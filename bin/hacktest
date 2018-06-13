@@ -1,0 +1,8 @@
+#!/usr/bin/env hhvm
+<?hh
+
+namespace Facebook\HackTest;
+
+require_once(__DIR__.'/../vendor/hh_autoload.php');
+
+HackTestCLI::main();

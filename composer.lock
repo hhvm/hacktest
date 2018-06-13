@@ -1,11 +1,91 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b6810e33c954e5b0c729dff62cd04253",
+    "content-hash": "3967a1472a44093dfe16827ccec7276a",
     "packages": [
+        {
+            "name": "facebook/definition-finder",
+            "version": "v1.7.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hhvm/definition-finder.git",
+                "reference": "7bd8b3b926814b7530565298a1517dc974bfb1db"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hhvm/definition-finder/zipball/7bd8b3b926814b7530565298a1517dc974bfb1db",
+                "reference": "7bd8b3b926814b7530565298a1517dc974bfb1db",
+                "shasum": ""
+            },
+            "require": {
+                "hhvm": "~3.23",
+                "hhvm/hhvm-autoload": "^1.6",
+                "hhvm/hsl": "^1.2|^3.26",
+                "hhvm/type-assert": "^3.2"
+            },
+            "require-dev": {
+                "91carriage/phpunit-hhi": "~5.1",
+                "facebook/fbexpect": "^0.4.0|^1.0",
+                "hhvm/systemlib-extractor": "~1.0",
+                "phpunit/phpunit": "~5.1"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ],
+                "files": [
+                    "autoload_files.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Find definitions in PHP or Hack files. Useful for autoloaders.",
+            "homepage": "https://github.com/hhvm/definitions-finder",
+            "keywords": [
+                "autoload",
+                "definitions",
+                "hack",
+                "hhvm"
+            ],
+            "time": "2018-06-12T17:27:41+00:00"
+        },
+        {
+            "name": "facebook/hh-clilib",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hhvm/hh-clilib.git",
+                "reference": "3a68ccd7c908f5e0e3a95c8b44481d0798bfe16f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hhvm/hh-clilib/zipball/3a68ccd7c908f5e0e3a95c8b44481d0798bfe16f",
+                "reference": "3a68ccd7c908f5e0e3a95c8b44481d0798bfe16f",
+                "shasum": ""
+            },
+            "require": {
+                "hhvm/hsl": "^3.26",
+                "hhvm/type-assert": "^3.2"
+            },
+            "require-dev": {
+                "91carriage/phpunit-hhi": "^5.7",
+                "facebook/fbexpect": "^1.1.0",
+                "hhvm/hhast": "^3.27.0",
+                "phpunit/phpunit": "^5.7"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "time": "2018-06-12T16:22:43+00:00"
+        },
         {
             "name": "fredemmott/hack-error-suppressor",
             "version": "v1.0.1",
@@ -45,16 +125,16 @@
         },
         {
             "name": "hhvm/hhvm-autoload",
-            "version": "v1.6.3",
+            "version": "v1.6.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hhvm/hhvm-autoload.git",
-                "reference": "2e3944571aa61b16336bea9254856f5ae4aea48c"
+                "reference": "df9098e03e5bf9a05ebdc46ec9588e0da25834d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/hhvm-autoload/zipball/2e3944571aa61b16336bea9254856f5ae4aea48c",
-                "reference": "2e3944571aa61b16336bea9254856f5ae4aea48c",
+                "url": "https://api.github.com/repos/hhvm/hhvm-autoload/zipball/df9098e03e5bf9a05ebdc46ec9588e0da25834d6",
+                "reference": "df9098e03e5bf9a05ebdc46ec9588e0da25834d6",
                 "shasum": ""
             },
             "require": {
@@ -90,7 +170,74 @@
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2018-05-08T17:26:24+00:00"
+            "time": "2018-06-06T22:45:48+00:00"
+        },
+        {
+            "name": "hhvm/hsl",
+            "version": "v3.26.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hhvm/hsl.git",
+                "reference": "e046cdba90c8204d9b329ad25ce134e9845761eb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hhvm/hsl/zipball/e046cdba90c8204d9b329ad25ce134e9845761eb",
+                "reference": "e046cdba90c8204d9b329ad25ce134e9845761eb",
+                "shasum": ""
+            },
+            "require": {
+                "hhvm": "^3.26.0",
+                "hhvm/hhvm-autoload": "^1.4"
+            },
+            "require-dev": {
+                "91carriage/phpunit-hhi": "^5.7",
+                "facebook/fbexpect": "^0.4",
+                "phpunit/phpunit": "^5.7"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "The Hack Standard Library",
+            "time": "2018-05-08T22:54:05+00:00"
+        },
+        {
+            "name": "hhvm/type-assert",
+            "version": "v3.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hhvm/type-assert.git",
+                "reference": "9bbe7cac2ff831142d74203479e72046cbc932f8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hhvm/type-assert/zipball/9bbe7cac2ff831142d74203479e72046cbc932f8",
+                "reference": "9bbe7cac2ff831142d74203479e72046cbc932f8",
+                "shasum": ""
+            },
+            "require": {
+                "hhvm": "^3.23.0",
+                "hhvm/hhvm-autoload": "^1.4",
+                "hhvm/hsl": "^1.0|^3.26.0"
+            },
+            "require-dev": {
+                "91carriage/phpunit-hhi": "~5.1",
+                "facebook/fbexpect": "^0.4.0|^1.0.0",
+                "phpunit/phpunit": "~5.1"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Convert untyped data to typed data",
+            "keywords": [
+                "TypeAssert",
+                "hack"
+            ],
+            "time": "2018-05-09T18:23:07+00:00"
         }
     ],
     "packages-dev": [
@@ -199,16 +346,16 @@
         },
         {
             "name": "facebook/fbexpect",
-            "version": "v1.0.0",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hhvm/fbexpect.git",
-                "reference": "1b86ba9bcab71242cf8d1a69aaca5ca3774c5ecf"
+                "reference": "5671bb1c7335b26de35a8049a680a8bad44c8b99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/fbexpect/zipball/1b86ba9bcab71242cf8d1a69aaca5ca3774c5ecf",
-                "reference": "1b86ba9bcab71242cf8d1a69aaca5ca3774c5ecf",
+                "url": "https://api.github.com/repos/hhvm/fbexpect/zipball/5671bb1c7335b26de35a8049a680a8bad44c8b99",
+                "reference": "5671bb1c7335b26de35a8049a680a8bad44c8b99",
                 "shasum": ""
             },
             "require": {
@@ -231,20 +378,20 @@
                 "MIT"
             ],
             "description": "Unit test helpers for Facebook projects",
-            "time": "2018-05-09T17:30:06+00:00"
+            "time": "2018-06-11T22:04:56+00:00"
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.8.0",
+            "version": "1.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "478465659fd987669df0bd8a9bf22a8710e5f1b6"
+                "reference": "3e01bdad3e18354c3dce54466b7fbe33a9f9f7f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/478465659fd987669df0bd8a9bf22a8710e5f1b6",
-                "reference": "478465659fd987669df0bd8a9bf22a8710e5f1b6",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/3e01bdad3e18354c3dce54466b7fbe33a9f9f7f8",
+                "reference": "3e01bdad3e18354c3dce54466b7fbe33a9f9f7f8",
                 "shasum": ""
             },
             "require": {
@@ -279,7 +426,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2018-05-29T17:25:09+00:00"
+            "time": "2018-06-11T23:09:50+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -1570,7 +1717,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "hhvm": "^3.27.0"
+        "hhvm": "^3.26.0"
     },
     "platform-dev": []
 }

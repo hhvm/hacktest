@@ -14,7 +14,7 @@ use function Facebook\FBExpect\expect;
 /**
  * @emails oncall+hack
  */
-final class TupleAsyncTest extends PHPUnit_Framework_TestCase {
+final class TupleAsyncTest extends HackTestCase {
   public function testWithNonNullableTypes(): void {
     /* HH_IGNORE_ERROR[5542] open source */
     \HH\Asio\join(async {
