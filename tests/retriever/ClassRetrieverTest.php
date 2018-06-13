@@ -25,8 +25,11 @@ final class ClassRetrieverTest extends PHPUnit_Framework_TestCase {
       $filename = $file->getFilename()
         |> Str\split($$, '/')
         |> C\lastx($$)
-        |> \explode('.', $$)[0];
+        |> Str\split($$, '.')
+        |> C\firstx($$);
 
+      $parent = $file->getClass($classname)->getParentClassName();
+      expect($parent)->toBeSame(HackTestCase::class);
       expect($classname)->toBeSame($filename);
     }
   }

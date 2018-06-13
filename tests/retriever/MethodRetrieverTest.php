@@ -22,6 +22,8 @@ final class MethodRetrieverTest extends PHPUnit_Framework_TestCase {
       $test_methods = new MethodRetriever($class)->getTestMethods();
       foreach ($test_methods as $method) {
         expect(Str\starts_with($method->getName(), 'test'))->toBeTrue();
+        $type = $method->getReturnType()?->getTypeText();
+        expect($type === 'void' || $type === 'Awaitable<void>')->toBeTrue();
         expect($method->isPublic())->toBeTrue();
       }
     }

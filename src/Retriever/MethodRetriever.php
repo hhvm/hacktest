@@ -15,6 +15,7 @@ use type Facebook\DefinitionFinder\{
   ScannedMethod,
   FileParser,
 };
+use type InvalidTestMethodException;
 use function Facebook\FBExpect\expect;
 use HH\Lib\Str;
 
@@ -31,11 +32,15 @@ class MethodRetriever {
       if ($method->isPublic()) {
         // TODO: set up data providers
         if (!Str\starts_with($method_name, 'test')) {
-          continue;
-          // TODO: throw new InvalidTestMethodException('Only test methods can be public.')
+          throw
+            new InvalidTestMethodException('Only test methods can be public');
         }
-        // TODO: expect void return type for non-async methods
-        // TODO: expect async keyword and Awaitable<void> return type for async methods
+        $type = $method->getReturnType()?->getTypeText();
+        if ($type !== 'void' && $type !== 'Awaitable<void>') {
+          throw new InvalidTestMethodException(
+            'Test methods must return void or Awaitable<void> (for async methods)',
+          );
+        }
         $this->test_methods[] = $method;
       }
     }
