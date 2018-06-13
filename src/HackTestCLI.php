@@ -12,8 +12,8 @@ namespace Facebook\HackTest;
 
 use type Facebook\CLILib\CLIWithRequiredArguments;
 use namespace Facebook\CLILib\CLIOptions;
-use type Facebook\DefinitionFinder\{FileParser};
-use HackTestCase;
+use type Facebook\DefinitionFinder\FileParser;
+use type HackTestCase;
 
 /** The main `hacktest` CLI */
 final class HackTestCLI extends CLIWithRequiredArguments {
@@ -34,26 +34,20 @@ final class HackTestCLI extends CLIWithRequiredArguments {
     return 0;
   }
 
-  public function run(vec<string> $argv): int {
+  public function run(vec<string> $paths): void {
 
     // TODO: put in a test runner class
-    $file_retriever = new FileRetriever($argv[0]);
-    foreach ($file_retriever->getAllFiles() as $file) {
+    $file_retriever = new FileRetriever($paths[0]);
+    foreach ($file_retriever->getTestFiles() as $file) {
       $cr = new ClassRetriever($file);
       $class_name = $cr->getTestClassName();
       $class = $file->getClass($class_name);
-      \printf("%s\n", $class_name);
-
+      \var_dump($class_name);
       $mr = new MethodRetriever($class);
       $method_names = $mr->getTestMethodNames();
-      foreach ($method_names as $name) {
-        //\printf("%s ", $name);
-      }
-      //\printf("\n");
       $htc = new HackTestCase($class_name, $method_names);
       $htc->run();
     }
-    return 0;
   }
 
 }
