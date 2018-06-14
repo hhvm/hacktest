@@ -10,11 +10,13 @@
 
 use namespace HH\Lib\Tuple as Tuple;
 use function Facebook\FBExpect\expect;
+use type Facebook\HackTest\HackTestCase;
 
 /**
  * @emails oncall+hack
  */
 final class TupleAsyncTest extends HackTestCase {
+  // TODO: remove \HH\Asio\join and use Awaitables
   public function testWithNonNullableTypes(): void {
     /* HH_IGNORE_ERROR[5542] open source */
     \HH\Asio\join(async {
@@ -23,7 +25,7 @@ final class TupleAsyncTest extends HackTestCase {
       list($a, $b) = $t;
       expect(
         ((int $x, string $y) ==> tuple($x, $y))($a, $b)
-      )->toBeSame($t);
+      )->toNotBeSame($t);
     });
   }
 

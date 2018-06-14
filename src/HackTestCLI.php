@@ -12,7 +12,6 @@ namespace Facebook\HackTest;
 
 use type Facebook\CLILib\CLIWithRequiredArguments;
 use namespace Facebook\CLILib\CLIOptions;
-use type HackTestRunner;
 
 /** The main `hacktest` CLI */
 final class HackTestCLI extends CLIWithRequiredArguments {
@@ -29,6 +28,7 @@ final class HackTestCLI extends CLIWithRequiredArguments {
 
   <<__Override>>
   public async function mainAsync(): Awaitable<int> {
+    $this->getStdout()->write("HackTest 1.0 by Wilson Lin and contributors.\n\n");
     HackTestRunner::run($this->getArguments());
     return 0;
   }
