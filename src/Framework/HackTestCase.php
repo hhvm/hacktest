@@ -8,22 +8,47 @@
  *
  */
 
+namespace Facebook\HackTest;
+
+use type Facebook\DefinitionFinder\ScannedMethod;
+use type Facebook\HHAPIDoc\DocBlock\DocBlock;
+use HH\Lib\C;
+
 class HackTestCase {
 
-  public function __construct(private string $className = '', private ?vec<string> $methodNames = null) {
-    $this->className = $className;
-    $this->methodNames = $methodNames;
+  public function __construct(
+    private string $className = '',
+    private vec<ScannedMethod> $methods = vec[],
+  ) {
   }
 
-  public function run(): void {
-    if ($this->methodNames !== null) {
-      foreach ($this->methodNames as $method) {
-        printf("%s ", $method);
-        $instance = new $this->className();
-        $instance->$method();
-        printf("Passed.\n");
-        // TODO: await for async tests
+  public function run(): vec<\Exception> {
+    $errors = vec[];
+
+    foreach ($this->methods as $method) {
+      $method_name = $method->getName();
+      $instance = new $this->className();
+      $doc = $method->getDocComment();
+      $providers = null;
+      if ($doc !== null) {
+        $block = new DocBlock($doc);
+        $providers = $block->getTagsByName('@dataProvider');
+      }
+      try {
+        if ($providers === null) {
+          $instance->$method_name();
+        } else {
+          $provider = C\firstx($providers);
+          $data = $instance->$provider();
+          $instance->$method_name($data);
+        }
+        \printf(".");
+      } catch (\Exception $e) {
+        \printf("F");
+        $errors[] = $e;
       }
     }
+
+    return $errors;
   }
 }

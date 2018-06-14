@@ -7,13 +7,18 @@
     "phpunit/phpunit": "^5.7",
     "facebook/fbexpect": "^1.0.0"
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:hhvm/hh-apidoc.git"
+    }
+  ],
   "require": {
     "hhvm": "^3.26.0",
     "hhvm/hhvm-autoload": "^1.6",
     "facebook/definition-finder": "^1.7",
     "facebook/hh-clilib": "^1.0",
+    "hhvm/hh-apidoc": "dev-master",
     "hhvm/type-assert": "^3.2"
   }
-
-
 }

@@ -1,4 +1,4 @@
-<?hh // strict
+<?hh
 /*
  *  Copyright (c) 2018-present, Facebook, Inc.
  *  All rights reserved.
@@ -8,14 +8,15 @@
  *
  */
 
+namespace Facebook\HackTest;
+
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{FileRetriever, ClassRetriever};
 use HH\Lib\{C, Str};
 
-final class ClassRetrieverTest extends PHPUnit_Framework_TestCase {
+final class ClassRetrieverTest extends \PHPUnit_Framework_TestCase {
 
   public function testClassMatchFileName(): void {
-    $path = '../tuple';
+    $path = 'tests/tuple';
     $file_retriever = new FileRetriever($path);
     foreach ($file_retriever->getTestFiles() as $file) {
       $cr = new ClassRetriever($file);

@@ -15,7 +15,6 @@ use type Facebook\DefinitionFinder\{
   ScannedMethod,
   FileParser,
 };
-use type InvalidTestMethodException;
 use function Facebook\FBExpect\expect;
 use HH\Lib\Str;
 
@@ -30,10 +29,12 @@ class MethodRetriever {
       $method_name = $method->getName();
       // don't worry about private/protected methods
       if ($method->isPublic()) {
-        // TODO: set up data providers
         if (!Str\starts_with($method_name, 'test')) {
-          throw
-            new InvalidTestMethodException('Only test methods can be public');
+          if (!Str\starts_with($method_name, 'provide')) {
+            throw
+              new InvalidTestMethodException('Only test methods and data providers can be public');
+          }
+          continue;
         }
         $type = $method->getReturnType()?->getTypeText();
         if ($type !== 'void' && $type !== 'Awaitable<void>') {
