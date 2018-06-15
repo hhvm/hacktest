@@ -8,20 +8,27 @@
  *
  */
 
-use type HackTestCase;
+namespace Facebook\HackTest;
+
 use Facebook\HackTest\{FileRetriever, ClassRetriever, MethodRetriever};
+use HH\Lib\Dict;
 
 class HackTestRunner {
 
-  public static function run(vec<string> $paths): void {
-    $file_retriever = new FileRetriever($paths[0]);
-    foreach ($file_retriever->getTestFiles() as $file) {
-      $class_name = new ClassRetriever($file)->getTestClassName();
-      $class = $file->getClass($class_name);
-      $method_names = new MethodRetriever($class)->getTestMethodNames();
-      $htc = new HackTestCase($class_name, $method_names);
-      $htc->run();
+  public static async function runAsync(vec<string> $paths): Awaitable<dict<string, mixed>> {
+    $test_results = dict[];
+    foreach ($paths as $path) {
+      $file_retriever = new FileRetriever($path);
+      foreach ($file_retriever->getTestFiles() as $file) {
+        $class_name = new ClassRetriever($file)->getTestClassName();
+        $class = $file->getClass($class_name);
+        $methods = new MethodRetriever($class)->getTestMethods();
+        $htc = new HackTestCase($class_name, $methods);
+        $result = await $htc->runAsync();
+        $test_results = Dict\merge($result, $test_results);
+      }
     }
-  }
 
+    return $test_results;
+  }
 }
