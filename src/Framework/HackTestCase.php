@@ -22,11 +22,12 @@ class HackTestCase {
   ) {
   }
 
-  public function run(): vec<\Exception> {
-    $errors = vec[];
+  public async function runAsync(): Awaitable<dict<string, mixed>> {
+    $errors = dict[];
 
     foreach ($this->methods as $method) {
       $method_name = $method->getName();
+      $key = $this->className.'.'.$method_name;
       $instance = new $this->className();
       $doc = $method->getDocComment();
       $providers = null;
@@ -34,20 +35,31 @@ class HackTestCase {
         $block = new DocBlock($doc);
         $providers = $block->getTagsByName('@dataProvider');
       }
+      $type = $method->getReturnType()?->getTypeName();
       try {
         if ($providers === null) {
-          $instance->$method_name();
+          if ($type === 'Awaitable') {
+            await $instance->$method_name();
+          } else {
+            $instance->$method_name();
+          }
         } else {
           $provider = C\firstx($providers);
           $data = $instance->$provider();
-          $instance->$method_name($data);
+          if ($type === 'Awaitable') {
+            await $instance->$method_name($data);
+          } else {
+            $instance->$method_name($data);
+          }
         }
         \printf(".");
+        $errors[$key] = 'Passed';
       } catch (\Exception $e) {
         \printf("F");
-        $errors[] = $e;
+        $errors[$key] = $e;
       }
     }
+    \printf("\n\n");
 
     return $errors;
   }
