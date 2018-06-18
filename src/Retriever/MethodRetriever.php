@@ -1,4 +1,4 @@
-<?hh  // strict
+<?hh // strict
 /*
  *  Copyright (c) 2018-present, Facebook, Inc.
  *  All rights reserved.
@@ -10,11 +10,7 @@
 
 namespace Facebook\HackTest;
 
-use type Facebook\DefinitionFinder\{
-  ScannedClass,
-  ScannedMethod,
-  FileParser,
-};
+use type Facebook\DefinitionFinder\{ScannedClass, ScannedMethod, FileParser};
 use function Facebook\FBExpect\expect;
 use HH\Lib\Str;
 
@@ -31,8 +27,9 @@ class MethodRetriever {
       if ($method->isPublic()) {
         if (!Str\starts_with($method_name, 'test')) {
           if (!Str\starts_with($method_name, 'provide')) {
-            throw
-              new InvalidTestMethodException('Only test methods and data providers can be public');
+            throw new InvalidTestMethodException(
+              'Only test methods and data providers can be public',
+            );
           }
           continue;
         }

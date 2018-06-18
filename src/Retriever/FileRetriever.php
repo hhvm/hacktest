@@ -31,7 +31,7 @@ class FileRetriever {
       );
     }
     $rii = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($this->path),
+      new \RecursiveDirectoryIterator($this->path),
     );
     $filenames = vec[];
     foreach ($rii as $filename) {

@@ -21,11 +21,14 @@ class ClassRetriever {
   }
 
   public function getTestClassName(): classname<HackTestCase> {
-    $test_classes =
-      Vec\filter($this->fp->getClassNames(), $name ==> Str\ends_with($name, 'Test'));
+    $test_classes = Vec\filter(
+      $this->fp->getClassNames(),
+      $name ==> Str\ends_with($name, 'Test'),
+    );
 
     if (C\count($test_classes) !== 1) {
-      throw new InvalidTestClassException("Only one test class allowed per file");
+      throw
+        new InvalidTestClassException("Only one test class allowed per file");
     }
 
     $name = $test_classes[0];
@@ -47,7 +50,9 @@ class ClassRetriever {
     try {
       $name = TypeAssert\classname_of(HackTestCase::class, $name);
     } catch (TypeAssert\IncorrectTypeException $_) {
-      throw new InvalidTestClassException("Test class does not extend HackTestCase");
+      throw new InvalidTestClassException(
+        "Test class does not extend HackTestCase",
+      );
     }
 
     return $name;

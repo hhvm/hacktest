@@ -27,7 +27,6 @@ class HackTestCase {
 
     foreach ($this->methods as $method) {
       $method_name = $method->getName();
-      $key = $this->className.'.'.$method_name;
       $instance = new $this->className();
       $doc = $method->getDocComment();
       $providers = null;
@@ -52,14 +51,11 @@ class HackTestCase {
             $instance->$method_name($data);
           }
         }
-        \printf(".");
-        $errors[$key] = 'Passed';
+        $errors[$method_name] = 'Passed';
       } catch (\Exception $e) {
-        \printf("F");
-        $errors[$key] = $e;
+        $errors[$method_name] = $e;
       }
     }
-    \printf("\n\n");
 
     return $errors;
   }
