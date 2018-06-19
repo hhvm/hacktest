@@ -11,7 +11,7 @@
 namespace Facebook\HackTest;
 
 use namespace Facebook\TypeAssert;
-use HH\Lib\{C, Str, Vec};
+use namespace HH\Lib\{C, Str, Vec};
 use type Facebook\DefinitionFinder\FileParser;
 use function Facebook\FBExpect\expect;
 

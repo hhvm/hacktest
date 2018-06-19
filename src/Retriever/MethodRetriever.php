@@ -12,7 +12,7 @@ namespace Facebook\HackTest;
 
 use type Facebook\DefinitionFinder\{ScannedClass, ScannedMethod, FileParser};
 use function Facebook\FBExpect\expect;
-use HH\Lib\Str;
+use namespace HH\Lib\Str;
 
 class MethodRetriever {
 
@@ -25,21 +25,19 @@ class MethodRetriever {
       $method_name = $method->getName();
       // don't worry about private/protected methods
       if ($method->isPublic()) {
-        if (!Str\starts_with($method_name, 'test')) {
-          if (!Str\starts_with($method_name, 'provide')) {
+        if (Str\starts_with($method_name, 'test')) {
+          $type = $method->getReturnType()?->getTypeText();
+          if ($type !== 'void' && $type !== 'Awaitable<void>') {
             throw new InvalidTestMethodException(
-              'Only test methods and data providers can be public',
+              'Test methods must return void or Awaitable<void> (for async methods)',
             );
           }
-          continue;
-        }
-        $type = $method->getReturnType()?->getTypeText();
-        if ($type !== 'void' && $type !== 'Awaitable<void>') {
+          $this->test_methods[] = $method;
+        } else if (!Str\starts_with($method_name, 'provide')) {
           throw new InvalidTestMethodException(
-            'Test methods must return void or Awaitable<void> (for async methods)',
+            'Only test methods and data providers can be public',
           );
         }
-        $this->test_methods[] = $method;
       }
     }
   }

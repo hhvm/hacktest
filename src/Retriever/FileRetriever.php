@@ -11,7 +11,7 @@
 namespace Facebook\HackTest;
 
 use type Facebook\DefinitionFinder\FileParser;
-use HH\Lib\Str;
+use namespace HH\Lib\Str;
 
 class FileRetriever {
 
@@ -48,7 +48,7 @@ class FileRetriever {
   }
 
   private function isTestFile(string $filename): bool {
-    return \preg_match('/Test(.php|.hh)$/', $filename) === 1;
+    return \preg_match('/Test(\.php|\.hh)$/', $filename) === 1;
   }
 
 }

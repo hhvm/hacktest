@@ -12,7 +12,7 @@ namespace Facebook\HackTest;
 
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\HackTestCase;
-use HH\Lib\Str;
+use namespace HH\Lib\Str;
 
 /**
  * @emails oncall+hack

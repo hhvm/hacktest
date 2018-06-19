@@ -12,9 +12,11 @@ namespace Facebook\HackTest;
 
 use type Facebook\DefinitionFinder\ScannedMethod;
 use type Facebook\HHAPIDoc\DocBlock\DocBlock;
-use HH\Lib\C;
+use namespace HH\Lib\C;
 
 class HackTestCase {
+
+  private static string $output = '';
 
   public function __construct(
     private string $className = '',
@@ -24,39 +26,50 @@ class HackTestCase {
 
   public async function runAsync(): Awaitable<dict<string, mixed>> {
     $errors = dict[];
-
+    $results = dict[];
     foreach ($this->methods as $method) {
       $method_name = $method->getName();
       $instance = new $this->className();
       $doc = $method->getDocComment();
-      $providers = null;
+      $providers = vec[];
       if ($doc !== null) {
         $block = new DocBlock($doc);
         $providers = $block->getTagsByName('@dataProvider');
       }
-      $type = $method->getReturnType()?->getTypeName();
       try {
-        if ($providers === null) {
-          if ($type === 'Awaitable') {
-            await $instance->$method_name();
-          } else {
-            $instance->$method_name();
-          }
+        if (C\is_empty($providers)) {
+          $results[$method_name] = $instance->$method_name();
         } else {
-          $provider = C\firstx($providers);
-          $data = $instance->$provider();
-          if ($type === 'Awaitable') {
-            await $instance->$method_name($data);
-          } else {
-            $instance->$method_name($data);
+          $args = array();
+          foreach ($providers as $provider) {
+            $arg = $instance->$provider();
+            $args[] = $arg;
           }
+          $results[$method_name] = \call_user_func_array(array($instance, $method_name), $args);
         }
-        $errors[$method_name] = 'Passed';
       } catch (\Exception $e) {
         $errors[$method_name] = $e;
       }
     }
 
+    foreach ($results as $method_name => $result) {
+      try {
+        if ($result instanceof Awaitable) {
+          await $result;
+        }
+        $errors[$method_name] = 'Passed';
+        self::$output .= '.';
+      } catch (\Exception $e) {
+        $errors[$method_name] = $e;
+        self::$output .= 'F';
+      }
+    }
+
     return $errors;
   }
+
+  public static function getOutput(): string {
+    return self::$output;
+  }
+
 }
