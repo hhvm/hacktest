@@ -32,14 +32,10 @@ final class FileRetriever {
     $rii = new \RecursiveIteratorIterator(
       new \RecursiveDirectoryIterator($this->path),
     );
-    $filenames = vec[];
-    foreach ($rii as $filename) {
-      if (!$filename->isDir()) {
-        $filenames[] = $filename->getPathname();
-      }
-    }
-    foreach ($filenames as $filename) {
-      if ($this->isTestFile($filename)) {
+
+    foreach ($rii as $file) {
+      $filename = $file->getPathname();
+      if (!$file->isDir() && $this->isTestFile($filename)) {
         $files[] = FileParser::FromFile($filename);
       }
     }

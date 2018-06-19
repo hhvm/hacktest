@@ -32,7 +32,7 @@ final class ClassRetriever {
       );
     }
 
-    $name = $test_classes[0];
+    $name = C\onlyx($test_classes);
     $classname = $name
       |> Str\split($$, '\\')
       |> C\lastx($$);

@@ -35,4 +35,17 @@ final class DataProviderTest extends HackTestCase {
   public function testSimple(Traversable<string> $traversable): void {
     expect(Str\join($traversable, '-'))->toBeSame('the-quick-brown-fox-1');
   }
+
+  public function provideMultipleArgs(): varray<mixed> {
+    return varray[
+      tuple(1, 2),
+      tuple(2, 1),
+    ];
+  }
+
+  /** @dataProvider provideMultipleArgs */
+  public function testMultipleArgs(int $a, int $b): void {
+    expect($a + $b)->toBeSame(3);
+  }
+
 }

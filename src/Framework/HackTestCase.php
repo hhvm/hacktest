@@ -16,7 +16,7 @@ use namespace HH\Lib\C;
 
 class HackTestCase {
 
-  const TEST_PASSED = 'PASSED';
+  private int $numTests = 0;
 
   public function __construct(
     private string $className = '',
@@ -24,7 +24,7 @@ class HackTestCase {
   ) {
   }
 
-  public async function runAsync(): Awaitable<dict<string, mixed>> {
+  public async function runAsync(): Awaitable<dict<string, \Exception>> {
     $errors = dict[];
     foreach ($this->methods as $method) {
       $method_name = $method->getName();
@@ -38,13 +38,13 @@ class HackTestCase {
       $type = $method->getReturnType()?->getTypeName();
 
       if (C\is_empty($providers)) {
+        $this->numTests++;
         try {
           if ($type === 'Awaitable') {
             await $instance->$method_name();
           } else {
             $instance->$method_name();
           }
-          $errors[$method_name] = self::TEST_PASSED;
         } catch (\Exception $e) {
           $errors[$method_name] = $e;
         }
@@ -53,21 +53,20 @@ class HackTestCase {
           'There can only be one data provider per test method',
         );
       } else {
-        $provider = C\firstx($providers);
+        $provider = C\onlyx($providers);
         $tuples = $instance->$provider();
+        $this->numTests += C\count($tuples);
         $tuple_num = 0;
         foreach ($tuples as $tuple) {
           $tuple_num++;
-          // TODO: display this in test output?
-          $data = \var_export(C\firstx($tuple), true);
           try {
             if ($type === 'Awaitable') {
               await \call_user_func_array(array($instance, $method_name), $tuple);
             } else {
               \call_user_func_array(array($instance, $method_name), $tuple);
             }
-            $errors[$method_name.'.'.$tuple_num] = self::TEST_PASSED;
           } catch (\Exception $e) {
+            // TODO: add data set (e.g. var_export) to test result output?
             $errors[$method_name.'.'.$tuple_num] = $e;
           }
         }
@@ -76,4 +75,9 @@ class HackTestCase {
 
     return $errors;
   }
+
+  public function getNumTests(): int {
+    return $this->numTests;
+  }
+
 }
