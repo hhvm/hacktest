@@ -15,7 +15,7 @@ use namespace HH\Lib\{C, Str, Vec};
 use type Facebook\DefinitionFinder\FileParser;
 use function Facebook\FBExpect\expect;
 
-class ClassRetriever {
+final class ClassRetriever {
 
   public function __construct(private FileParser $fp) {
   }
@@ -23,12 +23,13 @@ class ClassRetriever {
   public function getTestClassName(): classname<HackTestCase> {
     $test_classes = Vec\filter(
       $this->fp->getClassNames(),
-      $name ==> Str\ends_with($name, 'Test'),
+      $name ==> \is_subclass_of($name, HackTestCase::class, true),
     );
 
     if (C\count($test_classes) !== 1) {
-      throw
-        new InvalidTestClassException("Only one test class allowed per file");
+      throw new InvalidTestClassException(
+        'There must be exactly one test class per file'
+      );
     }
 
     $name = $test_classes[0];
@@ -42,16 +43,24 @@ class ClassRetriever {
       |> C\firstx($$);
 
     if ($classname !== $filename) {
-      throw new InvalidTestClassException("Class name must match filename");
+      throw new InvalidTestClassException(
+        'Class name must match filename'
+      );
     }
     if (!Str\ends_with($classname, 'Test')) {
-      throw new InvalidTestClassException("Class name must end with 'Test'");
+      throw new InvalidTestClassException(
+        'Class name must end with \'Test\''
+      );
     }
     try {
       $name = TypeAssert\classname_of(HackTestCase::class, $name);
     } catch (TypeAssert\IncorrectTypeException $_) {
       throw new InvalidTestClassException(
-        "Test class does not extend HackTestCase",
+        Str\format(
+          "%s does not extend %s",
+          $name,
+          HackTestCase::class
+        ),
       );
     }
 

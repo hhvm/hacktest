@@ -8,8 +8,6 @@
  *
  */
 
-namespace Facebook\HackTest;
-
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\HackTestCase;
 use namespace HH\Lib\Str;
@@ -19,9 +17,18 @@ use namespace HH\Lib\Str;
  */
 final class DataProviderTest extends HackTestCase {
 
-  public function provideSimple(): array<mixed> {
-    $elements = array('the', 'quick', 'brown', 'fox', 1);
-    return $elements;
+  public function provideSimple(): varray<mixed> {
+    $elements = varray['the', 'quick', 'brown', 'fox', 1];
+    return varray[
+      tuple($elements),
+      tuple(new Vector($elements)),
+      tuple(new Set($elements)),
+      tuple(new Map($elements)),
+      tuple(vec($elements)),
+      tuple(keyset($elements)),
+      tuple(dict($elements)),
+      tuple(HackLibTestTraversables::getIterator($elements)),
+    ];
   }
 
   /** @dataProvider provideSimple */

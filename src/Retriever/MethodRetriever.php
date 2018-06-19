@@ -14,7 +14,7 @@ use type Facebook\DefinitionFinder\{ScannedClass, ScannedMethod, FileParser};
 use function Facebook\FBExpect\expect;
 use namespace HH\Lib\Str;
 
-class MethodRetriever {
+final class MethodRetriever {
 
   private vec<ScannedMethod> $test_methods;
 

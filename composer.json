@@ -14,7 +14,7 @@
     }
   ],
   "require": {
-    "hhvm": "^3.26.0",
+    "hhvm": "^3.27.0",
     "hhvm/hhvm-autoload": "^1.6",
     "facebook/definition-finder": "^1.7",
     "facebook/hh-clilib": "^1.0",

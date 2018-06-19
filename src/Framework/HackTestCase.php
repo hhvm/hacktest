@@ -16,7 +16,7 @@ use namespace HH\Lib\C;
 
 class HackTestCase {
 
-  private static string $output = '';
+  const TEST_PASSED = 'PASSED';
 
   public function __construct(
     private string $className = '',
@@ -26,7 +26,6 @@ class HackTestCase {
 
   public async function runAsync(): Awaitable<dict<string, mixed>> {
     $errors = dict[];
-    $results = dict[];
     foreach ($this->methods as $method) {
       $method_name = $method->getName();
       $instance = new $this->className();
@@ -36,40 +35,45 @@ class HackTestCase {
         $block = new DocBlock($doc);
         $providers = $block->getTagsByName('@dataProvider');
       }
-      try {
-        if (C\is_empty($providers)) {
-          $results[$method_name] = $instance->$method_name();
-        } else {
-          $args = array();
-          foreach ($providers as $provider) {
-            $arg = $instance->$provider();
-            $args[] = $arg;
-          }
-          $results[$method_name] = \call_user_func_array(array($instance, $method_name), $args);
-        }
-      } catch (\Exception $e) {
-        $errors[$method_name] = $e;
-      }
-    }
+      $type = $method->getReturnType()?->getTypeName();
 
-    foreach ($results as $method_name => $result) {
-      try {
-        if ($result instanceof Awaitable) {
-          await $result;
+      if (C\is_empty($providers)) {
+        try {
+          if ($type === 'Awaitable') {
+            await $instance->$method_name();
+          } else {
+            $instance->$method_name();
+          }
+          $errors[$method_name] = self::TEST_PASSED;
+        } catch (\Exception $e) {
+          $errors[$method_name] = $e;
         }
-        $errors[$method_name] = 'Passed';
-        self::$output .= '.';
-      } catch (\Exception $e) {
-        $errors[$method_name] = $e;
-        self::$output .= 'F';
+      } else if (C\count($providers) > 1) {
+        throw new InvalidTestMethodException(
+          'There can only be one data provider per test method',
+        );
+      } else {
+        $provider = C\firstx($providers);
+        $tuples = $instance->$provider();
+        $tuple_num = 0;
+        foreach ($tuples as $tuple) {
+          $tuple_num++;
+          // TODO: display this in test output?
+          $data = \var_export(C\firstx($tuple), true);
+          try {
+            if ($type === 'Awaitable') {
+              await \call_user_func_array(array($instance, $method_name), $tuple);
+            } else {
+              \call_user_func_array(array($instance, $method_name), $tuple);
+            }
+            $errors[$method_name.'.'.$tuple_num] = self::TEST_PASSED;
+          } catch (\Exception $e) {
+            $errors[$method_name.'.'.$tuple_num] = $e;
+          }
+        }
       }
     }
 
     return $errors;
   }
-
-  public static function getOutput(): string {
-    return self::$output;
-  }
-
 }

@@ -10,4 +10,4 @@
 
 namespace Facebook\HackTest;
 
-class InvalidTestFileException extends \RuntimeException {}
+final class InvalidTestFileException extends \RuntimeException {}

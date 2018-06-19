@@ -11,9 +11,8 @@
 namespace Facebook\HackTest;
 
 use type Facebook\DefinitionFinder\FileParser;
-use namespace HH\Lib\Str;
 
-class FileRetriever {
+final class FileRetriever {
 
   public function __construct(private string $path = '.') {
   }
@@ -35,8 +34,9 @@ class FileRetriever {
     );
     $filenames = vec[];
     foreach ($rii as $filename) {
-      if (!$filename->isDir())
+      if (!$filename->isDir()) {
         $filenames[] = $filename->getPathname();
+      }
     }
     foreach ($filenames as $filename) {
       if ($this->isTestFile($filename)) {

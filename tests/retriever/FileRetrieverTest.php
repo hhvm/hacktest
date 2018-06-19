@@ -1,4 +1,4 @@
-<?hh
+<?hh // strict
 /*
  *  Copyright (c) 2018-present, Facebook, Inc.
  *  All rights reserved.
@@ -18,7 +18,7 @@ final class FileRetrieverTest extends \PHPUnit_Framework_TestCase {
     $path = 'tests/tuple';
     $file_retriever = new FileRetriever($path);
     foreach ($file_retriever->getTestFiles() as $file) {
-      expect(\preg_match('/Test(.php|.hh)$/', $file->getFilename()) === 1)->toBeTrue();
+      expect(\preg_match('/Test(\.php|\.hh)$/', $file->getFilename()) === 1)->toBeTrue();
     }
   }
 }

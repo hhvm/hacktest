@@ -12,7 +12,7 @@ namespace Facebook\HackTest;
 
 use type Facebook\CLILib\CLIWithRequiredArguments;
 use namespace Facebook\CLILib\CLIOptions;
-use namespace HH\Lib\{C, Str};
+use namespace HH\Lib\Str;
 
 /** The main `hacktest` CLI */
 final class HackTestCLI extends CLIWithRequiredArguments {
@@ -43,7 +43,7 @@ final class HackTestCLI extends CLIWithRequiredArguments {
     $this->getStdout()
       ->write("HackTest 1.0 by Wilson Lin and contributors.\n\n");
     $output = await HackTestRunner::runAsync($this->getArguments(), $this->verbose);
-    $output_chunks = Str\chunk($output, 1024);
+    $output_chunks = Str\chunk($output, 64);
     foreach ($output_chunks as $chunk) {
       $this->getStdout()->write($chunk);
     }

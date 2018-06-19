@@ -28,24 +28,18 @@ abstract final class HackTestRunner {
         $class = $file->getClass($classname);
         $methods = new MethodRetriever($class)->getTestMethods();
         $htc = new HackTestCase($classname, $methods);
-        $results[$classname] = $htc->runAsync();
+        $results[$classname] = await $htc->runAsync();
       }
     }
 
-    $num_error = 0;
-    $test_results = dict[];
-    foreach ($results as $class => $res) {
-      $test_results[$class] = await $res;
-    }
-    $output .= HackTestCase::getOutput();
-    foreach ($test_results as $class => $result) {
+    foreach ($results as $class => $result) {
       $num_tests += C\count($result);
       foreach ($result as $method => $res) {
         if ($res instanceof \Exception) {
           $num_errors++;
           if ($verbosity) {
             $output .= "\n\nClass: $class\nMethod: $method\n";
-            $output .= ++$num_error.") ".$res->__toString();
+            $output .= $num_errors.") ".$res;
           }
         }
       }

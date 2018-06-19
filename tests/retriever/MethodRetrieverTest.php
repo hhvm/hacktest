@@ -1,4 +1,4 @@
-<?hh
+<?hh // strict
 /*
  *  Copyright (c) 2018-present, Facebook, Inc.
  *  All rights reserved.
@@ -11,7 +11,7 @@
 namespace Facebook\HackTest;
 
 use function Facebook\FBExpect\expect;
-use HH\Lib\Str;
+use namespace HH\Lib\Str;
 
 final class MethodRetrieverTest extends \PHPUnit_Framework_TestCase {
 
