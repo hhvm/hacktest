@@ -24,7 +24,9 @@ class HackTestCase {
   ) {
   }
 
-  public async function runAsync((function(string): void) $writeProgress): Awaitable<dict<string, \Exception>> {
+  public async function runAsync(
+    (function(string): void) $writeProgress,
+  ): Awaitable<dict<string, \Exception>> {
     $errors = dict[];
     foreach ($this->methods as $method) {
       $method_name = $method->getName();
@@ -47,8 +49,12 @@ class HackTestCase {
           }
           $writeProgress('.');
         } catch (\Exception $e) {
+          if ($e instanceof SkippedTestException) {
+            $writeProgress('S');
+          } else {
+            $writeProgress('F');
+          }
           $errors[$method_name] = $e;
-          $writeProgress('F');
         }
       } else if (C\count($providers) > 1) {
         throw new InvalidTestMethodException(
@@ -76,14 +82,21 @@ class HackTestCase {
           $tuple_num++;
           try {
             if ($type === 'Awaitable') {
-              await \call_user_func_array(array($instance, $method_name), $tuple);
+              await \call_user_func_array(
+                array($instance, $method_name),
+                $tuple,
+              );
             } else {
               \call_user_func_array(array($instance, $method_name), $tuple);
             }
             $writeProgress('.');
           } catch (\Exception $e) {
+            if ($e instanceof SkippedTestException) {
+              $writeProgress('S');
+            } else {
+              $writeProgress('F');
+            }
             $errors[$method_name.'.'.$tuple_num.'.'.$data] = $e;
-            $writeProgress('F');
           }
         }
       }
@@ -97,9 +110,7 @@ class HackTestCase {
   }
 
   public function markTestSkipped(string $message): void {
-    // TODO: display number of skipped tests
-    // TODO: display name of skipped test in verbose mode
-    return;
+    throw new SkippedTestException($message);
   }
 
 }

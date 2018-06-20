@@ -11,7 +11,7 @@
 namespace Facebook\HackTest;
 
 use type Facebook\DefinitionFinder\FileParser;
-use namespace HH\Lib\{C, Str};
+use namespace HH\Lib\Str;
 
 abstract final class HackTestRunner {
 
@@ -22,8 +22,10 @@ abstract final class HackTestRunner {
   ): Awaitable<string> {
     $errors = dict[];
     $output = '';
+    $verbose = '';
     $num_tests = 0;
-    $num_errors = 0;
+    $num_error = 0;
+    $num_skipped = 0;
 
     foreach ($paths as $path) {
       $file_retriever = new FileRetriever($path);
@@ -38,27 +40,37 @@ abstract final class HackTestRunner {
     }
 
     foreach ($errors as $class => $result) {
-      foreach ($result as $method => $exception) {
-        $num_errors++;
-        if ($verbosity) {
-          if (Str\contains($method, '.')) {
-            list($method, $num, $data) = Str\split($method, '.');
-            $output .= "\n\n$num_errors) $class::$method".
-              " with data set #$num $data\n$exception";
-          } else {
-            $output .= "\n\n$num_errors) $class::$method\n$exception";
-          }
+      foreach ($result as $test_params => $exception) {
+        $num_error++;
+        if (Str\contains($test_params, '.')) {
+          list($method, $num, $data) = Str\split($test_params, '.');
+          $verbose .= "\n\n$num_error) $class::$method".
+          " with data set #$num $data\n";
+        } else {
+          $verbose .= "\n\n$num_error) $class::$test_params\n";
+        }
+        if ($exception instanceof SkippedTestException) {
+          $num_skipped++;
+          $verbose .= 'Skipped: '.$exception->getMessage();
+        } else {
+          $verbose .= $exception->__toString();
         }
       }
+    }
+
+    if ($verbosity) {
+      $output .= $verbose;
     }
 
     $output .= "\n\nSummary: ".
       $num_tests.
       " test(s), ".
-      ($num_tests - $num_errors).
+      ($num_tests - $num_error).
       " passed, ".
-      $num_errors.
-      " failed.\n";
+      ($num_error - $num_skipped).
+      " failed, ".
+      $num_skipped.
+      " skipped.\n";
 
     return $output;
   }
