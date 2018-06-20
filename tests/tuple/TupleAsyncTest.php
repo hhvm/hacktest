@@ -23,7 +23,7 @@ final class TupleAsyncTest extends HackTestCase {
     list($a, $b) = $t;
     expect(
       ((int $x, string $y) ==> tuple($x, $y))($a, $b)
-    )->toNotBeSame($t);
+    )->toBeSame($t);
   }
 
   public async function testWithNullLiteralsAsync(): Awaitable<void> {
@@ -32,7 +32,7 @@ final class TupleAsyncTest extends HackTestCase {
     list($a, $b, $c) = $t;
     expect(
       ((int $x, ?int $y, ?int $z) ==> tuple($x, $y, $z))($a, $b, $c)
-    )->toNotBeSame($t);
+    )->toBeSame($t);
   }
 
   public async function testWithNullableTypesAsync(): Awaitable<void> {

@@ -10,11 +10,11 @@
 
 use namespace HH\Lib\C;
 use function Facebook\FBExpect\expect;
-
+use type Facebook\HackTest\HackTestCase;
 /**
  * @emails oncall+hack
  */
-final class CReduceTest extends PHPUnit_Framework_TestCase {
+final class CReduceTest extends HackTestCase {
 
   public static function provideTestReduce(): varray<mixed> {
     return varray[
@@ -48,7 +48,7 @@ final class CReduceTest extends PHPUnit_Framework_TestCase {
     Ta $initial,
     Ta $expected,
   ): void {
-    expect(C\reduce($traversable, $accumulator, $initial))->toEqual($expected);
+    expect(C\reduce($traversable, $accumulator, $initial))->toBePHPEqual($expected);
   }
 
   public static function provideTestReduceWithKey(): varray<mixed> {

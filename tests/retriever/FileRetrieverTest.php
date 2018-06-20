@@ -12,7 +12,7 @@ namespace Facebook\HackTest;
 
 use function Facebook\FBExpect\expect;
 
-final class FileRetrieverTest extends \PHPUnit_Framework_TestCase {
+final class FileRetrieverTest extends HackTestCase {
 
   public function testValidTestFiles(): void {
     $path = 'tests/tuple';

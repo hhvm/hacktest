@@ -13,7 +13,7 @@ namespace Facebook\HackTest;
 use function Facebook\FBExpect\expect;
 use namespace HH\Lib\Str;
 
-final class MethodRetrieverTest extends \PHPUnit_Framework_TestCase {
+final class MethodRetrieverTest extends HackTestCase {
 
   public function testValidTestMethods(): void {
     $path = 'tests/tuple';
