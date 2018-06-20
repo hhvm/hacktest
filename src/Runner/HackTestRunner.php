@@ -15,7 +15,11 @@ use namespace HH\Lib\{C, Str};
 
 abstract final class HackTestRunner {
 
-  public static async function runAsync(vec<string> $paths, bool $verbosity): Awaitable<string> {
+  public static async function runAsync(
+    vec<string> $paths,
+    bool $verbosity,
+    (function(string): void) $callback,
+  ): Awaitable<string> {
     $errors = dict[];
     $output = '';
     $num_tests = 0;
@@ -28,7 +32,7 @@ abstract final class HackTestRunner {
         $class = $file->getClass($classname);
         $methods = new MethodRetriever($class)->getTestMethods();
         $test_case = new HackTestCase($classname, $methods);
-        $errors[$classname] = await $test_case->runAsync();
+        $errors[$classname] = await $test_case->runAsync($callback);
         $num_tests += $test_case->getNumTests();
       }
     }
@@ -38,11 +42,9 @@ abstract final class HackTestRunner {
         $num_errors++;
         if ($verbosity) {
           if (Str\contains($method, '.')) {
-            $test_info = Str\split($method, '.');
-            $method = $test_info[0];
-            $dataset_num = $test_info[1];
+            list($method, $num, $data) = Str\split($method, '.');
             $output .= "\n\n$num_errors) $class::$method".
-              " with data set #$dataset_num\n$exception";
+              " with data set #$num $data\n$exception";
           } else {
             $output .= "\n\n$num_errors) $class::$method\n$exception";
           }
@@ -50,8 +52,7 @@ abstract final class HackTestRunner {
       }
     }
 
-    $output .=
-      "\n\nSummary: ".
+    $output .= "\n\nSummary: ".
       $num_tests.
       " test(s), ".
       ($num_tests - $num_errors).

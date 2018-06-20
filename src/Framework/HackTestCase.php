@@ -24,7 +24,7 @@ class HackTestCase {
   ) {
   }
 
-  public async function runAsync(): Awaitable<dict<string, \Exception>> {
+  public async function runAsync((function(string): void) $writeProgress): Awaitable<dict<string, \Exception>> {
     $errors = dict[];
     foreach ($this->methods as $method) {
       $method_name = $method->getName();
@@ -45,8 +45,10 @@ class HackTestCase {
           } else {
             $instance->$method_name();
           }
+          $writeProgress('.');
         } catch (\Exception $e) {
           $errors[$method_name] = $e;
+          $writeProgress('F');
         }
       } else if (C\count($providers) > 1) {
         throw new InvalidTestMethodException(
@@ -58,6 +60,19 @@ class HackTestCase {
         $this->numTests += C\count($tuples);
         $tuple_num = 0;
         foreach ($tuples as $tuple) {
+          $data = '';
+          if (C\count($tuple) > 1) {
+            $data .= '(';
+            foreach ($tuple as $arg) {
+              $data .= \var_export($arg, true);
+              if ($arg !== C\lastx($tuple)) {
+                $data .= ', ';
+              }
+            }
+            $data .= ')';
+          } else {
+            $data = \var_export(C\onlyx($tuple), true);
+          }
           $tuple_num++;
           try {
             if ($type === 'Awaitable') {
@@ -65,9 +80,10 @@ class HackTestCase {
             } else {
               \call_user_func_array(array($instance, $method_name), $tuple);
             }
+            $writeProgress('.');
           } catch (\Exception $e) {
-            // TODO: add data set (e.g. var_export) to test result output?
-            $errors[$method_name.'.'.$tuple_num] = $e;
+            $errors[$method_name.'.'.$tuple_num.'.'.$data] = $e;
+            $writeProgress('F');
           }
         }
       }
@@ -78,6 +94,12 @@ class HackTestCase {
 
   public function getNumTests(): int {
     return $this->numTests;
+  }
+
+  public function markTestSkipped(string $message): void {
+    // TODO: display number of skipped tests
+    // TODO: display name of skipped test in verbose mode
+    return;
   }
 
 }
