@@ -11,26 +11,28 @@
 namespace Facebook\HackTest;
 
 use namespace Facebook\TypeAssert;
-use HH\Lib\{C, Str, Vec};
+use namespace HH\Lib\{C, Str, Vec};
 use type Facebook\DefinitionFinder\FileParser;
-use type HackTestCase;
-use type InvalidTestClassException;
 use function Facebook\FBExpect\expect;
 
-class ClassRetriever {
+final class ClassRetriever {
 
   public function __construct(private FileParser $fp) {
   }
 
   public function getTestClassName(): classname<HackTestCase> {
-    $test_classes =
-      Vec\filter($this->fp->getClassNames(), $name ==> Str\ends_with($name, 'Test'));
+    $test_classes = Vec\filter(
+      $this->fp->getClassNames(),
+      $name ==> \is_subclass_of($name, HackTestCase::class, true),
+    );
 
     if (C\count($test_classes) !== 1) {
-      throw new InvalidTestClassException("Only one test class allowed per file");
+      throw new InvalidTestClassException(
+        'There must be exactly one test class per file'
+      );
     }
 
-    $name = $test_classes[0];
+    $name = C\onlyx($test_classes);
     $classname = $name
       |> Str\split($$, '\\')
       |> C\lastx($$);
@@ -41,12 +43,26 @@ class ClassRetriever {
       |> C\firstx($$);
 
     if ($classname !== $filename) {
-      throw new InvalidTestClassException('Class name must match filename');
+      throw new InvalidTestClassException(
+        'Class name must match filename'
+      );
     }
     if (!Str\ends_with($classname, 'Test')) {
-      throw new InvalidTestClassException("Class name must end with 'Test'");
+      throw new InvalidTestClassException(
+        'Class name must end with \'Test\''
+      );
     }
-    $name = TypeAssert\classname_of(HackTestCase::class, $name);
+    try {
+      $name = TypeAssert\classname_of(HackTestCase::class, $name);
+    } catch (TypeAssert\IncorrectTypeException $_) {
+      throw new InvalidTestClassException(
+        Str\format(
+          "%s does not extend %s",
+          $name,
+          HackTestCase::class
+        ),
+      );
+    }
 
     return $name;
   }

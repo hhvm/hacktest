@@ -8,16 +8,17 @@
  *
  */
 
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\FileRetriever;
+namespace Facebook\HackTest;
 
-final class FileRetrieverTest extends PHPUnit_Framework_TestCase {
+use function Facebook\FBExpect\expect;
+
+final class FileRetrieverTest extends \PHPUnit_Framework_TestCase {
 
   public function testValidTestFiles(): void {
-    $path = '../tuple';
+    $path = 'tests/tuple';
     $file_retriever = new FileRetriever($path);
     foreach ($file_retriever->getTestFiles() as $file) {
-      expect(\preg_match('/Test(.php|.hh)$/', $file->getFilename()))->toBeTrue();
+      expect(\preg_match('/Test(\.php|\.hh)$/', $file->getFilename()) === 1)->toBeTrue();
     }
   }
 }

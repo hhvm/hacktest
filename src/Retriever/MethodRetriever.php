@@ -1,4 +1,4 @@
-<?hh  // strict
+<?hh // strict
 /*
  *  Copyright (c) 2018-present, Facebook, Inc.
  *  All rights reserved.
@@ -10,16 +10,11 @@
 
 namespace Facebook\HackTest;
 
-use type Facebook\DefinitionFinder\{
-  ScannedClass,
-  ScannedMethod,
-  FileParser,
-};
-use type InvalidTestMethodException;
+use type Facebook\DefinitionFinder\{ScannedClass, ScannedMethod, FileParser};
 use function Facebook\FBExpect\expect;
-use HH\Lib\Str;
+use namespace HH\Lib\Str;
 
-class MethodRetriever {
+final class MethodRetriever {
 
   private vec<ScannedMethod> $test_methods;
 
@@ -30,18 +25,19 @@ class MethodRetriever {
       $method_name = $method->getName();
       // don't worry about private/protected methods
       if ($method->isPublic()) {
-        // TODO: set up data providers
-        if (!Str\starts_with($method_name, 'test')) {
-          throw
-            new InvalidTestMethodException('Only test methods can be public');
-        }
-        $type = $method->getReturnType()?->getTypeText();
-        if ($type !== 'void' && $type !== 'Awaitable<void>') {
+        if (Str\starts_with($method_name, 'test')) {
+          $type = $method->getReturnType()?->getTypeText();
+          if ($type !== 'void' && $type !== 'Awaitable<void>') {
+            throw new InvalidTestMethodException(
+              'Test methods must return void or Awaitable<void> (for async methods)',
+            );
+          }
+          $this->test_methods[] = $method;
+        } else if (!Str\starts_with($method_name, 'provide')) {
           throw new InvalidTestMethodException(
-            'Test methods must return void or Awaitable<void> (for async methods)',
+            'Only test methods and data providers can be public',
           );
         }
-        $this->test_methods[] = $method;
       }
     }
   }

@@ -8,14 +8,15 @@
  *
  */
 
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{FileRetriever, ClassRetriever, MethodRetriever};
-use HH\Lib\Str;
+namespace Facebook\HackTest;
 
-final class MethodRetrieverTest extends PHPUnit_Framework_TestCase {
+use function Facebook\FBExpect\expect;
+use namespace HH\Lib\Str;
+
+final class MethodRetrieverTest extends \PHPUnit_Framework_TestCase {
 
   public function testValidTestMethods(): void {
-    $path = '../tuple';
+    $path = 'tests/tuple';
     $file_retriever = new FileRetriever($path);
     foreach ($file_retriever->getTestFiles() as $file) {
       $class = $file->getClass(new ClassRetriever($file)->getTestClassName());
