@@ -41,6 +41,7 @@ class HackTestCase {
         $this->numTests++;
         try {
           if ($type === 'Awaitable') {
+            /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
             await $instance->$method_name();
           } else {
             $instance->$method_name();
@@ -61,6 +62,7 @@ class HackTestCase {
           $tuple_num++;
           try {
             if ($type === 'Awaitable') {
+              /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
               await \call_user_func_array(array($instance, $method_name), $tuple);
             } else {
               \call_user_func_array(array($instance, $method_name), $tuple);

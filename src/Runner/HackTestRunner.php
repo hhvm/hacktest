@@ -28,6 +28,7 @@ abstract final class HackTestRunner {
         $class = $file->getClass($classname);
         $methods = (new MethodRetriever($class))->getTestMethods();
         $test_case = new HackTestCase($classname, $methods);
+        /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
         $errors[$classname] = await $test_case->runAsync();
         $num_tests += $test_case->getNumTests();
       }
@@ -41,10 +42,10 @@ abstract final class HackTestRunner {
             $test_info = Str\split($method, '.');
             $method = $test_info[0];
             $dataset_num = $test_info[1];
-            $output .= "\n\n$num_errors) $class::$method".
-              " with data set #$dataset_num\n$exception";
+            $output .= "\n\n".$num_errors.") ".$class."::".$method.
+              " with data set #".$dataset_num."\n".$exception;
           } else {
-            $output .= "\n\n$num_errors) $class::$method\n$exception";
+            $output .= "\n\n".$num_errors.") ".$class."::".$method."\n".$exception;
           }
         }
       }
