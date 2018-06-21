@@ -121,7 +121,7 @@ final class DictAsyncTest extends HackTestCase {
         },
       );
       expect($actual)->toBeSame(dict[1 => 1, 2 => 2]);
-      expect($run_cnt['value'])->toBeSame(2);
+      expect($run_cnt['value'])->toBePHPEqual(2);
     });
   }
 

@@ -19,8 +19,8 @@ final class MethodRetrieverTest extends HackTestCase {
     $path = 'tests/tuple';
     $file_retriever = new FileRetriever($path);
     foreach ($file_retriever->getTestFiles() as $file) {
-      $class = $file->getClass(new ClassRetriever($file)->getTestClassName());
-      $test_methods = new MethodRetriever($class)->getTestMethods();
+      $class = $file->getClass((new ClassRetriever($file))->getTestClassName());
+      $test_methods = (new MethodRetriever($class))->getTestMethods();
       foreach ($test_methods as $method) {
         expect(Str\starts_with($method->getName(), 'test'))->toBeTrue();
         $type = $method->getReturnType()?->getTypeText();

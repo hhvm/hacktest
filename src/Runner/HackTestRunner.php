@@ -30,10 +30,11 @@ abstract final class HackTestRunner {
     foreach ($paths as $path) {
       $file_retriever = new FileRetriever($path);
       foreach ($file_retriever->getTestFiles() as $file) {
-        $classname = new ClassRetriever($file)->getTestClassName();
+        $classname = (new ClassRetriever($file))->getTestClassName();
         $class = $file->getClass($classname);
-        $methods = new MethodRetriever($class)->getTestMethods();
+        $methods = (new MethodRetriever($class))->getTestMethods();
         $test_case = new HackTestCase($classname, $methods);
+        /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
         $errors[$classname] = await $test_case->runAsync($callback);
         $num_tests += $test_case->getNumTests();
       }
@@ -44,10 +45,10 @@ abstract final class HackTestRunner {
         $num_error++;
         if (Str\contains($test_params, '.')) {
           list($method, $num, $data) = Str\split($test_params, '.');
-          $verbose .= "\n\n$num_error) $class::$method".
+          $verbose .= "\n\n".$num_error.") ".$class."::".$method.
           " with data set #$num $data\n";
         } else {
-          $verbose .= "\n\n$num_error) $class::$test_params\n";
+          $verbose .= "\n\n".$num_error.") ".$class."::".$test_params."\n";
         }
         if ($exception instanceof SkippedTestException) {
           $num_skipped++;
