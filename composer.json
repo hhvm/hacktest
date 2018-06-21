@@ -16,6 +16,7 @@
   "require": {
     "hhvm": "^3.27.0",
     "hhvm/hhvm-autoload": "^1.6",
+    "hhvm/hsl": "^3.26",
     "facebook/definition-finder": "^1.7",
     "facebook/hh-clilib": "^1.0",
     "hhvm/hh-apidoc": "dev-master",

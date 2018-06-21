@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1a53ee5b992a137877550dbc8fd9e275",
+    "content-hash": "5bce5892eddd7fc353a68da069ffce04",
     "packages": [
         {
             "name": "facebook/definition-finder",
@@ -96,16 +96,16 @@
         },
         {
             "name": "facebook/hh-clilib",
-            "version": "v1.1.1",
+            "version": "v1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hhvm/hh-clilib.git",
-                "reference": "b8ac1045c4333bca3444a454d7f0297f82c2af9f"
+                "reference": "2772c82a8f5fc715d5a2fbe801563f36fdda9943"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/hh-clilib/zipball/b8ac1045c4333bca3444a454d7f0297f82c2af9f",
-                "reference": "b8ac1045c4333bca3444a454d7f0297f82c2af9f",
+                "url": "https://api.github.com/repos/hhvm/hh-clilib/zipball/2772c82a8f5fc715d5a2fbe801563f36fdda9943",
+                "reference": "2772c82a8f5fc715d5a2fbe801563f36fdda9943",
                 "shasum": ""
             },
             "require": {
@@ -123,7 +123,7 @@
             "license": [
                 "MIT"
             ],
-            "time": "2018-06-15T23:05:53+00:00"
+            "time": "2018-06-20T03:25:12+00:00"
         },
         {
             "name": "fredemmott/hack-error-suppressor",
@@ -168,12 +168,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:hhvm/hh-apidoc.git",
-                "reference": "4f3a635392a9997588f747f07f08091e1173f706"
+                "reference": "602d035884e890ef20c3c885eab91cf7e92ddd4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/hh-apidoc/zipball/4f3a635392a9997588f747f07f08091e1173f706",
-                "reference": "4f3a635392a9997588f747f07f08091e1173f706",
+                "url": "https://api.github.com/repos/hhvm/hh-apidoc/zipball/602d035884e890ef20c3c885eab91cf7e92ddd4a",
+                "reference": "602d035884e890ef20c3c885eab91cf7e92ddd4a",
                 "shasum": ""
             },
             "require": {
@@ -191,7 +191,7 @@
                 "source": "https://github.com/hhvm/hh-apidoc/tree/master",
                 "issues": "https://github.com/hhvm/hh-apidoc/issues"
             },
-            "time": "2018-06-18T17:37:46+00:00"
+            "time": "2018-06-20T23:26:47+00:00"
         },
         {
             "name": "hhvm/hhast",
