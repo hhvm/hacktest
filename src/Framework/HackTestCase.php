@@ -24,8 +24,8 @@ class HackTestCase {
   ) {
   }
 
-  public async function runAsync(
-    (function(string): void) $writeProgress,
+  public final async function runAsync(
+    (function(string): void) $write_progress,
   ): Awaitable<dict<string, \Exception>> {
     $errors = dict[];
     foreach ($this->methods as $method) {
@@ -48,12 +48,12 @@ class HackTestCase {
           } else {
             $instance->$method_name();
           }
-          $writeProgress('.');
+          $write_progress('.');
         } catch (\Exception $e) {
           if ($e instanceof SkippedTestException) {
-            $writeProgress('S');
+            $write_progress('S');
           } else {
-            $writeProgress('F');
+            $write_progress('F');
           }
           $errors[$method_name] = $e;
         }
@@ -88,12 +88,12 @@ class HackTestCase {
             } else {
               \call_user_func_array(array($instance, $method_name), $tuple);
             }
-            $writeProgress('.');
+            $write_progress('.');
           } catch (\Exception $e) {
             if ($e instanceof SkippedTestException) {
-              $writeProgress('S');
+              $write_progress('S');
             } else {
-              $writeProgress('F');
+              $write_progress('F');
             }
             $errors[$method_name.'.'.$tuple_num.'.'.$data] = $e;
           }
@@ -104,11 +104,11 @@ class HackTestCase {
     return $errors;
   }
 
-  public function getNumTests(): int {
+  public final function getNumTests(): int {
     return $this->numTests;
   }
 
-  public function markTestSkipped(string $message): void {
+  public final function markTestSkipped(string $message): void {
     throw new SkippedTestException($message);
   }
 

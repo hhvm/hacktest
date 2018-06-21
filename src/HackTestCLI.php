@@ -43,11 +43,10 @@ final class HackTestCLI extends CLIWithRequiredArguments {
     $this->getStdout()
       ->write("HackTest 1.0 by Wilson Lin and contributors.\n\n");
 
-    $callback = inst_meth($this, 'writeProgress');
     $output = await HackTestRunner::runAsync(
       $this->getArguments(),
       $this->verbose,
-      $callback,
+      inst_meth($this, 'writeProgress'),
     );
     $output_chunks = Str\chunk($output, 64);
     foreach ($output_chunks as $chunk) {
