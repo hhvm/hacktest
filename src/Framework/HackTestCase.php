@@ -19,8 +19,7 @@ class HackTestCase {
   private vec<\ReflectionMethod> $methods = vec[];
 
   public final function __construct() {
-    $this->methods = vec(new \ReflectionClass($this)->getMethods());
-    $this->methods = $this->methods
+    $this->methods = vec((new \ReflectionClass($this))->getMethods())
       |> Vec\filter($$, $method ==> $method->class === static::class)
       |> Vec\filter($$, $method ==> Str\starts_with($method->getName(), 'test'));
   }
@@ -37,17 +36,14 @@ class HackTestCase {
         $block = new DocBlock((string) $doc);
         $providers = $block->getTagsByName('@dataProvider');
       }
-      $type = Str\replace($method->getReturnTypeText(), 'HH\\', '');
       if (C\is_empty($providers)) {
         $this->numTests++;
         try {
-          if ($type === 'Awaitable<void>') {
+          /* HH_IGNORE_ERROR[2011] this is unsafe */
+          $res = $this->$method_name();
+          if ($res instanceof Awaitable) {
             /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-            /* HH_IGNORE_ERROR[2011] this is unsafe */
-            await $this->$method_name();
-          } else {
-            /* HH_IGNORE_ERROR[2011] this is unsafe */
-            $this->$method_name();
+            await $res;
           }
           $write_progress('.');
         } catch (\Exception $e) {
@@ -84,13 +80,11 @@ class HackTestCase {
           }
           $tuple_num++;
           try {
-            if ($type === 'Awaitable<void>') {
+            /* HH_IGNORE_ERROR[2011] this is unsafe */
+            $res = $this->$method_name(...$tuple);
+            if ($res instanceof Awaitable) {
               /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-              /* HH_IGNORE_ERROR[2011] this is unsafe */
-              await $this->$method_name(...$tuple);
-            } else {
-              /* HH_IGNORE_ERROR[2011] this is unsafe */
-              $this->$method_name(...$tuple);
+              await $res;
             }
             $write_progress('.');
           } catch (\Exception $e) {
