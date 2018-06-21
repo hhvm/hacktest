@@ -11,15 +11,21 @@
 namespace Facebook\HackTest;
 
 use type Facebook\DefinitionFinder\FileParser;
-use namespace HH\Lib\{C, Str};
+use namespace HH\Lib\Str;
 
 abstract final class HackTestRunner {
 
-  public static async function runAsync(vec<string> $paths, bool $verbosity): Awaitable<string> {
+  public static async function runAsync(
+    vec<string> $paths,
+    bool $verbosity,
+    (function(string): void) $callback,
+  ): Awaitable<string> {
     $errors = dict[];
     $output = '';
+    $verbose = '';
     $num_tests = 0;
-    $num_errors = 0;
+    $num_error = 0;
+    $num_skipped = 0;
 
     foreach ($paths as $path) {
       $file_retriever = new FileRetriever($path);
@@ -29,36 +35,43 @@ abstract final class HackTestRunner {
         $methods = (new MethodRetriever($class))->getTestMethods();
         $test_case = new HackTestCase($classname, $methods);
         /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-        $errors[$classname] = await $test_case->runAsync();
+        $errors[$classname] = await $test_case->runAsync($callback);
         $num_tests += $test_case->getNumTests();
       }
     }
 
     foreach ($errors as $class => $result) {
-      foreach ($result as $method => $exception) {
-        $num_errors++;
-        if ($verbosity) {
-          if (Str\contains($method, '.')) {
-            $test_info = Str\split($method, '.');
-            $method = $test_info[0];
-            $dataset_num = $test_info[1];
-            $output .= "\n\n".$num_errors.") ".$class."::".$method.
-              " with data set #".$dataset_num."\n".$exception;
-          } else {
-            $output .= "\n\n".$num_errors.") ".$class."::".$method."\n".$exception;
-          }
+      foreach ($result as $test_params => $exception) {
+        $num_error++;
+        if (Str\contains($test_params, '.')) {
+          list($method, $num, $data) = Str\split($test_params, '.');
+          $verbose .= "\n\n".$num_error.") ".$class."::".$method.
+          " with data set #$num $data\n";
+        } else {
+          $verbose .= "\n\n".$num_error.") ".$class."::".$test_params."\n";
+        }
+        if ($exception instanceof SkippedTestException) {
+          $num_skipped++;
+          $verbose .= 'Skipped: '.$exception->getMessage();
+        } else {
+          $verbose .= $exception->__toString();
         }
       }
     }
 
-    $output .=
-      "\n\nSummary: ".
+    if ($verbosity) {
+      $output .= $verbose;
+    }
+
+    $output .= "\n\nSummary: ".
       $num_tests.
       " test(s), ".
-      ($num_tests - $num_errors).
+      ($num_tests - $num_error).
       " passed, ".
-      $num_errors.
-      " failed.\n";
+      ($num_error - $num_skipped).
+      " failed, ".
+      $num_skipped.
+      " skipped.\n";
 
     return $output;
   }

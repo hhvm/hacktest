@@ -24,7 +24,9 @@ class HackTestCase {
   ) {
   }
 
-  public async function runAsync(): Awaitable<dict<string, \Exception>> {
+  public final async function runAsync(
+    (function(string): void) $write_progress,
+  ): Awaitable<dict<string, \Exception>> {
     $errors = dict[];
     foreach ($this->methods as $method) {
       $method_name = $method->getName();
@@ -46,7 +48,13 @@ class HackTestCase {
           } else {
             $instance->$method_name();
           }
+          $write_progress('.');
         } catch (\Exception $e) {
+          if ($e instanceof SkippedTestException) {
+            $write_progress('S');
+          } else {
+            $write_progress('F');
+          }
           $errors[$method_name] = $e;
         }
       } else if (C\count($providers) > 1) {
@@ -59,6 +67,19 @@ class HackTestCase {
         $this->numTests += C\count($tuples);
         $tuple_num = 0;
         foreach ($tuples as $tuple) {
+          $data = '';
+          if (C\count($tuple) > 1) {
+            $data .= '(';
+            foreach ($tuple as $arg) {
+              $data .= \var_export($arg, true);
+              if ($arg !== C\lastx($tuple)) {
+                $data .= ', ';
+              }
+            }
+            $data .= ')';
+          } else {
+            $data = \var_export(C\onlyx($tuple), true);
+          }
           $tuple_num++;
           try {
             if ($type === 'Awaitable') {
@@ -67,9 +88,14 @@ class HackTestCase {
             } else {
               \call_user_func_array(array($instance, $method_name), $tuple);
             }
+            $write_progress('.');
           } catch (\Exception $e) {
-            // TODO: add data set (e.g. var_export) to test result output?
-            $errors[$method_name.'.'.$tuple_num] = $e;
+            if ($e instanceof SkippedTestException) {
+              $write_progress('S');
+            } else {
+              $write_progress('F');
+            }
+            $errors[$method_name.'.'.$tuple_num.'.'.$data] = $e;
           }
         }
       }
@@ -78,8 +104,12 @@ class HackTestCase {
     return $errors;
   }
 
-  public function getNumTests(): int {
+  public final function getNumTests(): int {
     return $this->numTests;
+  }
+
+  public final function markTestSkipped(string $message): void {
+    throw new SkippedTestException($message);
   }
 
 }

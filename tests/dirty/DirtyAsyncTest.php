@@ -15,11 +15,11 @@ use type Facebook\HackTest\HackTestCase;
 /**
  * @emails oncall+hack
  */
-final class TupleAsyncTest extends HackTestCase {
+final class DirtyAsyncTest extends HackTestCase {
 
   public async function testWithNonNullableTypesAsync(): Awaitable<void> {
     $t = await Tuple\from_async(async { return 1; }, async { return 'foo'; });
-    expect($t)->toBeSame(tuple(1, 'foo'));
+    expect($t)->toNotBeSame(tuple(1, 'foo'));
     list($a, $b) = $t;
     expect(
       ((int $x, string $y) ==> tuple($x, $y))($a, $b)
@@ -32,7 +32,7 @@ final class TupleAsyncTest extends HackTestCase {
     list($a, $b, $c) = $t;
     expect(
       ((int $x, ?int $y, ?int $z) ==> tuple($x, $y, $z))($a, $b, $c)
-    )->toBeSame($t);
+    )->toBeTrue();
   }
 
   public async function testWithNullableTypesAsync(): Awaitable<void> {
@@ -41,6 +41,6 @@ final class TupleAsyncTest extends HackTestCase {
     list($a, $b) = $t;
     expect(
       ((?int $x, ?string $y) ==> tuple($x, $y))($a, $b)
-    )->toBeSame($t);
+    )->toBeNull();
   }
 }

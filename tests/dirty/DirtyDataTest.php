@@ -8,17 +8,17 @@
  *
  */
 
-use namespace HH\Lib\Str;
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\HackTestCase;
+use namespace HH\Lib\Str;
 
 /**
  * @emails oncall+hack
  */
-final class StrCombineTest extends HackTestCase {
+final class DirtyDataTest extends HackTestCase {
 
-  public static function provideJoin(): varray<mixed> {
-    $elements = varray['the', 'quick', 'brown', 'fox', 1];
+  public function provideDirty(): varray<mixed> {
+    $elements = varray['the', 'quicky', 'brown', 'fox', 1];
     return varray[
       tuple($elements),
       tuple(new Vector($elements)),
@@ -31,12 +31,21 @@ final class StrCombineTest extends HackTestCase {
     ];
   }
 
-  /** @dataProvider provideJoin */
-  public function testJoin(
-    Traversable<string> $traversable,
-  ): void {
-    expect(Str\join($traversable, '-'))
-      ->toBeSame('the-quick-brown-fox-1');
+  /** @dataProvider provideDirty */
+  public function testDirty(Traversable<string> $traversable): void {
+    expect(Str\join($traversable, '-'))->toBeSame('the-quick-brown-fox-1');
+  }
+
+  public function provideMultipleArgs(): varray<mixed> {
+    return varray[
+      tuple(1, 2),
+      tuple(2, 1),
+    ];
+  }
+
+  /** @dataProvider provideMultipleArgs */
+  public function testMultipleArgs(int $a, int $b): void {
+    expect($a + $b)->toBeLessThan(3);
   }
 
 }
