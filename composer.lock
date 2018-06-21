@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "7012fb5c85f42b45996767abd10dff62",
@@ -168,12 +168,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:hhvm/hh-apidoc.git",
-                "reference": "602d035884e890ef20c3c885eab91cf7e92ddd4a"
+                "reference": "a4433d524e8dead6f45349a3a4368dde7cdb619f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/hh-apidoc/zipball/602d035884e890ef20c3c885eab91cf7e92ddd4a",
-                "reference": "602d035884e890ef20c3c885eab91cf7e92ddd4a",
+                "url": "https://api.github.com/repos/hhvm/hh-apidoc/zipball/a4433d524e8dead6f45349a3a4368dde7cdb619f",
+                "reference": "a4433d524e8dead6f45349a3a4368dde7cdb619f",
                 "shasum": ""
             },
             "require": {
@@ -191,7 +191,7 @@
                 "source": "https://github.com/hhvm/hh-apidoc/tree/master",
                 "issues": "https://github.com/hhvm/hh-apidoc/issues"
             },
-            "time": "2018-06-20T23:26:47+00:00"
+            "time": "2018-06-21T20:05:13+00:00"
         },
         {
             "name": "hhvm/hhast",

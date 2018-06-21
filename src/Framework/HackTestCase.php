@@ -10,17 +10,19 @@
 
 namespace Facebook\HackTest;
 
-use type Facebook\DefinitionFinder\ScannedMethod;
 use type Facebook\HHAPIDoc\DocBlock\DocBlock;
-use namespace HH\Lib\C;
+use namespace HH\Lib\{C, Vec, Str};
 
 class HackTestCase {
 
   private int $numTests = 0;
+  private vec<\ReflectionMethod> $methods = vec[];
 
-  public final function __construct(
-    private vec<ScannedMethod> $methods = vec[],
-  ) {
+  public final function __construct() {
+    $this->methods = vec(new \ReflectionClass($this)->getMethods());
+    $this->methods = $this->methods
+      |> Vec\filter($$, $method ==> $method->class === static::class)
+      |> Vec\filter($$, $method ==> Str\starts_with($method->getName(), 'test'));
   }
 
   public final async function runAsync(
@@ -32,15 +34,14 @@ class HackTestCase {
       $doc = $method->getDocComment();
       $providers = vec[];
       if ($doc !== null) {
-        $block = new DocBlock($doc);
+        $block = new DocBlock((string) $doc);
         $providers = $block->getTagsByName('@dataProvider');
       }
-      $type = $method->getReturnType()?->getTypeName();
-
+      $type = Str\replace($method->getReturnTypeText(), 'HH\\', '');
       if (C\is_empty($providers)) {
         $this->numTests++;
         try {
-          if ($type === 'Awaitable') {
+          if ($type === 'Awaitable<void>') {
             /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
             /* HH_IGNORE_ERROR[2011] this is unsafe */
             await $this->$method_name();
@@ -83,7 +84,7 @@ class HackTestCase {
           }
           $tuple_num++;
           try {
-            if ($type === 'Awaitable') {
+            if ($type === 'Awaitable<void>') {
               /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
               /* HH_IGNORE_ERROR[2011] this is unsafe */
               await $this->$method_name(...$tuple);
