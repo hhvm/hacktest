@@ -29,7 +29,6 @@ class HackTestCase {
     $errors = dict[];
     foreach ($this->methods as $method) {
       $method_name = $method->getName();
-      $instance = $this;
       $doc = $method->getDocComment();
       $providers = vec[];
       if ($doc !== null) {
@@ -44,10 +43,10 @@ class HackTestCase {
           if ($type === 'Awaitable') {
             /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
             /* HH_IGNORE_ERROR[2011] this is unsafe */
-            await $instance->$method_name();
+            await $this->$method_name();
           } else {
             /* HH_IGNORE_ERROR[2011] this is unsafe */
-            $instance->$method_name();
+            $this->$method_name();
           }
           $write_progress('.');
         } catch (\Exception $e) {
@@ -65,7 +64,7 @@ class HackTestCase {
       } else {
         $provider = C\onlyx($providers);
         /* HH_IGNORE_ERROR[2011] this is unsafe */
-        $tuples = $instance->$provider();
+        $tuples = $this->$provider();
         $this->numTests += C\count($tuples);
         $tuple_num = 0;
         foreach ($tuples as $tuple) {
@@ -87,10 +86,10 @@ class HackTestCase {
             if ($type === 'Awaitable') {
               /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
               /* HH_IGNORE_ERROR[2011] this is unsafe */
-              await $instance->$method_name(...$tuple);
+              await $this->$method_name(...$tuple);
             } else {
               /* HH_IGNORE_ERROR[2011] this is unsafe */
-              $instance->$method_name(...$tuple);
+              $this->$method_name(...$tuple);
             }
             $write_progress('.');
           } catch (\Exception $e) {
