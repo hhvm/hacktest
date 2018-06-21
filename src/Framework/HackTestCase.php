@@ -1,4 +1,4 @@
-<?hh
+<?hh // strict
 /*
  *  Copyright (c) 2018-present, Facebook, Inc.
  *  All rights reserved.
@@ -18,8 +18,7 @@ class HackTestCase {
 
   private int $numTests = 0;
 
-  public function __construct(
-    private string $className = '',
+  public final function __construct(
     private vec<ScannedMethod> $methods = vec[],
   ) {
   }
@@ -30,7 +29,7 @@ class HackTestCase {
     $errors = dict[];
     foreach ($this->methods as $method) {
       $method_name = $method->getName();
-      $instance = new $this->className();
+      $instance = $this;
       $doc = $method->getDocComment();
       $providers = vec[];
       if ($doc !== null) {
@@ -44,8 +43,10 @@ class HackTestCase {
         try {
           if ($type === 'Awaitable') {
             /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
+            /* HH_IGNORE_ERROR[2011] this is unsafe */
             await $instance->$method_name();
           } else {
+            /* HH_IGNORE_ERROR[2011] this is unsafe */
             $instance->$method_name();
           }
           $write_progress('.');
@@ -63,6 +64,7 @@ class HackTestCase {
         );
       } else {
         $provider = C\onlyx($providers);
+        /* HH_IGNORE_ERROR[2011] this is unsafe */
         $tuples = $instance->$provider();
         $this->numTests += C\count($tuples);
         $tuple_num = 0;
@@ -84,9 +86,11 @@ class HackTestCase {
           try {
             if ($type === 'Awaitable') {
               /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-              await \call_user_func_array(array($instance, $method_name), $tuple);
+              /* HH_IGNORE_ERROR[2011] this is unsafe */
+              await $instance->$method_name(...$tuple);
             } else {
-              \call_user_func_array(array($instance, $method_name), $tuple);
+              /* HH_IGNORE_ERROR[2011] this is unsafe */
+              $instance->$method_name(...$tuple);
             }
             $write_progress('.');
           } catch (\Exception $e) {
