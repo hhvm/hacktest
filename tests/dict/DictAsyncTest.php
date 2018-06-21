@@ -120,7 +120,7 @@ final class DictAsyncTest extends PHPUnit_Framework_TestCase {
         },
       );
       expect($actual)->toBeSame(dict[1 => 1, 2 => 2]);
-      expect($run_cnt['value'])->toEqual(2);
+      expect($run_cnt['value'])->toBePHPEqual(2);
     });
   }
 

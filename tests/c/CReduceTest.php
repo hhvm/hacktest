@@ -48,7 +48,7 @@ final class CReduceTest extends PHPUnit_Framework_TestCase {
     Ta $initial,
     Ta $expected,
   ): void {
-    expect(C\reduce($traversable, $accumulator, $initial))->toEqual($expected);
+    expect(C\reduce($traversable, $accumulator, $initial))->toBePHPEqual($expected);
   }
 
   public static function provideTestReduceWithKey(): varray<mixed> {
