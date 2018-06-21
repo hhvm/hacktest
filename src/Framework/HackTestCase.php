@@ -25,7 +25,7 @@ class HackTestCase {
   }
 
   public final async function runAsync(
-    (function(string): void) $write_progress,
+    (function(TestResult): void) $write_progress,
   ): Awaitable<dict<string, \Exception>> {
     $errors = dict[];
     foreach ($this->methods as $method) {
@@ -45,12 +45,12 @@ class HackTestCase {
             /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
             await $res;
           }
-          $write_progress('.');
+          $write_progress(TestResult::PASSED);
         } catch (\Exception $e) {
           if ($e instanceof SkippedTestException) {
-            $write_progress('S');
+            $write_progress(TestResult::SKIPPED);
           } else {
-            $write_progress('F');
+            $write_progress(TestResult::FAILED);
           }
           $errors[$method_name] = $e;
         }
@@ -86,12 +86,12 @@ class HackTestCase {
               /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
               await $res;
             }
-            $write_progress('.');
+            $write_progress(TestResult::PASSED);
           } catch (\Exception $e) {
             if ($e instanceof SkippedTestException) {
-              $write_progress('S');
+              $write_progress(TestResult::SKIPPED);
             } else {
-              $write_progress('F');
+              $write_progress(TestResult::FAILED);
             }
             $errors[$method_name.'.'.$tuple_num.'.'.$data] = $e;
           }
