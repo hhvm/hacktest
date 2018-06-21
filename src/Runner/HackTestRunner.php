@@ -24,9 +24,9 @@ abstract final class HackTestRunner {
     foreach ($paths as $path) {
       $file_retriever = new FileRetriever($path);
       foreach ($file_retriever->getTestFiles() as $file) {
-        $classname = new ClassRetriever($file)->getTestClassName();
+        $classname = (new ClassRetriever($file))->getTestClassName();
         $class = $file->getClass($classname);
-        $methods = new MethodRetriever($class)->getTestMethods();
+        $methods = (new MethodRetriever($class))->getTestMethods();
         $test_case = new HackTestCase($classname, $methods);
         $errors[$classname] = await $test_case->runAsync();
         $num_tests += $test_case->getNumTests();
