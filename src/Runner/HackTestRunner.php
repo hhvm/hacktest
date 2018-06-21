@@ -31,9 +31,7 @@ abstract final class HackTestRunner {
       $file_retriever = new FileRetriever($path);
       foreach ($file_retriever->getTestFiles() as $file) {
         $classname = (new ClassRetriever($file))->getTestClassName();
-        $class = $file->getClass($classname);
-        $methods = (new MethodRetriever($class))->getTestMethods();
-        $test_case = new $classname($methods);
+        $test_case = new $classname();
         /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
         $errors[$classname] = await $test_case->runAsync($callback);
         $num_tests += $test_case->getNumTests();
