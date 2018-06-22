@@ -54,13 +54,25 @@ final class HackTestCLI extends CLIWithRequiredArguments {
       $this->getStdout()->write($chunk);
     }
 
-    return (int) ($this->exit);
+    return $this->exit;
   }
 
   public function writeProgress(TestResult $progress): void {
     if ($progress === TestResult::FAILED) {
       $this->exit = ExitCode::ERROR;
     }
-    $this->getStdout()->write((string) $progress);
+    $status = '';
+    switch ($progress) {
+      case TestResult::PASSED:
+        $status = '.';
+        break;
+      case TestResult::SKIPPED:
+        $status = 'S';
+        break;
+      case TestResult::FAILED:
+        $status = 'F';
+        break;
+    }
+    $this->getStdout()->write($status);
   }
 }

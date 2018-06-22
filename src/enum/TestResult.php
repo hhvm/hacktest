@@ -2,8 +2,8 @@
 
 namespace Facebook\HackTest;
 
-enum TestResult: string {
-  PASSED = '.';
-  FAILED = 'F';
-  SKIPPED = 'S';
+enum TestResult: int {
+  PASSED = 0;
+  FAILED = 1;
+  SKIPPED = 2;
 }

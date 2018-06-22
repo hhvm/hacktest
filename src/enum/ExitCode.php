@@ -2,7 +2,7 @@
 
 namespace Facebook\HackTest;
 
-enum ExitCode: int {
+enum ExitCode: int as int {
   SUCCESS = 0;
   ERROR = 1;
 }
