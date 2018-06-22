@@ -35,7 +35,7 @@ class HackTestCase {
       $doc = $method->getDocComment();
       $providers = vec[];
       if ($doc !== null) {
-        $block = new DocBlock((string) $doc);
+        $block = new DocBlock((string)$doc);
         $providers = $block->getTagsByName('@dataProvider');
       }
       if (C\is_empty($providers)) {
@@ -125,12 +125,10 @@ class HackTestCase {
     (function(TestResult): void) $write_progress,
   ): void {
     $status = TestResult::ERROR;
-    if ($e instanceof \Exception) {
-      if ($e instanceof SkippedTestException) {
-        $status = TestResult::SKIPPED;
-      } else if ($e instanceof \PHPUnit_Framework_ExpectationFailedException) {
-        $status = TestResult::FAILED;
-      }
+    if ($e instanceof SkippedTestException) {
+      $status = TestResult::SKIPPED;
+    } else if ($e instanceof \PHPUnit_Framework_ExpectationFailedException) {
+      $status = TestResult::FAILED;
     }
     $write_progress($status);
   }

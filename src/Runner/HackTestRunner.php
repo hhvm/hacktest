@@ -46,21 +46,28 @@ abstract final class HackTestRunner {
         $num_msg++;
         if (Str\contains($test_params, '.')) {
           list($method, $num, $data) = Str\split($test_params, '.');
-          $verbose .= "\n\n".$num_msg.") ".$class."::".$method.
-          " with data set #".$num." ".$data."\n";
+          $verbose .= Str\format(
+            "\n\n%d) %s::%s with data set #%s %s\n",
+            $num_msg,
+            $class,
+            $method,
+            $num,
+            $data,
+          );
         } else {
-          $verbose .= "\n\n".$num_msg.") ".$class."::".$test_params."\n";
+          $verbose .=
+            Str\format("\n\n%d) %s::%s\n", $num_msg, $class, $test_params);
         }
-        if ($err instanceof \Exception) {
-          if ($err instanceof SkippedTestException) {
-            $num_skipped++;
-            $verbose .= 'Skipped: '.$err->getMessage();
-            continue;
-          } else if ($err instanceof \PHPUnit_Framework_ExpectationFailedException) {
-            $num_failed++;
-          }
+        if ($err instanceof SkippedTestException) {
+          $num_skipped++;
+          $verbose .= 'Skipped: '.$err->getMessage();
+          continue;
+        } else if (
+          $err instanceof \PHPUnit_Framework_ExpectationFailedException
+        ) {
+          $num_failed++;
         }
-        $verbose .= $err->__toString();
+        $verbose .= $err->getMessage()."\n".$err->getTraceAsString();
       }
     }
     if ($verbosity) {
@@ -73,17 +80,14 @@ abstract final class HackTestRunner {
       self::$exit = ExitCode::FAILURE;
     }
 
-    $output .= "\n\nSummary: ".
-      $num_tests.
-      " test(s), ".
-      ($num_tests - $num_msg).
-      " passed, ".
-      ($num_failed).
-      " failed, ".
-      $num_skipped.
-      " skipped, ".
-      $num_errors.
-      " error(s).\n";
+    $output .= Str\format(
+      "\n\nSummary: %d test(s), %d passed, %d failed, %d skipped, %d error(s).\n",
+      $num_tests,
+      ($num_tests - $num_msg),
+      $num_failed,
+      $num_skipped,
+      $num_errors,
+    );
 
     return $output;
   }
