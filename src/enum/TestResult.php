@@ -5,5 +5,6 @@ namespace Facebook\HackTest;
 enum TestResult: int {
   PASSED = 0;
   FAILED = 1;
-  SKIPPED = 2;
+  ERROR = 2;
+  SKIPPED = 3;
 }

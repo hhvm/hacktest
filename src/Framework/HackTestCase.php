@@ -28,14 +28,14 @@ class HackTestCase {
 
   public final async function runAsync(
     (function(TestResult): void) $write_progress,
-  ): Awaitable<dict<string, \Exception>> {
+  ): Awaitable<dict<string, \Throwable>> {
     $errors = dict[];
     foreach ($this->methods as $method) {
       $method_name = $method->getName();
       $doc = $method->getDocComment();
       $providers = vec[];
       if ($doc !== null) {
-        $block = new DocBlock((string) $doc);
+        $block = new DocBlock((string)$doc);
         $providers = $block->getTagsByName('@dataProvider');
       }
       if (C\is_empty($providers)) {
@@ -48,12 +48,8 @@ class HackTestCase {
             await $res;
           }
           $write_progress(TestResult::PASSED);
-        } catch (\Exception $e) {
-          if ($e instanceof SkippedTestException) {
-            $write_progress(TestResult::SKIPPED);
-          } else {
-            $write_progress(TestResult::FAILED);
-          }
+        } catch (\Throwable $e) {
+          $this->writeError($e, $write_progress);
           $errors[$method_name] = $e;
         }
       } else if (C\count($providers) > 1) {
@@ -89,12 +85,8 @@ class HackTestCase {
               await $res;
             }
             $write_progress(TestResult::PASSED);
-          } catch (\Exception $e) {
-            if ($e instanceof SkippedTestException) {
-              $write_progress(TestResult::SKIPPED);
-            } else {
-              $write_progress(TestResult::FAILED);
-            }
+          } catch (\Throwable $e) {
+            $this->writeError($e, $write_progress);
             $errors[$method_name.'.'.$tuple_num.'.'.$data] = $e;
           }
         }
@@ -126,6 +118,19 @@ class HackTestCase {
     }
 
     return $methods;
+  }
+
+  public final function writeError(
+    \Throwable $e,
+    (function(TestResult): void) $write_progress,
+  ): void {
+    $status = TestResult::ERROR;
+    if ($e instanceof SkippedTestException) {
+      $status = TestResult::SKIPPED;
+    } else if ($e instanceof \PHPUnit_Framework_ExpectationFailedException) {
+      $status = TestResult::FAILED;
+    }
+    $write_progress($status);
   }
 
   public final function getNumTests(): int {
