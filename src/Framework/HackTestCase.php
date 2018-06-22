@@ -20,8 +20,8 @@ class HackTestCase {
 
   public final function __construct() {
     $this->methods = Vec\filter(
-      vec((new \ReflectionClass($this))->getMethods()),
-      $method ==> $method->class === static::class,
+      (new \ReflectionClass($this))->getMethods(),
+      $method ==> $method->class !== self::class,
     );
     $this->methods = $this->getTestMethods();
   }
@@ -107,7 +107,7 @@ class HackTestCase {
   public final function getTestMethods(): vec<\ReflectionMethod> {
     $methods = vec[];
     foreach ($this->methods as $method) {
-      if ($method->isPublic()) {
+      if ($method->isPublic() && !$method->isStatic()) {
         $method_name = $method->getName();
         if (Str\starts_with($method_name, 'test')) {
           $type = Str\replace($method->getReturnTypeText(), 'HH\\', '');
