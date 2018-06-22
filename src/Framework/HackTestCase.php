@@ -19,9 +19,11 @@ class HackTestCase {
   private vec<\ReflectionMethod> $methods = vec[];
 
   public final function __construct() {
-    $this->methods = vec((new \ReflectionClass($this))->getMethods())
-      |> Vec\filter($$, $method ==> $method->class === static::class)
-      |> Vec\filter($$, $method ==> Str\starts_with($method->getName(), 'test'));
+    $this->methods = Vec\filter(
+      vec((new \ReflectionClass($this))->getMethods()),
+      $method ==> $method->class === static::class,
+    );
+    $this->methods = $this->getTestMethods();
   }
 
   public final async function runAsync(
@@ -100,6 +102,30 @@ class HackTestCase {
     }
 
     return $errors;
+  }
+
+  public final function getTestMethods(): vec<\ReflectionMethod> {
+    $methods = vec[];
+    foreach ($this->methods as $method) {
+      if ($method->isPublic()) {
+        $method_name = $method->getName();
+        if (Str\starts_with($method_name, 'test')) {
+          $type = Str\replace($method->getReturnTypeText(), 'HH\\', '');
+          if ($type !== 'void' && $type !== 'Awaitable<void>') {
+            throw new InvalidTestMethodException(
+              'Test methods must return void or Awaitable<void> (for async methods)',
+            );
+          }
+          $methods[] = $method;
+        } else if (!Str\starts_with($method_name, 'provide')) {
+          throw new InvalidTestMethodException(
+            'Only test methods and data providers can be public',
+          );
+        }
+      }
+    }
+
+    return $methods;
   }
 
   public final function getNumTests(): int {
