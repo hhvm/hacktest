@@ -18,7 +18,7 @@ abstract final class HackTestRunner {
   public static async function runAsync(
     vec<string> $paths,
     bool $verbosity,
-    (function(string): void) $callback,
+    (function(TestResult): void) $callback,
   ): Awaitable<string> {
     $errors = dict[];
     $output = '';
