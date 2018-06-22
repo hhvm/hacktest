@@ -18,7 +18,6 @@ use namespace HH\Lib\Str;
 final class HackTestCLI extends CLIWithRequiredArguments {
 
   private bool $verbose = false;
-  private ExitCode $exit = ExitCode::SUCCESS;
 
   <<__Override>>
   public static function getHelpTextForRequiredArguments(): vec<string> {
@@ -54,13 +53,10 @@ final class HackTestCLI extends CLIWithRequiredArguments {
       $this->getStdout()->write($chunk);
     }
 
-    return $this->exit;
+    return HackTestRunner::getExit();
   }
 
   public function writeProgress(TestResult $progress): void {
-    if ($progress === TestResult::FAILED) {
-      $this->exit = ExitCode::ERROR;
-    }
     $status = '';
     switch ($progress) {
       case TestResult::PASSED:
@@ -71,6 +67,9 @@ final class HackTestCLI extends CLIWithRequiredArguments {
         break;
       case TestResult::FAILED:
         $status = 'F';
+        break;
+      case TestResult::ERROR:
+        $status = 'E';
         break;
     }
     $this->getStdout()->write($status);
