@@ -16,9 +16,8 @@ use type Facebook\HackTest\HackTestCase;
 final class DirtyErrorTest extends HackTestCase {
 
   public function testInvariantException(): void {
-    invariant(0 === 1, 'This should appear as an error rather than a test failure');
+    invariant(0 === 1, 'This should count as an error rather than a test failure');
   }
 
-  public function testArgumentCountError(int $bad_arg): void {
-  }
+  public function testArgumentCountError(int $bad_arg): void {}
 }

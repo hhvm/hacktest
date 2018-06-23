@@ -48,4 +48,13 @@ final class DataProviderTest extends HackTestCase {
     expect($a + $b)->toBeSame(3);
   }
 
+  public function provideSkip(): void {
+    $this->markTestSkipped('This test depends on a data provider that is not ready yet.');
+  }
+
+  /** @dataProvider provideSkip */
+  public function testProviderSkip(int $a): void {}
+
+  /** @dataProvider provideSkip */
+  public function testProviderSkipDup(int $a): void {}
 }
