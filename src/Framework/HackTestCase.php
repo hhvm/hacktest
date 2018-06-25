@@ -69,9 +69,11 @@ class HackTestCase {
       $tuple_num = 0;
       foreach ($tuples as $tuple) {
         $tuple_num++;
-        $key = \implode(
-          '.',
-          array($method_name, $tuple_num, $this->prettyFormat($tuple)),
+        $key = Str\format(
+          '%s.%d.%s',
+          $method_name,
+          $tuple_num,
+          $this->prettyFormat($tuple),
         );
         /* HH_IGNORE_ERROR[2011] this is unsafe */
         $to_run[$key] = () ==> $this->$method_name(...$tuple);
