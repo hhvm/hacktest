@@ -45,13 +45,13 @@ abstract final class HackTestRunner {
       foreach ($result as $test_params => $err) {
         $num_msg++;
         if (Str\contains($test_params, '.')) {
-          list($method, $num, $data) = Str\split($test_params, '.');
+          list($method, $tuple_num, $data) = Str\split($test_params, '.');
           $verbose .= Str\format(
             "\n\n%d) %s::%s with data set #%s %s\n",
             $num_msg,
             $class,
             $method,
-            $num,
+            $tuple_num,
             $data,
           );
         } else {
@@ -63,7 +63,8 @@ abstract final class HackTestRunner {
           $verbose .= 'Skipped: '.$err->getMessage();
           continue;
         } else if (
-          $err instanceof \PHPUnit_Framework_ExpectationFailedException
+          \is_a($err, 'PHPUnit\\Framework\\ExpectationFailedException', true) ||
+          \is_a($err, 'PHPUnit_Framework_ExpectationFailedException', true)
         ) {
           $num_failed++;
         }

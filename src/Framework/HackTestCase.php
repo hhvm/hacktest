@@ -30,6 +30,7 @@ class HackTestCase {
     (function(TestResult): void) $write_progress,
   ): Awaitable<dict<string, \Throwable>> {
     $errors = dict[];
+    $to_run = dict[];
     foreach ($this->methods as $method) {
       $method_name = $method->getName();
       $doc = $method->getDocComment();
@@ -40,68 +41,56 @@ class HackTestCase {
       }
       if (C\is_empty($providers)) {
         $this->numTests++;
-        try {
-          /* HH_IGNORE_ERROR[2011] this is unsafe */
-          $res = $this->$method_name();
-          if ($res instanceof Awaitable) {
-            /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-            await $res;
-          }
-          $write_progress(TestResult::PASSED);
-        } catch (\Throwable $e) {
-          $this->writeError($e, $write_progress);
-          $errors[$method_name] = $e;
-        }
-      } else if (C\count($providers) > 1) {
+        /* HH_IGNORE_ERROR[2011] this is unsafe */
+        $to_run[$method_name] = () ==> $this->$method_name();
+        continue;
+      }
+      if (C\count($providers) > 1) {
         throw new InvalidTestMethodException(
           'There can only be one data provider per test method',
         );
-      } else {
-        $provider = C\onlyx($providers);
-        try {
-          /* HH_IGNORE_ERROR[2011] this is unsafe */
-          $tuples = $this->$provider();
-          if (C\is_empty($tuples)) {
-            throw new InvalidDataProviderException(
-              'This test depends on a provider that returns no data.',
-            );
-          }
-        } catch (\Throwable $e) {
-          $this->numTests++;
-          $this->writeError($e, $write_progress);
-          $errors[$method_name] = $e;
-          continue;
+      }
+      $provider = C\onlyx($providers);
+      try {
+        /* HH_IGNORE_ERROR[2011] this is unsafe */
+        $tuples = $this->$provider();
+        if (C\is_empty($tuples)) {
+          throw new InvalidDataProviderException(
+            'This test depends on a provider that returns no data.',
+          );
         }
-        $this->numTests += C\count($tuples);
-        $tuple_num = 0;
-        foreach ($tuples as $tuple) {
-          $data = '';
-          if (C\count($tuple) > 1) {
-            $data .= '(';
-            foreach ($tuple as $arg) {
-              $data .= \var_export($arg, true);
-              if ($arg !== C\lastx($tuple)) {
-                $data .= ', ';
-              }
-            }
-            $data .= ')';
-          } else {
-            $data = \var_export(C\onlyx($tuple), true);
-          }
-          $tuple_num++;
-          try {
-            /* HH_IGNORE_ERROR[2011] this is unsafe */
-            $res = $this->$method_name(...$tuple);
-            if ($res instanceof Awaitable) {
-              /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-              await $res;
-            }
-            $write_progress(TestResult::PASSED);
-          } catch (\Throwable $e) {
-            $this->writeError($e, $write_progress);
-            $errors[$method_name.'.'.$tuple_num.'.'.$data] = $e;
-          }
+      } catch (\Throwable $e) {
+        $this->numTests++;
+        $this->writeError($e, $write_progress);
+        $errors[$method_name] = $e;
+        continue;
+      }
+      $this->numTests += C\count($tuples);
+      $tuple_num = 0;
+      foreach ($tuples as $tuple) {
+        $tuple_num++;
+        $key = Str\format(
+          '%s.%d.%s',
+          $method_name,
+          $tuple_num,
+          $this->prettyFormat($tuple),
+        );
+        /* HH_IGNORE_ERROR[2011] this is unsafe */
+        $to_run[$key] = () ==> $this->$method_name(...$tuple);
+      }
+    }
+
+    foreach ($to_run as $key => $runnable) {
+      try {
+        $res = $runnable();
+        if ($res instanceof Awaitable) {
+          /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
+          await $res;
         }
+        $write_progress(TestResult::PASSED);
+      } catch (\Throwable $e) {
+        $errors[$key] = $e;
+        $this->writeError($e, $write_progress);
       }
     }
 
@@ -139,10 +128,31 @@ class HackTestCase {
     $status = TestResult::ERROR;
     if ($e instanceof SkippedTestException) {
       $status = TestResult::SKIPPED;
-    } else if ($e instanceof \PHPUnit_Framework_ExpectationFailedException) {
+    } else if (
+      \is_a($e, 'PHPUnit\\Framework\\ExpectationFailedException', true) ||
+      \is_a($e, 'PHPUnit_Framework_ExpectationFailedException', true)
+    ) {
       $status = TestResult::FAILED;
     }
     $write_progress($status);
+  }
+
+  public final function prettyFormat(Container<mixed> $tuple): string {
+    $data = '';
+    if (C\count($tuple) > 1) {
+      $data .= '(';
+      foreach ($tuple as $arg) {
+        $data .= \var_export($arg, true);
+        if ($arg !== C\lastx($tuple)) {
+          $data .= ', ';
+        }
+      }
+      $data .= ')';
+    } else {
+      $data = \var_export(C\onlyx($tuple), true);
+    }
+
+    return $data;
   }
 
   public final function getNumTests(): int {
