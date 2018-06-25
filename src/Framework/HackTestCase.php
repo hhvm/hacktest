@@ -58,8 +58,20 @@ class HackTestCase {
         );
       } else {
         $provider = C\onlyx($providers);
-        /* HH_IGNORE_ERROR[2011] this is unsafe */
-        $tuples = $this->$provider();
+        try {
+          /* HH_IGNORE_ERROR[2011] this is unsafe */
+          $tuples = $this->$provider();
+          if (C\is_empty($tuples)) {
+            throw new InvalidDataProviderException(
+              'This test depends on a provider that returns no data.',
+            );
+          }
+        } catch (\Throwable $e) {
+          $this->numTests++;
+          $this->writeError($e, $write_progress);
+          $errors[$method_name] = $e;
+          continue;
+        }
         $this->numTests += C\count($tuples);
         $tuple_num = 0;
         foreach ($tuples as $tuple) {

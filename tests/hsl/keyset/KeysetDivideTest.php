@@ -17,8 +17,8 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class KeysetDivideTest extends HackTestCase {
 
-  public static function providePartition(): varray<mixed> {
-    return varray[
+  public static function providePartition(): vec<mixed> {
+    return vec[
       tuple(
         range(1, 10),
         $n ==> $n % 2 === 0,

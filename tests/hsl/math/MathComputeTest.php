@@ -22,8 +22,8 @@ use function md5 as non_crypto_md5;
  * @emails oncall+hack
  */
 final class MathComputeTest extends HackTestCase {
-  public static function provideTestAbs(): varray<mixed> {
-    return varray[
+  public static function provideTestAbs(): vec<mixed> {
+    return vec[
       tuple(-1, 1),
       tuple(1, 1),
       tuple(-7.3, 7.3),
@@ -38,8 +38,8 @@ final class MathComputeTest extends HackTestCase {
     expect(Math\abs($number))->toBeSame($expected);
   }
 
-  public static function provideTestBaseConvertBijection(): varray<mixed> {
-    return varray[
+  public static function provideTestBaseConvertBijection(): vec<mixed> {
+    return vec[
       tuple('a', 16, 10, '10'),
       tuple('a', 16, 2, '1010'),
       tuple('50f', 16, 36, 'zz'),
@@ -113,8 +113,8 @@ final class MathComputeTest extends HackTestCase {
     }
   }
 
-  public static function provideTestBaseConvertOneWay(): varray<mixed> {
-    return varray[
+  public static function provideTestBaseConvertOneWay(): vec<mixed> {
+    return vec[
       tuple('00000a', 16, 10, '10'),
       tuple('00000a', 16, 2, '1010'),
       tuple('50F', 16, 36, 'zz'),
@@ -171,8 +171,8 @@ final class MathComputeTest extends HackTestCase {
       ->toBeSame($expected);
   }
 
-  public static function provideTestBaseConvertException(): varray<mixed> {
-    return varray[
+  public static function provideTestBaseConvertException(): vec<mixed> {
+    return vec[
       // empty string
       tuple('', 2, 16),
       // invalid base
@@ -194,8 +194,8 @@ final class MathComputeTest extends HackTestCase {
       ->toThrow(InvariantException::class);
   }
 
-  public static function provideTestCeil(): varray<mixed> {
-    return varray[
+  public static function provideTestCeil(): vec<mixed> {
+    return vec[
       tuple(3.5, 4.0),
       tuple(4, 4.0),
       tuple(-3.5, -3.0),
@@ -209,8 +209,8 @@ final class MathComputeTest extends HackTestCase {
     expect(Math\ceil($value))->toBeSame($expected);
   }
 
-  public static function provideTestCos(): varray<mixed> {
-    return varray[
+  public static function provideTestCos(): vec<mixed> {
+    return vec[
       tuple(0.0, 1.0),
       tuple(M_PI_2, -3.4914813388431e-15),
       tuple(-M_PI_2, -3.4914813388431e-15),
@@ -229,8 +229,8 @@ final class MathComputeTest extends HackTestCase {
     expect($actual)->toAlmostEqual($expected);
   }
 
-  public static function provideTestExp(): varray<mixed> {
-    return varray[
+  public static function provideTestExp(): vec<mixed> {
+    return vec[
       tuple(-1.0, 1.0 / M_E),
       tuple(0.0, 1.0),
       tuple(1.0, M_E),
@@ -244,8 +244,8 @@ final class MathComputeTest extends HackTestCase {
     expect($actual)->toAlmostEqual($expected);
   }
 
-  public static function provideTestFloor(): varray<mixed> {
-    return varray[
+  public static function provideTestFloor(): vec<mixed> {
+    return vec[
       tuple(3.5, 3.0),
       tuple(4, 4.0),
       tuple(-3.5, -4.0),
@@ -259,8 +259,8 @@ final class MathComputeTest extends HackTestCase {
     expect(Math\floor($value))->toBeSame($expected);
   }
 
-  public static function provideTestFromBase(): varray<mixed> {
-    return varray[
+  public static function provideTestFromBase(): vec<mixed> {
+    return vec[
       tuple('4d2', 16, 1234),
       tuple('2322', 8, 1234),
       tuple('10011010010', 2, 1234),
@@ -279,8 +279,8 @@ final class MathComputeTest extends HackTestCase {
     expect(Math\from_base($number, $from_base))->toBeSame($expected);
   }
 
-  public static function provideTestFromBaseException(): varray<mixed> {
-    return varray[
+  public static function provideTestFromBaseException(): vec<mixed> {
+    return vec[
       // invalid base
       tuple('1234', 0),
       tuple('1234', -1),
@@ -304,8 +304,8 @@ final class MathComputeTest extends HackTestCase {
       ->toThrow(InvariantException::class);
   }
 
-  public static function provideTestIntDiv(): varray<mixed> {
-    return varray[
+  public static function provideTestIntDiv(): vec<mixed> {
+    return vec[
       tuple(1, 2, 0),
       tuple(2, 1, 2),
       tuple(-1, 2, 0),
@@ -324,8 +324,8 @@ final class MathComputeTest extends HackTestCase {
     expect(Math\int_div($numerator, $denominator))->toBeSame($expected);
   }
 
-  public static function provideTestIntDivException(): varray<mixed> {
-    return varray[
+  public static function provideTestIntDivException(): vec<mixed> {
+    return vec[
       tuple(-1, 0),
       tuple(0, 0),
       tuple(1, 0),
@@ -338,8 +338,8 @@ final class MathComputeTest extends HackTestCase {
       ->toThrow(Math\DivisionByZeroException::class);
   }
 
-  public static function provideTestLog(): varray<mixed> {
-    return varray[
+  public static function provideTestLog(): vec<mixed> {
+    return vec[
       tuple(M_E),
       tuple(10),
       tuple(2),
@@ -354,8 +354,8 @@ final class MathComputeTest extends HackTestCase {
     }
   }
 
-  public static function provideTestLogNoBase(): varray<mixed> {
-    return varray[
+  public static function provideTestLogNoBase(): vec<mixed> {
+    return vec[
       tuple(0.1),
       tuple(3.6),
       tuple(M_E),
@@ -376,8 +376,8 @@ final class MathComputeTest extends HackTestCase {
     expect(() ==> Math\log(3, 1))->toThrow(InvariantException::class);
   }
 
-  public static function provideTestRound(): varray<mixed> {
-    return varray[
+  public static function provideTestRound(): vec<mixed> {
+    return vec[
       tuple(3.5, 0, 4.0),
       tuple(4, 0, 4.0),
       tuple(-3.5, 0, -4.0),
@@ -407,8 +407,8 @@ final class MathComputeTest extends HackTestCase {
     expect(Math\round($value, $precision))->toBeSame($expected);
   }
 
-  public static function provideTestSin(): varray<mixed> {
-    return varray[
+  public static function provideTestSin(): vec<mixed> {
+    return vec[
       tuple(0.0, 0.0),
       tuple(M_PI_2, 1.0),
       tuple(-M_PI_2, -1.0),
@@ -427,8 +427,8 @@ final class MathComputeTest extends HackTestCase {
     expect($actual)->toAlmostEqual($expected);
   }
 
-  public static function provideTestSqrt(): varray<mixed> {
-    return varray[
+  public static function provideTestSqrt(): vec<mixed> {
+    return vec[
       tuple(16.0, 4.0),
       tuple(2, M_SQRT2),
       tuple(3, M_SQRT3),
@@ -447,8 +447,8 @@ final class MathComputeTest extends HackTestCase {
     expect(() ==> Math\sqrt(-1))->toThrow(InvariantException::class);
   }
 
-  public static function provideTestToBase(): varray<mixed> {
-    return varray[
+  public static function provideTestToBase(): vec<mixed> {
+    return vec[
       tuple(1234, 16, '4d2'),
       tuple(1234, 8, '2322'),
       tuple(1234, 2, '10011010010'),
@@ -464,8 +464,8 @@ final class MathComputeTest extends HackTestCase {
     expect(Math\to_base($number, $to_base))->toBeSame($expected);
   }
 
-  public static function provideTestToBaseException(): varray<mixed> {
-    return varray[
+  public static function provideTestToBaseException(): vec<mixed> {
+    return vec[
       tuple(1234, 0),
       tuple(1234, -1),
       tuple(1234, 37),

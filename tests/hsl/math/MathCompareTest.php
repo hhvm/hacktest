@@ -17,8 +17,8 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class MathCompareTest extends HackTestCase {
 
-  public static function provideTestMaxva(): varray<mixed> {
-    return varray[
+  public static function provideTestMaxva(): vec<mixed> {
+    return vec[
       tuple(1, 2, vec[], 2),
       tuple(2, 1, vec[], 2),
       tuple(1.0, 2.0, vec[], 2.0),
@@ -42,8 +42,8 @@ final class MathCompareTest extends HackTestCase {
     expect(Math\maxva($first, $second, ...$rest))->toBeSame($expected);
   }
 
-  public static function provideTestMinva(): varray<mixed> {
-    return varray[
+  public static function provideTestMinva(): vec<mixed> {
+    return vec[
       tuple(1, 2, vec[], 1),
       tuple(2, 1, vec[], 1),
       tuple(1.0, 2.0, vec[], 1.0),

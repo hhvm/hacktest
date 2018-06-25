@@ -17,8 +17,8 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class KeysetOrderTest extends HackTestCase {
 
-  public static function provideSort(): varray<mixed> {
-    return varray[
+  public static function provideSort(): vec<mixed> {
+    return vec[
       tuple(
         vec['the', 'quick', 'brown', 'fox'],
         null,
@@ -30,12 +30,12 @@ final class KeysetOrderTest extends HackTestCase {
         keyset['the', 'fox', 'brown', 'quick'],
       ),
       tuple(
-        varray[8, 6, 7, 5, 3, 0, 9],
+        vec[8, 6, 7, 5, 3, 0, 9],
         null,
         keyset[0, 3, 5, 6, 7, 8, 9],
       ),
       tuple(
-        HackLibTestTraversables::getIterator(varray[8, 6, 7, 5, 3, 0, 9]),
+        HackLibTestTraversables::getIterator(vec[8, 6, 7, 5, 3, 0, 9]),
         null,
         keyset[0, 3, 5, 6, 7, 8, 9],
       ),

@@ -17,26 +17,26 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class VecCombineTest extends HackTestCase {
 
-  public static function provideTestConcat(): varray<mixed> {
-    return varray[
+  public static function provideTestConcat(): vec<mixed> {
+    return vec[
       tuple(
-        varray[],
-        varray[],
+        vec[],
+        vec[],
         vec[],
       ),
       tuple(
         vec[],
-        varray[
+        vec[
           darray[], Vector {}, Map {}, Set {},
         ],
         vec[],
       ),
       tuple(
-        varray['the', 'quick'],
-        varray[
+        vec['the', 'quick'],
+        vec[
           Vector {'brown', 'fox'},
           Map {'jumped' => 'over'},
-          HackLibTestTraversables::getIterator(varray['the', 'lazy', 'dog']),
+          HackLibTestTraversables::getIterator(vec['the', 'lazy', 'dog']),
         ],
         vec['the', 'quick', 'brown', 'fox', 'over', 'the', 'lazy', 'dog'],
       ),

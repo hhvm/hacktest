@@ -17,8 +17,8 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class DictAsyncTest extends HackTestCase {
 
-  public static function provideTestGen(): varray<mixed> {
-    return varray[
+  public static function provideTestGen(): vec<mixed> {
+    return vec[
       tuple(
         Vector {
           async {return 'the';},
@@ -68,8 +68,8 @@ final class DictAsyncTest extends HackTestCase {
     });
   }
 
-  public static function provideTestGenFromKeys(): varray<mixed> {
-    return varray[
+  public static function provideTestGenFromKeys(): vec<mixed> {
+    return vec[
       tuple(
         Vector {'the', 'quick', 'brown', 'fox'},
         async ($word) ==> strlen($word),
@@ -82,7 +82,7 @@ final class DictAsyncTest extends HackTestCase {
       ),
       tuple(
         HackLibTestTraversables::getIterator(
-          varray['the', 'quick', 'brown', 'fox'],
+          vec['the', 'quick', 'brown', 'fox'],
         ),
         async ($word) ==> strlen($word),
         dict[
@@ -125,8 +125,8 @@ final class DictAsyncTest extends HackTestCase {
     });
   }
 
-  public static function provideTestGenFilter(): varray<mixed> {
-    return varray[
+  public static function provideTestGenFilter(): vec<mixed> {
+    return vec[
       tuple(
         darray[
           '2' => 'two',
@@ -179,10 +179,10 @@ final class DictAsyncTest extends HackTestCase {
     });
   }
 
-  public static function provideTestGenMap(): varray<mixed> {
-    return varray[
+  public static function provideTestGenMap(): vec<mixed> {
+    return vec[
       tuple(
-        varray[],
+        vec[],
         $x ==> $x,
         dict[],
       ),
@@ -211,7 +211,7 @@ final class DictAsyncTest extends HackTestCase {
       ),
       tuple(
         HackLibTestTraversables::getIterator(
-          varray['the', 'quick', 'brown', 'fox'],
+          vec['the', 'quick', 'brown', 'fox'],
         ),
         async ($word) ==> strrev($word),
         dict[

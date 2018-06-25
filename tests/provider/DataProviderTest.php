@@ -17,9 +17,9 @@ use namespace HH\Lib\Str;
  */
 final class DataProviderTest extends HackTestCase {
 
-  public function provideSimple(): varray<mixed> {
-    $elements = varray['the', 'quick', 'brown', 'fox', 1];
-    return varray[
+  public function provideSimple(): vec<mixed> {
+    $elements = vec['the', 'quick', 'brown', 'fox', 1];
+    return vec[
       tuple($elements),
       tuple(new Vector($elements)),
       tuple(new Set($elements)),
@@ -36,8 +36,8 @@ final class DataProviderTest extends HackTestCase {
     expect(Str\join($traversable, '-'))->toBeSame('the-quick-brown-fox-1');
   }
 
-  public function provideMultipleArgs(): varray<mixed> {
-    return varray[
+  public function provideMultipleArgs(): vec<mixed> {
+    return vec[
       tuple(1, 2),
       tuple(2, 1),
     ];
@@ -48,4 +48,13 @@ final class DataProviderTest extends HackTestCase {
     expect($a + $b)->toBeSame(3);
   }
 
+  public function provideSkip(): void {
+    $this->markTestSkipped('This test depends on a data provider that is not ready yet.');
+  }
+
+  /** @dataProvider provideSkip */
+  public function testProviderSkip(int $a): void {}
+
+  /** @dataProvider provideSkip */
+  public function testProviderSkipDup(int $a): void {}
 }

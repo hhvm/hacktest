@@ -17,9 +17,9 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class StrCombineTest extends HackTestCase {
 
-  public static function provideJoin(): varray<mixed> {
-    $elements = varray['the', 'quick', 'brown', 'fox', 1];
-    return varray[
+  public static function provideJoin(): vec<mixed> {
+    $elements = vec['the', 'quick', 'brown', 'fox', 1];
+    return vec[
       tuple($elements),
       tuple(new Vector($elements)),
       tuple(new Set($elements)),

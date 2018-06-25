@@ -67,7 +67,7 @@ abstract final class HackTestRunner {
         ) {
           $num_failed++;
         }
-        $verbose .= $err->getMessage()."\n".$err->getTraceAsString();
+        $verbose .= $err->getMessage()."\n\n".$err->getTraceAsString();
       }
     }
     if ($verbosity) {

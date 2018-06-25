@@ -17,10 +17,10 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class MathContainersTest extends HackTestCase {
 
-  public static function provideTestMax(): varray<mixed> {
-    return varray[
+  public static function provideTestMax(): vec<mixed> {
+    return vec[
       tuple(
-        varray[],
+        vec[],
         null,
       ),
       tuple(
@@ -29,7 +29,7 @@ final class MathContainersTest extends HackTestCase {
       ),
       tuple(
         HackLibTestTraversables::getIterator(
-          varray[8, 6, 7, 5, 3, 0, 9],
+          vec[8, 6, 7, 5, 3, 0, 9],
         ),
         9,
       ),
@@ -44,10 +44,10 @@ final class MathContainersTest extends HackTestCase {
     expect(Math\max($numbers))->toBeSame($expected);
   }
 
-  public static function provideTestMaxBy(): varray<mixed> {
-    return varray[
+  public static function provideTestMaxBy(): vec<mixed> {
+    return vec[
       tuple(
-        varray[],
+        vec[],
         $x ==> $x,
         null,
       ),
@@ -58,7 +58,7 @@ final class MathContainersTest extends HackTestCase {
       ),
       tuple(
         HackLibTestTraversables::getIterator(
-          varray['the', 'quick', 'brown', 'fox'],
+          vec['the', 'quick', 'brown', 'fox'],
         ),
         fun('strlen'),
         'brown',
@@ -75,8 +75,8 @@ final class MathContainersTest extends HackTestCase {
     expect(Math\max_by($traversable, $num_func))->toBeSame($expected);
   }
 
-  public static function provideTestMean(): varray<mixed> {
-    return varray[
+  public static function provideTestMean(): vec<mixed> {
+    return vec[
       tuple(vec[1.0, 2.0, 3, 4], 2.5),
       tuple(vec[1, 1, 2], 4 / 3),
       tuple(vec[-1, 1], 0.0),
@@ -97,8 +97,8 @@ final class MathContainersTest extends HackTestCase {
     }
   }
 
-  public static function provideTestMedian(): varray<mixed> {
-    return varray[
+  public static function provideTestMedian(): vec<mixed> {
+    return vec[
       tuple(vec[], null),
       tuple(vec[1], 1.0),
       tuple(vec[1, 2], 1.5),
@@ -121,10 +121,10 @@ final class MathContainersTest extends HackTestCase {
     }
   }
 
-  public static function provideTestMin(): varray<mixed> {
-    return varray[
+  public static function provideTestMin(): vec<mixed> {
+    return vec[
       tuple(
-        varray[],
+        vec[],
         null,
       ),
       tuple(
@@ -133,7 +133,7 @@ final class MathContainersTest extends HackTestCase {
       ),
       tuple(
         HackLibTestTraversables::getIterator(
-          varray[8, 6, 7, 5, 3, 0, 9],
+          vec[8, 6, 7, 5, 3, 0, 9],
         ),
         0,
       ),
@@ -152,10 +152,10 @@ final class MathContainersTest extends HackTestCase {
     expect(Math\min($traversable))->toBeSame($expected);
   }
 
-  public static function provideTestMinBy(): varray<mixed> {
-    return varray[
+  public static function provideTestMinBy(): vec<mixed> {
+    return vec[
       tuple(
-        varray[],
+        vec[],
         $x ==> $x,
         null,
       ),
@@ -166,7 +166,7 @@ final class MathContainersTest extends HackTestCase {
       ),
       tuple(
         HackLibTestTraversables::getIterator(
-          varray['the', 'quick', 'brown', 'fox'],
+          vec['the', 'quick', 'brown', 'fox'],
         ),
         fun('strlen'),
         'fox',
@@ -183,14 +183,14 @@ final class MathContainersTest extends HackTestCase {
     expect(Math\min_by($traversable, $num_func))->toBeSame($expected);
   }
 
-  public static function provideTestSum(): varray<mixed> {
-    return varray[
+  public static function provideTestSum(): vec<mixed> {
+    return vec[
       tuple(
         Vector {},
         0,
       ),
       tuple(
-        varray[1, 2, 1, 1, 3],
+        vec[1, 2, 1, 1, 3],
         8,
       ),
       tuple(
@@ -208,14 +208,14 @@ final class MathContainersTest extends HackTestCase {
     expect(Math\sum($traversable))->toBeSame($expected);
   }
 
-  public static function provideTestSumFloat(): varray<mixed> {
-    return varray[
+  public static function provideTestSumFloat(): vec<mixed> {
+    return vec[
       tuple(
         Vector {},
         0.0,
       ),
       tuple(
-        varray[1, 2.5, 1, 1, 3],
+        vec[1, 2.5, 1, 1, 3],
         8.5,
       ),
       tuple(

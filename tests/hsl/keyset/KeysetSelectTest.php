@@ -17,24 +17,24 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class KeysetSelectTest extends HackTestCase {
 
-  public static function provideTestDiff(): varray<mixed> {
-    return varray[
+  public static function provideTestDiff(): vec<mixed> {
+    return vec[
       tuple(
-        varray[],
-        varray[],
-        varray[],
+        vec[],
+        vec[],
+        vec[],
         keyset[],
       ),
       tuple(
         vec[1, 3, 5, 7],
         dict[],
-        varray[],
+        vec[],
         keyset[1, 3, 5, 7],
       ),
       tuple(
         new Vector(range(0, 20)),
         Set {1, 3, 5},
-        varray[
+        vec[
           Map {'foo' => 7, 'bar' => 9},
           HackLibTestTraversables::getIterator(range(11, 30)),
         ],
@@ -54,8 +54,8 @@ final class KeysetSelectTest extends HackTestCase {
       ->toBeSame($expected);
   }
 
-  public static function provideDrop(): varray<mixed> {
-    return varray[
+  public static function provideDrop(): vec<mixed> {
+    return vec[
       tuple(
         vec[],
         5,
@@ -77,7 +77,7 @@ final class KeysetSelectTest extends HackTestCase {
         keyset[2, 3, 4, 5],
       ),
       tuple(
-        HackLibTestTraversables::getIterator(varray[0, 1, 2, 3, 4, 5, 5, 5]),
+        HackLibTestTraversables::getIterator(vec[0, 1, 2, 3, 4, 5, 5, 5]),
         5,
         keyset[5],
       ),
@@ -93,10 +93,10 @@ final class KeysetSelectTest extends HackTestCase {
     expect(Keyset\drop($traversable, $n))->toBeSame($expected);
   }
 
-  public static function provideTestFilter(): varray<mixed> {
-    return varray[
+  public static function provideTestFilter(): vec<mixed> {
+    return vec[
       tuple(
-        varray[],
+        vec[],
         $x ==> true,
         keyset[],
       ),
@@ -140,14 +140,14 @@ final class KeysetSelectTest extends HackTestCase {
 
   public function testFilterWithoutPredicate(): void {
     expect(
-      Keyset\filter(varray[0, 3, 5, 40, '', '0', 'win!'])
+      Keyset\filter(vec[0, 3, 5, 40, '', '0', 'win!'])
     )->toBeSame(keyset[3, 5, 40, 'win!']);
   }
 
-  public static function provideTestFilterNulls(): varray<mixed> {
-    return varray[
+  public static function provideTestFilterNulls(): vec<mixed> {
+    return vec[
       tuple(
-        varray[null, null, null],
+        vec[null, null, null],
         keyset[],
       ),
       tuple(
@@ -228,8 +228,8 @@ final class KeysetSelectTest extends HackTestCase {
     expect($result)->toBeSame($expected);
   }
 
-  public static function provideTestKeys(): varray<mixed> {
-    return varray[
+  public static function provideTestKeys(): vec<mixed> {
+    return vec[
       tuple(
         Map {},
         keyset[],
@@ -263,18 +263,18 @@ final class KeysetSelectTest extends HackTestCase {
     expect(Keyset\keys($traversable))->toBeSame($expected);
   }
 
-  public static function provideTestIntersect(): varray<mixed> {
-    return varray[
+  public static function provideTestIntersect(): vec<mixed> {
+    return vec[
       tuple(
         range(0, 1000),
-        varray[],
-        varray[],
+        vec[],
+        vec[],
         keyset[],
       ),
       tuple(
         range(1, 10),
         range(1, 5),
-        varray[
+        vec[
           range(2, 6),
           range(3, 7),
         ],
@@ -283,13 +283,13 @@ final class KeysetSelectTest extends HackTestCase {
       tuple(
         Set {},
         range(1, 100),
-        varray[],
+        vec[],
         keyset[],
       ),
       tuple(
         range(1, 1000),
         Map {},
-        varray[
+        vec[
           Set {},
           Vector {},
         ],
@@ -298,15 +298,15 @@ final class KeysetSelectTest extends HackTestCase {
       tuple(
         new Vector(range(1, 100)),
         Map {1 => 2, 39 => 40},
-        varray[
+        vec[
           HackLibTestTraversables::getIterator(range(0, 40)),
         ],
         keyset[2, 40],
       ),
       tuple(
-        varray[3, 4, 4, 5],
-        varray[3, 4],
-        varray[],
+        vec[3, 4, 4, 5],
+        vec[3, 4],
+        vec[],
         keyset[3, 4],
       ),
     ];
@@ -323,8 +323,8 @@ final class KeysetSelectTest extends HackTestCase {
       ->toBeSame($expected);
   }
 
-  public static function provideTake(): varray<mixed> {
-    return varray[
+  public static function provideTake(): vec<mixed> {
+    return vec[
       tuple(
         keyset[],
         5,
@@ -346,7 +346,7 @@ final class KeysetSelectTest extends HackTestCase {
         keyset[0, 1],
       ),
       tuple(
-        HackLibTestTraversables::getIterator(varray[0, 0, 1, 1, 2, 2, 3, 3]),
+        HackLibTestTraversables::getIterator(vec[0, 0, 1, 1, 2, 2, 3, 3]),
         5,
         keyset[0, 1, 2],
       ),

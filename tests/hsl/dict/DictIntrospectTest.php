@@ -17,8 +17,8 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class DictIntrospectTest extends HackTestCase {
 
-  public static function provideTestEqual(): varray<mixed> {
-    return varray[
+  public static function provideTestEqual(): vec<mixed> {
+    return vec[
       tuple(
         dict[1 => 1, 2 => 2, 3 => 3],
         dict[1 => 1, 2 => 2, 3 => 3],
