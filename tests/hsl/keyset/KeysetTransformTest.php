@@ -17,15 +17,15 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class KeysetTransformTest extends HackTestCase {
 
-  public static function provideTestChunk(): varray<mixed> {
-    return varray[
+  public static function provideTestChunk(): vec<mixed> {
+    return vec[
       tuple(
         Map {},
         10,
         vec[],
       ),
       tuple(
-        varray[0, 1, 2, 3, 4],
+        vec[0, 1, 2, 3, 4],
         2,
         vec[
           keyset[0, 1],
@@ -65,16 +65,16 @@ final class KeysetTransformTest extends HackTestCase {
     expect(Keyset\chunk($traversable, $size))->toBeSame($expected);
   }
 
-  public static function provideTestMap(): varray<mixed> {
+  public static function provideTestMap(): vec<mixed> {
     $doubler = $x ==> $x * 2;
-    return varray[
+    return vec[
       tuple(
-        varray[],
+        vec[],
         $doubler,
         keyset[],
       ),
       tuple(
-        varray[1],
+        vec[1],
         $doubler,
         keyset[2],
       ),
@@ -84,12 +84,12 @@ final class KeysetTransformTest extends HackTestCase {
         keyset[20, 22, 24, 26, 28, 30],
       ),
       tuple(
-        varray['a'],
+        vec['a'],
         $x ==> $x. ' buzz',
         keyset['a buzz'],
       ),
       tuple(
-        varray['a', 'bee', 'a bee'],
+        vec['a', 'bee', 'a bee'],
         $x ==> $x. ' buzz',
         keyset['a buzz', 'bee buzz', 'a bee buzz'],
       ),
@@ -123,7 +123,7 @@ final class KeysetTransformTest extends HackTestCase {
         keyset[20, 40],
       ),
       tuple(
-        HackLibTestTraversables::getIterator(varray[1, 2, 3]),
+        HackLibTestTraversables::getIterator(vec[1, 2, 3]),
         $doubler,
         keyset[2, 4, 6],
       ),
@@ -144,10 +144,10 @@ final class KeysetTransformTest extends HackTestCase {
     expect(Keyset\map($traversable, $value_func))->toBeSame($expected);
   }
 
-  public static function provideTestMapWithKey(): varray<mixed> {
-    return varray[
+  public static function provideTestMapWithKey(): vec<mixed> {
+    return vec[
       tuple(
-        varray[],
+        vec[],
         ($a, $b) ==> null,
         keyset[],
       ),
@@ -180,8 +180,8 @@ final class KeysetTransformTest extends HackTestCase {
   }
 
   public static function provideTestFlatten(
-  ): varray<(Traversable<Traversable<arraykey>>, keyset<arraykey>)> {
-    return varray[
+  ): vec<(Traversable<Traversable<arraykey>>, keyset<arraykey>)> {
+    return vec[
       tuple(
         vec[keyset[1,2], keyset[2,3,4]],
         keyset[1,2,3,4],
@@ -207,8 +207,8 @@ final class KeysetTransformTest extends HackTestCase {
         keyset['apple', 'banana', 'grape'],
       ),
       tuple(
-        varray[
-          varray[1, 2, 3],
+        vec[
+          vec[1, 2, 3],
           Vector {'the', 'quick', 'brown'},
           HackLibTestTraversables::getKeyedIterator(darray[
             'the' => 'the',

@@ -17,8 +17,8 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class StrFormatTest extends HackTestCase {
 
-  public static function provideFormat(): varray<mixed> {
-    return varray[
+  public static function provideFormat(): vec<mixed> {
+    return vec[
       tuple(
         Str\format('No format specifiers'),
         'No format specifiers',

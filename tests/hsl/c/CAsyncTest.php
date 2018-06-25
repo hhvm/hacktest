@@ -18,11 +18,11 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class CAsyncTest extends HackTestCase {
 
-  public static function provideTestGenFirst(): varray<mixed> {
-    return varray[
+  public static function provideTestGenFirst(): vec<mixed> {
+    return vec[
       tuple(
         async {
-          return varray[];
+          return vec[];
         },
         null,
       ),
@@ -56,11 +56,11 @@ final class CAsyncTest extends HackTestCase {
     });
   }
 
-  public static function provideTestGenFirstx(): varray<mixed> {
-    return varray[
+  public static function provideTestGenFirstx(): vec<mixed> {
+    return vec[
       tuple(
         async {
-          return varray[];
+          return vec[];
         },
         InvariantException::class,
       ),

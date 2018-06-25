@@ -17,8 +17,8 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class KeysetAsyncTest extends HackTestCase {
 
-  public static function provideTestGen(): varray<mixed> {
-    return varray[
+  public static function provideTestGen(): vec<mixed> {
+    return vec[
       tuple(
         Vector {
           async {return 'the';},
@@ -36,7 +36,7 @@ final class KeysetAsyncTest extends HackTestCase {
         keyset[1, 2],
       ),
       tuple(
-        HackLibTestTraversables::getIterator(varray[
+        HackLibTestTraversables::getIterator(vec[
           async {return 'the';},
           async {return 'quick';},
           async {return 'brown';},
@@ -59,8 +59,8 @@ final class KeysetAsyncTest extends HackTestCase {
     });
   }
 
-  public static function provideTestGenMap(): varray<mixed> {
-    return varray[
+  public static function provideTestGenMap(): vec<mixed> {
+    return vec[
       tuple(
         keyset[1,2,3],
         async ($num) ==> $num * 2,
@@ -72,7 +72,7 @@ final class KeysetAsyncTest extends HackTestCase {
         keyset[2,4,6],
       ),
       tuple(
-        varray['dan', 'danny', 'daniel'],
+        vec['dan', 'danny', 'daniel'],
         async ($word) ==> strrev($word),
         keyset['nad', 'ynnad', 'leinad'],
       ),
@@ -92,12 +92,12 @@ final class KeysetAsyncTest extends HackTestCase {
     });
   }
 
-  public static function provideTestGenFilter(): varray<(
+  public static function provideTestGenFilter(): vec<(
     Container<arraykey>,
     (function(arraykey): Awaitable<bool>),
     keyset<arraykey>,
   )> {
-    return varray[
+    return vec[
       tuple(
         darray[
           '2' => 'two',

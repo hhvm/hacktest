@@ -17,8 +17,8 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class VecAsyncTest extends HackTestCase {
 
-  public static function provideTestGen(): varray<mixed> {
-    return varray[
+  public static function provideTestGen(): vec<mixed> {
+    return vec[
       tuple(
         Vector {
           async {return 'the';},
@@ -36,7 +36,7 @@ final class VecAsyncTest extends HackTestCase {
         vec[1, 2],
       ),
       tuple(
-        HackLibTestTraversables::getIterator(varray[
+        HackLibTestTraversables::getIterator(vec[
           async {return 'the';},
           async {return 'quick';},
           async {return 'brown';},
@@ -59,8 +59,8 @@ final class VecAsyncTest extends HackTestCase {
     });
   }
 
-  public static function provideTestGenFilter(): varray<mixed> {
-    return varray[
+  public static function provideTestGenFilter(): vec<mixed> {
+    return vec[
       tuple(
         darray[
           '2' => 'two',
@@ -92,8 +92,8 @@ final class VecAsyncTest extends HackTestCase {
     });
   }
 
-  public static function provideTestGenMap(): varray<mixed> {
-    return varray[
+  public static function provideTestGenMap(): vec<mixed> {
+    return vec[
       tuple(
         Vector {'the', 'quick', 'brown', 'fox'},
         async ($word) ==> strrev($word),
@@ -101,7 +101,7 @@ final class VecAsyncTest extends HackTestCase {
       ),
       tuple(
         HackLibTestTraversables::getIterator(
-          varray['the', 'quick', 'brown', 'fox'],
+          vec['the', 'quick', 'brown', 'fox'],
         ),
         async ($word) ==> strrev($word),
         vec['eht', 'kciuq', 'nworb', 'xof'],

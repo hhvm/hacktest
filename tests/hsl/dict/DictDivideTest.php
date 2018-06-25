@@ -17,8 +17,8 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class DictDivideTest extends HackTestCase {
 
-  public static function providePartition(): varray<mixed> {
-    return varray[
+  public static function providePartition(): vec<mixed> {
+    return vec[
       tuple(
         array_combine(range(1, 10), range(11, 20)),
         $val ==> $val % 2 === 0,
@@ -62,8 +62,8 @@ final class DictDivideTest extends HackTestCase {
     ];
   }
 
-  public static function providePartitionWithKey(): varray<mixed> {
-    return varray[
+  public static function providePartitionWithKey(): vec<mixed> {
+    return vec[
       tuple(
         array_combine(range(1, 10), range(11, 20)),
         ($key, $val) ==> $val >= 19 || $key <= 3,

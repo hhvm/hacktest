@@ -18,8 +18,8 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class VecOrderTest extends HackTestCase {
 
-  public static function provideTestRange(): varray<mixed> {
-    return varray[
+  public static function provideTestRange(): vec<mixed> {
+    return vec[
       tuple(1, 10, null, vec[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
       tuple(1, 10, 1, vec[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
       tuple(1, 10, 2, vec[1, 3, 5, 7, 9]),
@@ -79,8 +79,8 @@ final class VecOrderTest extends HackTestCase {
     }
   }
 
-  public static function provideTestRangeException(): varray<mixed> {
-    return varray[
+  public static function provideTestRangeException(): vec<mixed> {
+    return vec[
       tuple(0, 1, 0),
       tuple(-10, 10, -30),
     ];
@@ -96,8 +96,8 @@ final class VecOrderTest extends HackTestCase {
       ->toThrow(InvariantException::class);
   }
 
-  public static function provideTestReverse(): varray<mixed> {
-    return varray[
+  public static function provideTestReverse(): vec<mixed> {
+    return vec[
       tuple(
         vec[1, 2, 3, 4, 5],
         vec[5, 4, 3, 2, 1],
@@ -121,14 +121,14 @@ final class VecOrderTest extends HackTestCase {
     expect(Vec\reverse($traversable))->toBeSame($expected);
   }
 
-  public static function provideTestShuffle(): varray<mixed> {
-    return varray[
+  public static function provideTestShuffle(): vec<mixed> {
+    return vec[
       tuple(
         vec[8, 6, 7, 5, 3, 0, 9],
         vec[0, 3, 5, 6, 7, 8, 9],
       ),
       tuple(
-        HackLibTestTraversables::getIterator(varray[8, 6, 7, 5, 3, 0, 9]),
+        HackLibTestTraversables::getIterator(vec[8, 6, 7, 5, 3, 0, 9]),
         vec[0, 3, 5, 6, 7, 8, 9],
       ),
     ];
@@ -162,8 +162,8 @@ final class VecOrderTest extends HackTestCase {
     }
   }
 
-  public static function provideTestSort(): varray<mixed> {
-    return varray[
+  public static function provideTestSort(): vec<mixed> {
+    return vec[
       tuple(
         vec['the', 'quick', 'brown', 'fox'],
         null,
@@ -180,7 +180,7 @@ final class VecOrderTest extends HackTestCase {
         vec[-5.8, -5.7, 1, 1.2],
       ),
       tuple(
-        HackLibTestTraversables::getIterator(varray[8, 6, 7, 5, 3, 0, 9]),
+        HackLibTestTraversables::getIterator(vec[8, 6, 7, 5, 3, 0, 9]),
         null,
         vec[0, 3, 5, 6, 7, 8, 9],
       ),
@@ -196,17 +196,17 @@ final class VecOrderTest extends HackTestCase {
     expect(Vec\sort($traversable, $comparator))->toBeSame($expected);
   }
 
-  public static function provideTestSortBy(): varray<mixed> {
-    return varray[
+  public static function provideTestSortBy(): vec<mixed> {
+    return vec[
       tuple(
-        varray['the', 'quick', 'brown', 'fox', 'jumped'],
+        vec['the', 'quick', 'brown', 'fox', 'jumped'],
         fun('strrev'),
         null,
         vec['jumped', 'the', 'quick', 'brown', 'fox'],
       ),
       tuple(
         HackLibTestTraversables::getIterator(
-          varray['the', 'quick', 'brown', 'fox', 'jumped'],
+          vec['the', 'quick', 'brown', 'fox', 'jumped'],
         ),
         fun('strrev'),
         null,

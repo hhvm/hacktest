@@ -17,18 +17,18 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class KeysetCombineTest extends HackTestCase {
 
-  public static function provideTestUnion(): varray<mixed> {
-    return varray[
+  public static function provideTestUnion(): vec<mixed> {
+    return vec[
       tuple(
-        varray[],
-        varray[
+        vec[],
+        vec[
           vec[],
         ],
         keyset[],
       ),
       tuple(
         keyset[1, 2, 3],
-        varray[
+        vec[
           Vector {'the', 'quick', 'brown'},
           HackLibTestTraversables::getKeyedIterator(darray[
             'the' => 'the',

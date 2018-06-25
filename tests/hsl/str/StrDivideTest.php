@@ -17,8 +17,8 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class StrDivideTest extends HackTestCase {
 
-  public static function provideChunk(): varray<mixed> {
-    return varray[
+  public static function provideChunk(): vec<mixed> {
+    return vec[
       tuple(
         'hello',
         1,
@@ -46,8 +46,8 @@ final class StrDivideTest extends HackTestCase {
     expect(Str\chunk($string, $chunk_size))->toBeSame($expected);
   }
 
-  public static function provideSplit(): varray<mixed> {
-    return varray[
+  public static function provideSplit(): vec<mixed> {
+    return vec[
       tuple(
         '',
         '',

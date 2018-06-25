@@ -17,8 +17,8 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class DictCombineTest extends HackTestCase {
 
-  public static function provideTestAssociate(): varray<mixed> {
-    return varray[
+  public static function provideTestAssociate(): vec<mixed> {
+    return vec[
       tuple(
         vec[3, 2, 1],
         Vector {'a', 'b', 'c'},
@@ -64,8 +64,8 @@ final class DictCombineTest extends HackTestCase {
     expect(Dict\associate($keys, $values))->toBeSame($expected);
   }
 
-  public static function provideTestMerge(): varray<mixed> {
-    return varray[
+  public static function provideTestMerge(): vec<mixed> {
+    return vec[
       tuple(
         Map {},
         darray[],
@@ -76,7 +76,7 @@ final class DictCombineTest extends HackTestCase {
           'one' => 'one',
           'two' => 'two',
         ],
-        varray[
+        vec[
           darray[
             'three' => 'three',
             'one' => 3,
@@ -96,9 +96,9 @@ final class DictCombineTest extends HackTestCase {
         HackLibTestTraversables::getKeyedIterator(darray[
           'foo' => 'foo',
           'bar' => 'bar',
-          'baz' => varray[1, 2, 3],
+          'baz' => vec[1, 2, 3],
         ]),
-        varray[
+        vec[
           dict[
             'bar' => 'barbar',
           ],
@@ -111,7 +111,7 @@ final class DictCombineTest extends HackTestCase {
         dict[
           'foo' => 'foo',
           'bar' => 'barbar',
-          'baz' => varray[1, 2, 3],
+          'baz' => vec[1, 2, 3],
           0 => 'I should feel bad for doing this',
           1 => 'gross array behavior',
           'bloop' => 'bloop',

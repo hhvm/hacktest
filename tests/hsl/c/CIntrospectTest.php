@@ -17,8 +17,8 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class CIntrospectTest extends HackTestCase {
 
-  public static function provideTestAny(): varray<mixed> {
-    return varray[
+  public static function provideTestAny(): vec<mixed> {
+    return vec[
       tuple(
         Vector {2, 4, 6, 8, 9, 10, 12},
         $v ==> $v % 2 === 1,
@@ -41,19 +41,19 @@ final class CIntrospectTest extends HackTestCase {
     expect(C\any($traversable, $predicate))->toBeSame($expected);
   }
 
-  public static function provideTestAnyWithoutPredicate(): varray<mixed> {
-    return varray[
+  public static function provideTestAnyWithoutPredicate(): vec<mixed> {
+    return vec[
       tuple(
-        varray[],
+        vec[],
         false,
       ),
       tuple(
-        varray[null, 0, '0', ''],
+        vec[null, 0, '0', ''],
         false,
       ),
       tuple(
         HackLibTestTraversables::getIterator(
-          varray[null, 0, '0', '', 1],
+          vec[null, 0, '0', '', 1],
         ),
         true,
       ),
@@ -68,8 +68,8 @@ final class CIntrospectTest extends HackTestCase {
     expect(C\any($traversable))->toBeSame($expected);
   }
 
-  public static function provideTestContains(): varray<mixed> {
-    return varray[
+  public static function provideTestContains(): vec<mixed> {
+    return vec[
       tuple(
         vec[1, 2, 3, 4, 5],
         3,
@@ -96,13 +96,13 @@ final class CIntrospectTest extends HackTestCase {
         true,
       ),
       tuple(
-        varray[dict[1 => 2, 3 => 4]],
+        vec[dict[1 => 2, 3 => 4]],
         dict[1 => 2, 3 => 4],
         true,
       ),
       tuple(
-        varray[varray[3]],
-        varray[4],
+        vec[vec[3]],
+        vec[4],
         false,
       ),
     ];
@@ -117,8 +117,8 @@ final class CIntrospectTest extends HackTestCase {
     expect(C\contains($traversable, $value))->toBeSame($expected);
   }
 
-  public static function provideTestContainsKey(): varray<mixed> {
-    return varray[
+  public static function provideTestContainsKey(): vec<mixed> {
+    return vec[
       tuple(
         darray['3' => 3],
         3,
@@ -161,9 +161,9 @@ final class CIntrospectTest extends HackTestCase {
     expect(C\contains_key($container, $key))->toBeSame($expected);
   }
 
-  public static function provideTestCount(): varray<mixed> {
-    return varray[
-      tuple(varray[], 0),
+  public static function provideTestCount(): vec<mixed> {
+    return vec[
+      tuple(vec[], 0),
       tuple(range(1, 10), 10),
       tuple(Set {1, 2}, 2),
       tuple(Vector {1, 2}, 2),
@@ -182,8 +182,8 @@ final class CIntrospectTest extends HackTestCase {
     expect(C\count($container))->toBeSame($expected);
   }
 
-  public static function provideTestEvery(): varray<mixed> {
-    return varray[
+  public static function provideTestEvery(): vec<mixed> {
+    return vec[
       tuple(
         Vector {2, 4, 6, 8, 9, 10, 12},
         $v ==> $v % 2 === 0,
@@ -206,10 +206,10 @@ final class CIntrospectTest extends HackTestCase {
     expect(C\every($traversable, $predicate))->toBeSame($expected);
   }
 
-  public static function provideTestEveryWithoutPredicate(): varray<mixed> {
-    return varray[
+  public static function provideTestEveryWithoutPredicate(): vec<mixed> {
+    return vec[
       tuple(
-        varray[],
+        vec[],
         true,
       ),
       tuple(
@@ -227,10 +227,10 @@ final class CIntrospectTest extends HackTestCase {
     expect(C\every($traversable))->toBeSame($expected);
   }
 
-  public static function provideTestIsEmpty(): varray<mixed> {
-    return varray[
-      tuple(varray[], true),
-      tuple(varray[1], false),
+  public static function provideTestIsEmpty(): vec<mixed> {
+    return vec[
+      tuple(vec[], true),
+      tuple(vec[1], false),
       tuple(darray['foo' => 'bar'], false),
       tuple(dict[], true),
       tuple(dict['foo' => 'bar'], false),

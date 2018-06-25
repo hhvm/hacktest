@@ -17,8 +17,8 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class DictOrderTest extends HackTestCase {
 
-  public static function provideTestReverse(): varray<mixed> {
-    return varray[
+  public static function provideTestReverse(): vec<mixed> {
+    return vec[
       tuple(
         Map {},
         dict[],
@@ -58,8 +58,8 @@ final class DictOrderTest extends HackTestCase {
     expect(Dict\reverse($traversable))->toBeSame($expected);
   }
 
-  public static function provideTestSort(): varray<mixed> {
-    return varray[
+  public static function provideTestSort(): vec<mixed> {
+    return vec[
       tuple(
         Map {
           '0' => 'the',
@@ -106,7 +106,7 @@ final class DictOrderTest extends HackTestCase {
         ],
       ),
       tuple(
-        HackLibTestTraversables::getKeyedIterator(varray[
+        HackLibTestTraversables::getKeyedIterator(vec[
           'the', 'quick', 'brown', 'fox',
         ]),
         ($a, $b) ==> $b[1] <=> $a[1],
@@ -130,10 +130,10 @@ final class DictOrderTest extends HackTestCase {
     expect(Dict\sort($traversable, $value_comparator))->toBeSame($expected);
   }
 
-  public static function provideTestSortBy(): varray<mixed> {
-    return varray[
+  public static function provideTestSortBy(): vec<mixed> {
+    return vec[
       tuple(
-        varray['the', 'quick', 'brown', 'fox', 'jumped'],
+        vec['the', 'quick', 'brown', 'fox', 'jumped'],
         fun('strrev'),
         null,
         dict[
@@ -146,20 +146,20 @@ final class DictOrderTest extends HackTestCase {
       ),
       tuple(
         Map {
-          0 => varray['eddard', 'stark'],
-          1 => varray['arya', 'stark'],
-          2 => varray['tyrion', 'lannister'],
-          3 => varray['joffrey', 'boratheon'],
-          4 => varray['daenerys', 'targaryen'],
+          0 => vec['eddard', 'stark'],
+          1 => vec['arya', 'stark'],
+          2 => vec['tyrion', 'lannister'],
+          3 => vec['joffrey', 'boratheon'],
+          4 => vec['daenerys', 'targaryen'],
         },
         fun('array_reverse'),
         ($a, $b) ==> $b <=> $a,
         dict[
-          4 => varray['daenerys', 'targaryen'],
-          0 => varray['eddard', 'stark'],
-          1 => varray['arya', 'stark'],
-          2 => varray['tyrion', 'lannister'],
-          3 => varray['joffrey', 'boratheon'],
+          4 => vec['daenerys', 'targaryen'],
+          0 => vec['eddard', 'stark'],
+          1 => vec['arya', 'stark'],
+          2 => vec['tyrion', 'lannister'],
+          3 => vec['joffrey', 'boratheon'],
         ],
       ),
     ];
@@ -176,8 +176,8 @@ final class DictOrderTest extends HackTestCase {
       ->toBeSame($expected);
   }
 
-  public static function provideTestSortByKey(): varray<mixed> {
-    return varray[
+  public static function provideTestSortByKey(): vec<mixed> {
+    return vec[
       tuple(
         Map {
           'the' => 'the',

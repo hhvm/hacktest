@@ -17,9 +17,9 @@ use namespace HH\Lib\Str;
  */
 final class DirtyProviderTest extends HackTestCase {
 
-  public function provideDirtyData(): varray<mixed> {
-    $elements = varray['the', 'quicky', 'brown', 'fox', 1];
-    return varray[
+  public function provideDirtyData(): vec<mixed> {
+    $elements = vec['the', 'quicky', 'brown', 'fox', 1];
+    return vec[
       tuple($elements),
       tuple(new Vector($elements)),
       tuple(new Set($elements)),
@@ -36,8 +36,8 @@ final class DirtyProviderTest extends HackTestCase {
     expect(Str\join($traversable, '-'))->toBeSame('the-quick-brown-fox-1');
   }
 
-  public function provideNoData(): varray<mixed> {
-    return varray[];
+  public function provideNoData(): vec<mixed> {
+    return vec[];
   }
 
   /** @dataProvider provideNoData */
@@ -50,9 +50,9 @@ final class DirtyProviderTest extends HackTestCase {
     expect($a)->toBeSame(1);
   }
 
-  public function provideError(): varray<mixed> {
+  public function provideError(): vec<mixed> {
     invariant(0 === 1, "This test depends on a provider that throws an error.");
-    return varray[
+    return vec[
       tuple(1, 2),
       tuple(2, 1)
     ];

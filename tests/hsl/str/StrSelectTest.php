@@ -18,8 +18,8 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class StrSelectTest extends HackTestCase {
 
-  public static function provideSlice(): varray<mixed> {
-    return varray[
+  public static function provideSlice(): vec<mixed> {
+    return vec[
       tuple(
         'hello world',
         3,
@@ -90,8 +90,8 @@ final class StrSelectTest extends HackTestCase {
       ->toThrow(InvariantException::class);
   }
 
-  public static function provideStripPrefix(): varray<mixed> {
-    return varray[
+  public static function provideStripPrefix(): vec<mixed> {
+    return vec[
       tuple(
         '',
         '',
@@ -124,8 +124,8 @@ final class StrSelectTest extends HackTestCase {
     expect(Str\strip_prefix($string, $prefix))->toBeSame($expected);
   }
 
-  public static function provideStripSuffix(): varray<mixed> {
-    return varray[
+  public static function provideStripSuffix(): vec<mixed> {
+    return vec[
       tuple(
         '',
         '',
@@ -158,8 +158,8 @@ final class StrSelectTest extends HackTestCase {
     expect(Str\strip_suffix($string, $suffix))->toBeSame($expected);
   }
 
-  public static function provideTrim(): varray<mixed> {
-    return varray[
+  public static function provideTrim(): vec<mixed> {
+    return vec[
       tuple(
         " \t\n\r\0\x0Bhello \t\n\r\0\x0B world \t\n\r\0\x0B",
         null,
@@ -187,8 +187,8 @@ final class StrSelectTest extends HackTestCase {
     expect(Str\trim($string, $char_mask))->toBeSame($expected);
   }
 
-  public static function provideTrimLeft(): varray<mixed> {
-    return varray[
+  public static function provideTrimLeft(): vec<mixed> {
+    return vec[
       tuple(
         " \t\n\r\0\x0Bhello \t\n\r\0\x0B world \t\n\r\0\x0B",
         null,
@@ -216,8 +216,8 @@ final class StrSelectTest extends HackTestCase {
     expect(Str\trim_left($string, $char_mask))->toBeSame($expected);
   }
 
-  public static function provideTrimRight(): varray<mixed> {
-    return varray[
+  public static function provideTrimRight(): vec<mixed> {
+    return vec[
       tuple(
         " \t\n\r\0\x0Bhello \t\n\r\0\x0B world \t\n\r\0\x0B",
         null,

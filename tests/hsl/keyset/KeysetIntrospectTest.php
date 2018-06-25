@@ -17,8 +17,8 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class KeysetIntrospectTest extends HackTestCase {
 
-  public static function provideTestEqual(): varray<mixed> {
-    return varray[
+  public static function provideTestEqual(): vec<mixed> {
+    return vec[
       tuple(
         keyset[1, 2, 3],
         keyset[1, 2, 3],

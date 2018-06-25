@@ -16,8 +16,8 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class CReduceTest extends HackTestCase {
 
-  public static function provideTestReduce(): varray<mixed> {
-    return varray[
+  public static function provideTestReduce(): vec<mixed> {
+    return vec[
       tuple(
         Set {'the', ' quick', ' brown', ' fox'},
         ($a, $s) ==> $a.$s,
@@ -26,14 +26,14 @@ final class CReduceTest extends HackTestCase {
       ),
       tuple(
         HackLibTestTraversables::getIterator(
-          varray['the', ' quick', ' brown', ' fox'],
+          vec['the', ' quick', ' brown', ' fox'],
         ),
         ($a, $s) ==> $a.$s,
         '',
         'the quick brown fox',
       ),
       tuple(
-        varray['the', 'quick', 'brown', 'fox'],
+        vec['the', 'quick', 'brown', 'fox'],
         ($a, $s) ==> $a->add($s),
         Vector {},
         Vector {'the', 'quick', 'brown', 'fox'},
@@ -51,8 +51,8 @@ final class CReduceTest extends HackTestCase {
     expect(C\reduce($traversable, $accumulator, $initial))->toBePHPEqual($expected);
   }
 
-  public static function provideTestReduceWithKey(): varray<mixed> {
-    return varray[
+  public static function provideTestReduceWithKey(): vec<mixed> {
+    return vec[
       tuple(
         'dict',
         dict[1 => 2, 2 => 3, 3 => 4, 4 => 5],

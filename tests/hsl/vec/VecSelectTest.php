@@ -17,18 +17,18 @@ use type Facebook\HackTest\HackTestCase;
  */
 final class VecSelectTest extends HackTestCase {
 
-  public static function provideTestDiff(): varray<mixed> {
-    return varray[
+  public static function provideTestDiff(): vec<mixed> {
+    return vec[
       tuple(
-        varray[],
-        varray[
+        vec[],
+        vec[
           darray[],
         ],
         vec[],
       ),
       tuple(
         new Vector(range(0, 20)),
-        varray[
+        vec[
           Set {1, 3, 5},
           Map {'foo' => 7, 'bar' => 9},
           HackLibTestTraversables::getIterator(range(11, 30)),
@@ -48,16 +48,16 @@ final class VecSelectTest extends HackTestCase {
     expect(Vec\diff($base, ...$traversables))->toBeSame($expected);
   }
 
-  public static function provideTestDiffBy(): varray<mixed> {
-    return varray[
+  public static function provideTestDiffBy(): vec<mixed> {
+    return vec[
       tuple(
-        varray['the', 'quick', 'brown', 'fox'],
-        varray[],
+        vec['the', 'quick', 'brown', 'fox'],
+        vec[],
         $x ==> $x,
         vec['the', 'quick', 'brown', 'fox'],
       ),
       tuple(
-        varray[],
+        vec[],
         Vector {'the', 'quick', 'brown', 'fox'},
         $x ==> $x,
         vec[],
@@ -65,7 +65,7 @@ final class VecSelectTest extends HackTestCase {
       tuple(
         Set {'plum', 'port', 'paste', 'pun', 'promise'},
         HackLibTestTraversables::getIterator(
-          varray['power', 'push', 'pin', 'pygmy'],
+          vec['power', 'push', 'pin', 'pygmy'],
         ),
         ($str) ==> Str\slice($str, 0, 2),
         vec['plum', 'paste', 'promise'],
@@ -84,8 +84,8 @@ final class VecSelectTest extends HackTestCase {
       ->toBeSame($expected);
   }
 
-  public static function provideDrop(): varray<mixed> {
-    return varray[
+  public static function provideDrop(): vec<mixed> {
+    return vec[
       tuple(
         vec[],
         5,
@@ -123,8 +123,8 @@ final class VecSelectTest extends HackTestCase {
     expect(Vec\drop($traversable, $n))->toBeSame($expected);
   }
 
-  public static function provideTestFilter(): varray<mixed> {
-    return varray[
+  public static function provideTestFilter(): vec<mixed> {
+    return vec[
       tuple(
         dict[],
         $x ==> true,
@@ -168,15 +168,15 @@ final class VecSelectTest extends HackTestCase {
   }
 
   public function testFilterWithoutPredicate(): void {
-    expect(Vec\filter(varray[
+    expect(Vec\filter(vec[
       0, 3, null, 5, false, 40, '', '0', 'win!',
     ]))->toBeSame(vec[3, 5, 40, 'win!']);
   }
 
-  public static function provideTestFilterNulls(): varray<mixed> {
-    return varray[
+  public static function provideTestFilterNulls(): vec<mixed> {
+    return vec[
       tuple(
-        varray[null, null, null],
+        vec[null, null, null],
         vec[],
       ),
       tuple(
@@ -200,10 +200,10 @@ final class VecSelectTest extends HackTestCase {
       tuple(
         HackLibTestTraversables::getKeyedIterator(darray[
           '1' => null,
-          '2' => varray[],
+          '2' => vec[],
           '3' => '0',
         ]),
-        vec[varray[], '0'],
+        vec[vec[], '0'],
       ),
     ];
   }
@@ -258,18 +258,18 @@ final class VecSelectTest extends HackTestCase {
     expect($result)->toBeSame($expected);
   }
 
-  public static function provideTestIntersect(): varray<mixed> {
-    return varray[
+  public static function provideTestIntersect(): vec<mixed> {
+    return vec[
       tuple(
         range(0, 1000),
-        varray[],
-        varray[],
+        vec[],
+        vec[],
         vec[],
       ),
       tuple(
         range(1, 10),
         range(1, 5),
-        varray[
+        vec[
           range(2, 6),
           range(3, 7),
         ],
@@ -278,13 +278,13 @@ final class VecSelectTest extends HackTestCase {
       tuple(
         Set {},
         range(1, 100),
-        varray[],
+        vec[],
         vec[],
       ),
       tuple(
         range(1, 1000),
         Map {},
-        varray[
+        vec[
           Set {},
           Vector {},
         ],
@@ -293,15 +293,15 @@ final class VecSelectTest extends HackTestCase {
       tuple(
         new Vector(range(1, 100)),
         Map {1 => 2, 39 => 40},
-        varray[
+        vec[
           HackLibTestTraversables::getIterator(range(0, 40)),
         ],
         vec[2, 40],
       ),
       tuple(
-        varray[3, 4, 4, 5],
-        varray[3, 4],
-        varray[],
+        vec[3, 4, 4, 5],
+        vec[3, 4],
+        vec[],
         vec[3, 4, 4],
       ),
     ];
@@ -317,8 +317,8 @@ final class VecSelectTest extends HackTestCase {
     expect(Vec\intersect($first, $second, ...$rest))->toBeSame($expected);
   }
 
-  public static function provideTestKeys(): varray<mixed> {
-    return varray[
+  public static function provideTestKeys(): vec<mixed> {
+    return vec[
       tuple(
         darray[
           'foo' => null,
@@ -349,7 +349,7 @@ final class VecSelectTest extends HackTestCase {
       tuple(
         HackLibTestTraversables::getKeyedIterator(darray[
           '1' => null,
-          '2' => varray[],
+          '2' => vec[],
           '3' => '0',
         ]),
         vec[1, 2, 3],
@@ -365,8 +365,8 @@ final class VecSelectTest extends HackTestCase {
     expect(Vec\keys($traversable))->toBeSame($expected);
   }
 
-  public static function provideTestSample(): varray<mixed> {
-    return varray[
+  public static function provideTestSample(): vec<mixed> {
+    return vec[
       tuple(
         range(0, 5),
         6,
@@ -397,8 +397,8 @@ final class VecSelectTest extends HackTestCase {
     expect(C\count(Vec\sample($iterator, 3)))->toBeSame(3);
   }
 
-  public static function provideTestSlice(): varray<mixed> {
-    return varray[
+  public static function provideTestSlice(): vec<mixed> {
+    return vec[
       tuple(
         range(0, 5),
         6,
@@ -436,8 +436,8 @@ final class VecSelectTest extends HackTestCase {
     expect(Vec\slice($container, $offset, $length))->toBeSame($expected);
   }
 
-  public static function provideTake(): varray<mixed> {
-    return varray[
+  public static function provideTake(): vec<mixed> {
+    return vec[
       tuple(
         vec[],
         5,
@@ -483,15 +483,15 @@ final class VecSelectTest extends HackTestCase {
     expect(Vec\take($iter, 2))->toBeSame(vec[4]);
   }
 
-  public static function provideTestUnique(): varray<mixed> {
-    return varray[
+  public static function provideTestUnique(): vec<mixed> {
+    return vec[
       tuple(
-        varray['the', 'quick', 'brown', 'fox', 'jumped', 'over', 'the', 'dog'],
+        vec['the', 'quick', 'brown', 'fox', 'jumped', 'over', 'the', 'dog'],
         vec['the', 'quick', 'brown', 'fox', 'jumped', 'over', 'dog'],
       ),
       tuple(
         HackLibTestTraversables::getIterator(
-          varray[1, 2, 3, 2, 3, 4, 5, 6],
+          vec[1, 2, 3, 2, 3, 4, 5, 6],
         ),
         vec[1, 2, 3, 4, 5, 6],
       ),
@@ -506,10 +506,10 @@ final class VecSelectTest extends HackTestCase {
     expect(Vec\unique($traversable))->toBeSame($expected);
   }
 
-  public static function provideTestUniqueBy(): varray<mixed> {
-    return varray[
+  public static function provideTestUniqueBy(): vec<mixed> {
+    return vec[
       tuple(
-        varray[
+        vec[
           'plum',
           'port',
           'power',
@@ -524,7 +524,7 @@ final class VecSelectTest extends HackTestCase {
       ),
       tuple(
         HackLibTestTraversables::getIterator(
-          varray[
+          vec[
             'plum',
             'port',
             'power',
