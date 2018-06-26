@@ -11,7 +11,7 @@
 namespace Facebook\HackTest;
 
 use type Facebook\DefinitionFinder\FileParser;
-use namespace HH\Lib\Str;
+use namespace HH\Lib\{C, Str};
 
 abstract final class HackTestRunner {
 
@@ -24,7 +24,6 @@ abstract final class HackTestRunner {
   ): Awaitable<string> {
     $errors = dict[];
     $output = '';
-    $verbose = '';
     $num_tests = 0;
     $num_msg = 0;
     $num_failed = 0;
@@ -46,7 +45,7 @@ abstract final class HackTestRunner {
         $num_msg++;
         if (Str\contains($test_params, '.')) {
           list($method, $tuple_num, $data) = Str\split($test_params, '.');
-          $verbose .= Str\format(
+          $output .= Str\format(
             "\n\n%d) %s::%s with data set #%s %s\n",
             $num_msg,
             $class,
@@ -55,12 +54,12 @@ abstract final class HackTestRunner {
             $data,
           );
         } else {
-          $verbose .=
+          $output .=
             Str\format("\n\n%d) %s::%s\n", $num_msg, $class, $test_params);
         }
         if ($err instanceof SkippedTestException) {
           $num_skipped++;
-          $verbose .= 'Skipped: '.$err->getMessage();
+          $output .= 'Skipped: '.$err->getMessage();
           continue;
         } else if (
           \is_a($err, 'PHPUnit\\Framework\\ExpectationFailedException', true) ||
@@ -68,11 +67,26 @@ abstract final class HackTestRunner {
         ) {
           $num_failed++;
         }
-        $verbose .= $err->getMessage()."\n\n".$err->getTraceAsString();
+        $trace = Str\split($err->getTraceAsString(), '#');
+        $out = '';
+        foreach ($trace as $line) {
+          if (Str\contains($line, $class)) {
+            $out .= Str\slice($line, 2);
+          }
+        }
+        if ($verbosity) {
+          $output .= Str\format(
+            "%s\n\n%s",
+            $err->getMessage(),
+            $err->getTraceAsString(),
+          );
+        } else {
+          $output .= $err->getMessage();
+          if (!Str\is_empty($out)) {
+            $output .= "\n\n".$out;
+          }
+        }
       }
-    }
-    if ($verbosity) {
-      $output .= $verbose;
     }
     $num_errors = $num_msg - $num_failed - $num_skipped;
     if ($num_errors > 0) {
