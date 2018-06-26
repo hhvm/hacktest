@@ -16,7 +16,7 @@ use namespace HH\Lib\{C, Str};
 final class ClassRetrieverTest extends HackTestCase {
 
   public function testClassMatchFileName(): void {
-    $path = 'tests/clean/hsl/tuple';
+    $path = 'tests/hsl/tuple';
     $file_retriever = new FileRetriever($path);
     foreach ($file_retriever->getTestFiles() as $file) {
       $cr = new ClassRetriever($file);

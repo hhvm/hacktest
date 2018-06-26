@@ -16,7 +16,7 @@ use namespace HH\Lib\Str;
 final class MethodRetrieverTest extends HackTestCase {
 
   public function testValidTestMethods(): void {
-    $path = 'tests/clean/hsl/tuple';
+    $path = 'tests/hsl/tuple';
     $file_retriever = new FileRetriever($path);
     foreach ($file_retriever->getTestFiles() as $file) {
       $classname = (new ClassRetriever($file))->getTestClassName();
