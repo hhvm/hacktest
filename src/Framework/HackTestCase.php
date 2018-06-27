@@ -15,7 +15,6 @@ use namespace HH\Lib\{C, Vec, Str};
 
 class HackTestCase {
 
-  private int $numTests = 0;
   private vec<\ReflectionMethod> $methods = vec[];
 
   public final function __construct() {
@@ -28,7 +27,7 @@ class HackTestCase {
 
   public final async function runAsync(
     (function(TestResult): void) $write_progress,
-  ): Awaitable<dict<string, \Throwable>> {
+  ): Awaitable<dict<string, ?\Throwable>> {
     $errors = dict[];
     $to_run = dict[];
     foreach ($this->methods as $method) {
@@ -40,7 +39,6 @@ class HackTestCase {
         $providers = $block->getTagsByName('@dataProvider');
       }
       if (C\is_empty($providers)) {
-        $this->numTests++;
         /* HH_IGNORE_ERROR[2011] this is unsafe */
         $to_run[$method_name] = () ==> $this->$method_name();
         continue;
@@ -60,12 +58,10 @@ class HackTestCase {
           );
         }
       } catch (\Throwable $e) {
-        $this->numTests++;
         $this->writeError($e, $write_progress);
         $errors[$method_name] = $e;
         continue;
       }
-      $this->numTests += C\count($tuples);
       $tuple_num = 0;
       foreach ($tuples as $tuple) {
         $tuple_num++;
@@ -88,6 +84,7 @@ class HackTestCase {
           await $res;
         }
         $write_progress(TestResult::PASSED);
+        $errors[$key] = null;
       } catch (\Throwable $e) {
         $errors[$key] = $e;
         $this->writeError($e, $write_progress);
@@ -153,10 +150,6 @@ class HackTestCase {
     }
 
     return $data;
-  }
-
-  public final function getNumTests(): int {
-    return $this->numTests;
   }
 
   public final function markTestSkipped(string $message): void {
