@@ -15,7 +15,7 @@ use function Facebook\FBExpect\expect;
 final class FileRetrieverTest extends HackTestCase {
 
   public function testValidTestFiles(): void {
-    $path = 'tests/hsl/tuple';
+    $path = 'tests/clean/hsl/tuple';
     $file_retriever = new FileRetriever($path);
     foreach ($file_retriever->getTestFiles() as $file) {
       expect(\preg_match('/Test(\.php|\.hh)$/', $file->getFilename()) === 1)->toBeTrue();
