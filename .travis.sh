@@ -6,7 +6,7 @@ composer install
 
 hh_client
 
-hhvm vendor/bin/phpunit tests/
+bin/hacktest tests/clean/
 hhvm vendor/bin/hhast-lint
 
 echo > .hhconfig
