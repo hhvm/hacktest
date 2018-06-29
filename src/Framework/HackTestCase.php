@@ -45,7 +45,7 @@ class HackTestCase {
       }
       if (C\count($providers) > 1) {
         throw new InvalidTestMethodException(
-          'There can only be one data provider per test method',
+          Str\format('There can only be one data provider in %s', $method_name),
         );
       }
       $provider = C\onlyx($providers);
@@ -54,7 +54,10 @@ class HackTestCase {
         $tuples = $this->$provider();
         if (C\is_empty($tuples)) {
           throw new InvalidDataProviderException(
-            'This test depends on a provider that returns no data.',
+            Str\format(
+              'This test depends on a provider (%s) that returns no data.',
+              $provider,
+            ),
           );
         }
       } catch (\Throwable $e) {
@@ -103,13 +106,19 @@ class HackTestCase {
           $type = Str\replace($method->getReturnTypeText(), 'HH\\', '');
           if ($type !== 'void' && $type !== 'Awaitable<void>') {
             throw new InvalidTestMethodException(
-              'Test methods must return void or Awaitable<void> (for async methods)',
+              Str\format(
+                'Test method (%s) must return void or Awaitable<void> (for async methods)',
+                $method_name,
+              ),
             );
           }
           $methods[] = $method;
         } else if (!Str\starts_with($method_name, 'provide')) {
           throw new InvalidTestMethodException(
-            'Only test methods and data providers can be public',
+            Str\format(
+              'Only test methods and data providers can be public. Consider changing %s to a private or protected method.',
+              $method_name,
+            ),
           );
         }
       }

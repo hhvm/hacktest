@@ -28,12 +28,15 @@ final class ClassRetriever {
 
     if (C\count($test_classes) !== 1) {
       throw new InvalidTestClassException(
-        'There must be exactly one test class per file'
+        Str\format(
+          'There must be exactly one test class in %s',
+          $this->fp->getFilename(),
+        ),
       );
     }
 
     $name = C\onlyx($test_classes);
-    $classname = $name
+    $class_name = $name
       |> Str\split($$, '\\')
       |> C\lastx($$);
     $filename = $this->fp->getFilename()
@@ -42,28 +45,35 @@ final class ClassRetriever {
       |> Str\split($$, '.')
       |> C\firstx($$);
 
-    if ($classname !== $filename) {
-      throw new InvalidTestClassException(
-        'Class name must match filename'
-      );
-    }
-    if (!Str\ends_with($classname, 'Test')) {
-      throw new InvalidTestClassException(
-        'Class name must end with \'Test\''
-      );
-    }
-    try {
-      $name = TypeAssert\classname_of(HackTestCase::class, $name);
-    } catch (TypeAssert\IncorrectTypeException $_) {
+    if ($class_name !== $filename) {
       throw new InvalidTestClassException(
         Str\format(
-          "%s does not extend %s",
-          $name,
-          HackTestCase::class
+          'Class name (%s) must match filename (%s)',
+          $class_name,
+          $filename,
         ),
       );
     }
+    if (!Str\ends_with($class_name, 'Test')) {
+      throw new InvalidTestClassException(
+        Str\format('Class name (%s) must end with Test', $class_name),
+      );
+    }
+    $classname = $this->convertToClassname($name);
+    if ($classname === null) {
+      throw new InvalidTestClassException(
+        Str\format('%s does not extend %s', $name, HackTestCase::class),
+      );
+    }
 
-    return $name;
+    return $classname;
+  }
+
+  private function convertToClassname(string $name): ?classname<HackTestCase> {
+    try {
+      return TypeAssert\classname_of(HackTestCase::class, $name);
+    } catch (TypeAssert\IncorrectTypeException $_) {
+      return null;
+    }
   }
 }
