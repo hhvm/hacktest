@@ -11,6 +11,7 @@
 namespace Facebook\HackTest;
 
 use type Facebook\DefinitionFinder\FileParser;
+use namespace HH\Lib\Str;
 
 final class FileRetriever {
 
@@ -21,12 +22,19 @@ final class FileRetriever {
     $files = vec[];
     if (!\is_dir($this->path)) {
       $file = $this->path;
+      if (!\is_file($file)) {
+        throw new InvalidTestFileException(
+          Str\format('File (%s) not found', $file),
+        );
+      }
       if ($this->isTestFile($file)) {
-        $files[] = FileParser::fromFile($file);
-        return $files;
+        return vec[FileParser::fromFile($file)];
       }
       throw new InvalidTestFileException(
-        "Test file does not end in 'Test.php' or 'Test.hh'",
+        Str\format(
+          '%s is not a valid test file (ending in Test.php or Test.hh)',
+          $file,
+        ),
       );
     }
     $rii = new \RecursiveIteratorIterator(
