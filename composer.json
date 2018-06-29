@@ -8,19 +8,13 @@
     "facebook/fbexpect": "^1.0.0",
     "hhvm/hhast": "^3.27"
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:hhvm/hh-apidoc.git"
-    }
-  ],
   "require": {
     "hhvm": "^3.27.0",
     "hhvm/hhvm-autoload": "^1.6",
     "hhvm/hsl": "^3.26",
-    "facebook/definition-finder": "^1.7",
+    "facebook/definition-finder": "^2.0",
     "facebook/hh-clilib": "^1.0",
-    "hhvm/hh-apidoc": "dev-master",
+    "facebook/hh-apidoc": "^0.1",
     "hhvm/type-assert": "^3.2"
   }
 }

@@ -22,7 +22,7 @@ final class FileRetriever {
     if (!\is_dir($this->path)) {
       $file = $this->path;
       if ($this->isTestFile($file)) {
-        $files[] = FileParser::FromFile($file);
+        $files[] = FileParser::fromFile($file);
         return $files;
       }
       throw new InvalidTestFileException(
@@ -36,7 +36,7 @@ final class FileRetriever {
     foreach ($rii as $file) {
       $filename = $file->getPathname();
       if (!$file->isDir() && $this->isTestFile($filename)) {
-        $files[] = FileParser::FromFile($filename);
+        $files[] = FileParser::fromFile($filename);
       }
     }
 
