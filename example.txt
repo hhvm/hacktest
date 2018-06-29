@@ -1,0 +1,378 @@
+$ bin/hacktest -v tests/
+HackTest 1.0 by Wilson Lin and contributors.
+
+SS...........................................................................................................................................................................................................................................................................................................................................SS...........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................EEFFFEEEEFFFFFFFF
+
+1) DataProviderTest::testProviderSkip
+Skipped: This test depends on a data provider that is not ready yet.
+
+2) DataProviderTest::testProviderSkipDup
+Skipped: This test depends on a data provider that is not ready yet.
+
+3) VecOrderTest::testShuffle with data set #1 (vec [
+  8,
+  6,
+  7,
+  5,
+  3,
+  0,
+  9,
+], vec [
+  0,
+  3,
+  5,
+  6,
+  7,
+  8,
+  9,
+])
+Skipped: Mocking is not supported externally
+
+4) VecOrderTest::testShuffle with data set #2 (HackLibTestForwardOnlyIterator::__set_state(array(
+  'used' => false,
+  'keyIdx' => 0,
+  'keys' =>
+  array (
+    0 => 0,
+    1 => 1,
+    2 => 2,
+    3 => 3,
+    4 => 4,
+    5 => 5,
+    6 => 6,
+  ),
+  'data' =>
+  dict [
+    0 => 8,
+    1 => 6,
+    2 => 7,
+    3 => 5,
+    4 => 3,
+    5 => 0,
+    6 => 9,
+  ],
+)), vec [
+  0,
+  3,
+  5,
+  6,
+  7,
+  8,
+  9,
+])
+Skipped: Mocking is not supported externally
+
+5) DirtyErrorTest::testInvariantException
+This should count as an error rather than a test failure
+
+#0 /Users/wlin21/Desktop/hacktest/tests/dirty/DirtyErrorTest.php(19): HH\invariant_violation()
+#1 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(43): DirtyErrorTest->testInvariantException()
+#2 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(84): Closure$Facebook\HackTest\HackTestCase::runAsync()
+#3 /Users/wlin21/Desktop/hacktest/src/Runner/HackTestRunner.php(29): Facebook\HackTest\HackTestCase->runAsync()
+#4 /Users/wlin21/Desktop/hacktest/src/HackTestCLI.php(48): Facebook\HackTest\HackTestRunner::runAsync()
+#5 /Users/wlin21/Desktop/hacktest/vendor/facebook/hh-clilib/src/CLIBase.hh(168): Facebook\HackTest\HackTestCLI->mainAsync()
+#6 /Users/wlin21/Desktop/hacktest/bin/hacktest(8): Facebook\CLILib\CLIBase::main()
+#7 {main}
+
+6) DirtyErrorTest::testArgumentCountError
+Too few arguments to function testArgumentCountError(), 0 passed and exactly 1 expected
+
+#0 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(43): DirtyErrorTest->testArgumentCountError()
+#1 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(84): Closure$Facebook\HackTest\HackTestCase::runAsync()
+#2 /Users/wlin21/Desktop/hacktest/src/Runner/HackTestRunner.php(29): Facebook\HackTest\HackTestCase->runAsync()
+#3 /Users/wlin21/Desktop/hacktest/src/HackTestCLI.php(48): Facebook\HackTest\HackTestRunner::runAsync()
+#4 /Users/wlin21/Desktop/hacktest/vendor/facebook/hh-clilib/src/CLIBase.hh(168): Facebook\HackTest\HackTestCLI->mainAsync()
+#5 /Users/wlin21/Desktop/hacktest/bin/hacktest(8): Facebook\CLILib\CLIBase::main()
+#6 {main}
+
+7) DirtyAsyncTest::testWithNonNullableTypesAsync
+Failed asserting that Array &0 (
+    0 => 1
+    1 => 'foo'
+) is not identical to Array &0 (
+    0 => 1
+    1 => 'foo'
+).
+
+#0 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Constraint/Not.php(98): PHPUnit_Framework_Constraint->fail()
+#1 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(2060): PHPUnit_Framework_Constraint_Not->evaluate()
+#2 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(1419): PHPUnit_Framework_Assert::assertThat()
+#3 /Users/wlin21/Desktop/hacktest/vendor/facebook/fbexpect/src/ExpectObj.php(352): PHPUnit_Framework_Assert::assertNotSame()
+#4 /Users/wlin21/Desktop/hacktest/tests/dirty/DirtyAsyncTest.php(22): Facebook\FBExpect\ExpectObj->toNotBeSame()
+#5 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(43): DirtyAsyncTest->testWithNonNullableTypesAsync()
+#6 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(84): Closure$Facebook\HackTest\HackTestCase::runAsync()
+#7 /Users/wlin21/Desktop/hacktest/src/Runner/HackTestRunner.php(29): Facebook\HackTest\HackTestCase->runAsync()
+#8 /Users/wlin21/Desktop/hacktest/src/HackTestCLI.php(48): Facebook\HackTest\HackTestRunner::runAsync()
+#9 /Users/wlin21/Desktop/hacktest/vendor/facebook/hh-clilib/src/CLIBase.hh(168): Facebook\HackTest\HackTestCLI->mainAsync()
+#10 /Users/wlin21/Desktop/hacktest/bin/hacktest(8): Facebook\CLILib\CLIBase::main()
+#11 {main}
+
+8) DirtyAsyncTest::testWithNullLiteralsAsync
+Failed asserting that Array &0 (
+    0 => 1
+    1 => null
+    2 => null
+) is true.
+
+#0 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Constraint.php(56): PHPUnit_Framework_Constraint->fail()
+#1 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(2060): PHPUnit_Framework_Constraint->evaluate()
+#2 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(1094): PHPUnit_Framework_Assert::assertThat()
+#3 /Users/wlin21/Desktop/hacktest/vendor/facebook/fbexpect/src/ExpectObj.php(106): PHPUnit_Framework_Assert::assertTrue()
+#4 /Users/wlin21/Desktop/hacktest/tests/dirty/DirtyAsyncTest.php(35): Facebook\FBExpect\ExpectObj->toBeTrue()
+#5 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(43): DirtyAsyncTest->testWithNullLiteralsAsync()
+#6 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(84): Closure$Facebook\HackTest\HackTestCase::runAsync()
+#7 /Users/wlin21/Desktop/hacktest/src/Runner/HackTestRunner.php(29): Facebook\HackTest\HackTestCase->runAsync()
+#8 /Users/wlin21/Desktop/hacktest/src/HackTestCLI.php(48): Facebook\HackTest\HackTestRunner::runAsync()
+#9 /Users/wlin21/Desktop/hacktest/vendor/facebook/hh-clilib/src/CLIBase.hh(168): Facebook\HackTest\HackTestCLI->mainAsync()
+#10 /Users/wlin21/Desktop/hacktest/bin/hacktest(8): Facebook\CLILib\CLIBase::main()
+#11 {main}
+
+9) DirtyAsyncTest::testWithNullableTypesAsync
+Failed asserting that Array &0 (
+    0 => 1
+    1 => 'foo'
+) is null.
+
+#0 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Constraint.php(56): PHPUnit_Framework_Constraint->fail()
+#1 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(2060): PHPUnit_Framework_Constraint->evaluate()
+#2 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(1144): PHPUnit_Framework_Assert::assertThat()
+#3 /Users/wlin21/Desktop/hacktest/vendor/facebook/fbexpect/src/ExpectObj.php(118): PHPUnit_Framework_Assert::assertNull()
+#4 /Users/wlin21/Desktop/hacktest/tests/dirty/DirtyAsyncTest.php(44): Facebook\FBExpect\ExpectObj->toBeNull()
+#5 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(43): DirtyAsyncTest->testWithNullableTypesAsync()
+#6 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(84): Closure$Facebook\HackTest\HackTestCase::runAsync()
+#7 /Users/wlin21/Desktop/hacktest/src/Runner/HackTestRunner.php(29): Facebook\HackTest\HackTestCase->runAsync()
+#8 /Users/wlin21/Desktop/hacktest/src/HackTestCLI.php(48): Facebook\HackTest\HackTestRunner::runAsync()
+#9 /Users/wlin21/Desktop/hacktest/vendor/facebook/hh-clilib/src/CLIBase.hh(168): Facebook\HackTest\HackTestCLI->mainAsync()
+#10 /Users/wlin21/Desktop/hacktest/bin/hacktest(8): Facebook\CLILib\CLIBase::main()
+#11 {main}
+
+10) DirtyProviderTest::testNoData
+This test depends on a provider (provideNoData) that returns no data.
+
+#0 /Users/wlin21/Desktop/hacktest/src/Runner/HackTestRunner.php(29): Facebook\HackTest\HackTestCase->runAsync()
+#1 /Users/wlin21/Desktop/hacktest/src/HackTestCLI.php(48): Facebook\HackTest\HackTestRunner::runAsync()
+#2 /Users/wlin21/Desktop/hacktest/vendor/facebook/hh-clilib/src/CLIBase.hh(168): Facebook\HackTest\HackTestCLI->mainAsync()
+#3 /Users/wlin21/Desktop/hacktest/bin/hacktest(8): Facebook\CLILib\CLIBase::main()
+#4 {main}
+
+11) DirtyProviderTest::testNoDataDup
+This test depends on a provider (provideNoData) that returns no data.
+
+#0 /Users/wlin21/Desktop/hacktest/src/Runner/HackTestRunner.php(29): Facebook\HackTest\HackTestCase->runAsync()
+#1 /Users/wlin21/Desktop/hacktest/src/HackTestCLI.php(48): Facebook\HackTest\HackTestRunner::runAsync()
+#2 /Users/wlin21/Desktop/hacktest/vendor/facebook/hh-clilib/src/CLIBase.hh(168): Facebook\HackTest\HackTestCLI->mainAsync()
+#3 /Users/wlin21/Desktop/hacktest/bin/hacktest(8): Facebook\CLILib\CLIBase::main()
+#4 {main}
+
+12) DirtyProviderTest::testProviderError
+This test depends on a provider that throws an error.
+
+#0 /Users/wlin21/Desktop/hacktest/tests/dirty/DirtyProviderTest.php(54): HH\invariant_violation()
+#1 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(54): DirtyProviderTest->provideError()
+#2 /Users/wlin21/Desktop/hacktest/src/Runner/HackTestRunner.php(29): Facebook\HackTest\HackTestCase->runAsync()
+#3 /Users/wlin21/Desktop/hacktest/src/HackTestCLI.php(48): Facebook\HackTest\HackTestRunner::runAsync()
+#4 /Users/wlin21/Desktop/hacktest/vendor/facebook/hh-clilib/src/CLIBase.hh(168): Facebook\HackTest\HackTestCLI->mainAsync()
+#5 /Users/wlin21/Desktop/hacktest/bin/hacktest(8): Facebook\CLILib\CLIBase::main()
+#6 {main}
+
+13) DirtyProviderTest::testProviderErrorDup
+This test depends on a provider that throws an error.
+
+#0 /Users/wlin21/Desktop/hacktest/tests/dirty/DirtyProviderTest.php(54): HH\invariant_violation()
+#1 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(54): DirtyProviderTest->provideError()
+#2 /Users/wlin21/Desktop/hacktest/src/Runner/HackTestRunner.php(29): Facebook\HackTest\HackTestCase->runAsync()
+#3 /Users/wlin21/Desktop/hacktest/src/HackTestCLI.php(48): Facebook\HackTest\HackTestRunner::runAsync()
+#4 /Users/wlin21/Desktop/hacktest/vendor/facebook/hh-clilib/src/CLIBase.hh(168): Facebook\HackTest\HackTestCLI->mainAsync()
+#5 /Users/wlin21/Desktop/hacktest/bin/hacktest(8): Facebook\CLILib\CLIBase::main()
+#6 {main}
+
+14) DirtyProviderTest::testDirtyData with data set #1 vec [
+  'the',
+  'quicky',
+  'brown',
+  'fox',
+  1,
+]
+Failed asserting that two strings are identical.
+
+#0 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Constraint/IsIdentical.php(88): PHPUnit_Framework_Constraint->fail()
+#1 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(2060): PHPUnit_Framework_Constraint_IsIdentical->evaluate()
+#2 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(1379): PHPUnit_Framework_Assert::assertThat()
+#3 /Users/wlin21/Desktop/hacktest/vendor/facebook/fbexpect/src/ExpectObj.php(100): PHPUnit_Framework_Assert::assertSame()
+#4 /Users/wlin21/Desktop/hacktest/tests/dirty/DirtyProviderTest.php(36): Facebook\FBExpect\ExpectObj->toBeSame()
+#5 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(78): DirtyProviderTest->testDirtyData()
+#6 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(84): Closure$Facebook\HackTest\HackTestCase::runAsync#2()
+#7 /Users/wlin21/Desktop/hacktest/src/Runner/HackTestRunner.php(29): Facebook\HackTest\HackTestCase->runAsync()
+#8 /Users/wlin21/Desktop/hacktest/src/HackTestCLI.php(48): Facebook\HackTest\HackTestRunner::runAsync()
+#9 /Users/wlin21/Desktop/hacktest/vendor/facebook/hh-clilib/src/CLIBase.hh(168): Facebook\HackTest\HackTestCLI->mainAsync()
+#10 /Users/wlin21/Desktop/hacktest/bin/hacktest(8): Facebook\CLILib\CLIBase::main()
+#11 {main}
+
+15) DirtyProviderTest::testDirtyData with data set #2 HH\Vector {
+  'the',
+  'quicky',
+  'brown',
+  'fox',
+  1,
+}
+Failed asserting that two strings are identical.
+
+#0 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Constraint/IsIdentical.php(88): PHPUnit_Framework_Constraint->fail()
+#1 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(2060): PHPUnit_Framework_Constraint_IsIdentical->evaluate()
+#2 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(1379): PHPUnit_Framework_Assert::assertThat()
+#3 /Users/wlin21/Desktop/hacktest/vendor/facebook/fbexpect/src/ExpectObj.php(100): PHPUnit_Framework_Assert::assertSame()
+#4 /Users/wlin21/Desktop/hacktest/tests/dirty/DirtyProviderTest.php(36): Facebook\FBExpect\ExpectObj->toBeSame()
+#5 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(78): DirtyProviderTest->testDirtyData()
+#6 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(84): Closure$Facebook\HackTest\HackTestCase::runAsync#2()
+#7 /Users/wlin21/Desktop/hacktest/src/Runner/HackTestRunner.php(29): Facebook\HackTest\HackTestCase->runAsync()
+#8 /Users/wlin21/Desktop/hacktest/src/HackTestCLI.php(48): Facebook\HackTest\HackTestRunner::runAsync()
+#9 /Users/wlin21/Desktop/hacktest/vendor/facebook/hh-clilib/src/CLIBase.hh(168): Facebook\HackTest\HackTestCLI->mainAsync()
+#10 /Users/wlin21/Desktop/hacktest/bin/hacktest(8): Facebook\CLILib\CLIBase::main()
+#11 {main}
+
+16) DirtyProviderTest::testDirtyData with data set #3 HH\Set {
+  'the',
+  'quicky',
+  'brown',
+  'fox',
+  1,
+}
+Failed asserting that two strings are identical.
+
+#0 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Constraint/IsIdentical.php(88): PHPUnit_Framework_Constraint->fail()
+#1 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(2060): PHPUnit_Framework_Constraint_IsIdentical->evaluate()
+#2 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(1379): PHPUnit_Framework_Assert::assertThat()
+#3 /Users/wlin21/Desktop/hacktest/vendor/facebook/fbexpect/src/ExpectObj.php(100): PHPUnit_Framework_Assert::assertSame()
+#4 /Users/wlin21/Desktop/hacktest/tests/dirty/DirtyProviderTest.php(36): Facebook\FBExpect\ExpectObj->toBeSame()
+#5 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(78): DirtyProviderTest->testDirtyData()
+#6 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(84): Closure$Facebook\HackTest\HackTestCase::runAsync#2()
+#7 /Users/wlin21/Desktop/hacktest/src/Runner/HackTestRunner.php(29): Facebook\HackTest\HackTestCase->runAsync()
+#8 /Users/wlin21/Desktop/hacktest/src/HackTestCLI.php(48): Facebook\HackTest\HackTestRunner::runAsync()
+#9 /Users/wlin21/Desktop/hacktest/vendor/facebook/hh-clilib/src/CLIBase.hh(168): Facebook\HackTest\HackTestCLI->mainAsync()
+#10 /Users/wlin21/Desktop/hacktest/bin/hacktest(8): Facebook\CLILib\CLIBase::main()
+#11 {main}
+
+17) DirtyProviderTest::testDirtyData with data set #4 HH\Map {
+  0 => 'the',
+  1 => 'quicky',
+  2 => 'brown',
+  3 => 'fox',
+  4 => 1,
+}
+Failed asserting that two strings are identical.
+
+#0 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Constraint/IsIdentical.php(88): PHPUnit_Framework_Constraint->fail()
+#1 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(2060): PHPUnit_Framework_Constraint_IsIdentical->evaluate()
+#2 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(1379): PHPUnit_Framework_Assert::assertThat()
+#3 /Users/wlin21/Desktop/hacktest/vendor/facebook/fbexpect/src/ExpectObj.php(100): PHPUnit_Framework_Assert::assertSame()
+#4 /Users/wlin21/Desktop/hacktest/tests/dirty/DirtyProviderTest.php(36): Facebook\FBExpect\ExpectObj->toBeSame()
+#5 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(78): DirtyProviderTest->testDirtyData()
+#6 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(84): Closure$Facebook\HackTest\HackTestCase::runAsync#2()
+#7 /Users/wlin21/Desktop/hacktest/src/Runner/HackTestRunner.php(29): Facebook\HackTest\HackTestCase->runAsync()
+#8 /Users/wlin21/Desktop/hacktest/src/HackTestCLI.php(48): Facebook\HackTest\HackTestRunner::runAsync()
+#9 /Users/wlin21/Desktop/hacktest/vendor/facebook/hh-clilib/src/CLIBase.hh(168): Facebook\HackTest\HackTestCLI->mainAsync()
+#10 /Users/wlin21/Desktop/hacktest/bin/hacktest(8): Facebook\CLILib\CLIBase::main()
+#11 {main}
+
+18) DirtyProviderTest::testDirtyData with data set #5 vec [
+  'the',
+  'quicky',
+  'brown',
+  'fox',
+  1,
+]
+Failed asserting that two strings are identical.
+
+#0 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Constraint/IsIdentical.php(88): PHPUnit_Framework_Constraint->fail()
+#1 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(2060): PHPUnit_Framework_Constraint_IsIdentical->evaluate()
+#2 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(1379): PHPUnit_Framework_Assert::assertThat()
+#3 /Users/wlin21/Desktop/hacktest/vendor/facebook/fbexpect/src/ExpectObj.php(100): PHPUnit_Framework_Assert::assertSame()
+#4 /Users/wlin21/Desktop/hacktest/tests/dirty/DirtyProviderTest.php(36): Facebook\FBExpect\ExpectObj->toBeSame()
+#5 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(78): DirtyProviderTest->testDirtyData()
+#6 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(84): Closure$Facebook\HackTest\HackTestCase::runAsync#2()
+#7 /Users/wlin21/Desktop/hacktest/src/Runner/HackTestRunner.php(29): Facebook\HackTest\HackTestCase->runAsync()
+#8 /Users/wlin21/Desktop/hacktest/src/HackTestCLI.php(48): Facebook\HackTest\HackTestRunner::runAsync()
+#9 /Users/wlin21/Desktop/hacktest/vendor/facebook/hh-clilib/src/CLIBase.hh(168): Facebook\HackTest\HackTestCLI->mainAsync()
+#10 /Users/wlin21/Desktop/hacktest/bin/hacktest(8): Facebook\CLILib\CLIBase::main()
+#11 {main}
+
+19) DirtyProviderTest::testDirtyData with data set #6 keyset [
+  'the',
+  'quicky',
+  'brown',
+  'fox',
+  1,
+]
+Failed asserting that two strings are identical.
+
+#0 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Constraint/IsIdentical.php(88): PHPUnit_Framework_Constraint->fail()
+#1 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(2060): PHPUnit_Framework_Constraint_IsIdentical->evaluate()
+#2 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(1379): PHPUnit_Framework_Assert::assertThat()
+#3 /Users/wlin21/Desktop/hacktest/vendor/facebook/fbexpect/src/ExpectObj.php(100): PHPUnit_Framework_Assert::assertSame()
+#4 /Users/wlin21/Desktop/hacktest/tests/dirty/DirtyProviderTest.php(36): Facebook\FBExpect\ExpectObj->toBeSame()
+#5 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(78): DirtyProviderTest->testDirtyData()
+#6 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(84): Closure$Facebook\HackTest\HackTestCase::runAsync#2()
+#7 /Users/wlin21/Desktop/hacktest/src/Runner/HackTestRunner.php(29): Facebook\HackTest\HackTestCase->runAsync()
+#8 /Users/wlin21/Desktop/hacktest/src/HackTestCLI.php(48): Facebook\HackTest\HackTestRunner::runAsync()
+#9 /Users/wlin21/Desktop/hacktest/vendor/facebook/hh-clilib/src/CLIBase.hh(168): Facebook\HackTest\HackTestCLI->mainAsync()
+#10 /Users/wlin21/Desktop/hacktest/bin/hacktest(8): Facebook\CLILib\CLIBase::main()
+#11 {main}
+
+20) DirtyProviderTest::testDirtyData with data set #7 dict [
+  0 => 'the',
+  1 => 'quicky',
+  2 => 'brown',
+  3 => 'fox',
+  4 => 1,
+]
+Failed asserting that two strings are identical.
+
+#0 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Constraint/IsIdentical.php(88): PHPUnit_Framework_Constraint->fail()
+#1 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(2060): PHPUnit_Framework_Constraint_IsIdentical->evaluate()
+#2 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(1379): PHPUnit_Framework_Assert::assertThat()
+#3 /Users/wlin21/Desktop/hacktest/vendor/facebook/fbexpect/src/ExpectObj.php(100): PHPUnit_Framework_Assert::assertSame()
+#4 /Users/wlin21/Desktop/hacktest/tests/dirty/DirtyProviderTest.php(36): Facebook\FBExpect\ExpectObj->toBeSame()
+#5 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(78): DirtyProviderTest->testDirtyData()
+#6 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(84): Closure$Facebook\HackTest\HackTestCase::runAsync#2()
+#7 /Users/wlin21/Desktop/hacktest/src/Runner/HackTestRunner.php(29): Facebook\HackTest\HackTestCase->runAsync()
+#8 /Users/wlin21/Desktop/hacktest/src/HackTestCLI.php(48): Facebook\HackTest\HackTestRunner::runAsync()
+#9 /Users/wlin21/Desktop/hacktest/vendor/facebook/hh-clilib/src/CLIBase.hh(168): Facebook\HackTest\HackTestCLI->mainAsync()
+#10 /Users/wlin21/Desktop/hacktest/bin/hacktest(8): Facebook\CLILib\CLIBase::main()
+#11 {main}
+
+21) DirtyProviderTest::testDirtyData with data set #8 HackLibTestForwardOnlyIterator::__set_state(array(
+  'used' => false,
+  'keyIdx' => 0,
+  'keys' =>
+  array (
+    0 => 0,
+    1 => 1,
+    2 => 2,
+    3 => 3,
+    4 => 4,
+  ),
+  'data' =>
+  dict [
+    0 => 'the',
+    1 => 'quicky',
+    2 => 'brown',
+    3 => 'fox',
+    4 => 1,
+  ],
+))
+Failed asserting that two strings are identical.
+
+#0 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Constraint/IsIdentical.php(88): PHPUnit_Framework_Constraint->fail()
+#1 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(2060): PHPUnit_Framework_Constraint_IsIdentical->evaluate()
+#2 /Users/wlin21/Desktop/hacktest/vendor/phpunit/phpunit/src/Framework/Assert.php(1379): PHPUnit_Framework_Assert::assertThat()
+#3 /Users/wlin21/Desktop/hacktest/vendor/facebook/fbexpect/src/ExpectObj.php(100): PHPUnit_Framework_Assert::assertSame()
+#4 /Users/wlin21/Desktop/hacktest/tests/dirty/DirtyProviderTest.php(36): Facebook\FBExpect\ExpectObj->toBeSame()
+#5 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(78): DirtyProviderTest->testDirtyData()
+#6 /Users/wlin21/Desktop/hacktest/src/Framework/HackTestCase.php(84): Closure$Facebook\HackTest\HackTestCase::runAsync#2()
+#7 /Users/wlin21/Desktop/hacktest/src/Runner/HackTestRunner.php(29): Facebook\HackTest\HackTestCase->runAsync()
+#8 /Users/wlin21/Desktop/hacktest/src/HackTestCLI.php(48): Facebook\HackTest\HackTestRunner::runAsync()
+#9 /Users/wlin21/Desktop/hacktest/vendor/facebook/hh-clilib/src/CLIBase.hh(168): Facebook\HackTest\HackTestCLI->mainAsync()
+#10 /Users/wlin21/Desktop/hacktest/bin/hacktest(8): Facebook\CLILib\CLIBase::main()
+#11 {main}
+
+Summary: 955 test(s), 934 passed, 11 failed, 4 skipped, 6 error(s).

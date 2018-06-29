@@ -1,58 +1,53 @@
-[![Build Status](https://travis-ci.org/hhvm/hsl.svg?branch=master)](https://travis-ci.org/hhvm/hsl)
+[![Build Status](https://travis-ci.com/hhvm/hacktest.svg?token=zPvriessjph1qhCX5PxF&branch=master)](https://travis-ci.com/hhvm/hacktest)
 
-# Hack Standard Library
+# HackTest
 
-The goal of the Hack Standard Library is to provide a consistent, centralized,
-well-typed set of APIs for Hack programmers. We aim to achieve this by
-implementing the library according to codified design principles.
+HackTest is a pure Hack alternative to PHPUnit. In order to use this framework, you must migrate assert calls to use the [expect](https://github.com/hhvm/fbexpect) API.
 
-This library is especially useful for working with the Hack arrays (`vec`,
-`keyset`, and `dict`).
+## Usage
 
-For future APIs, see
-[the experimental repository](https://github.com/hhvm/hsl-experimental).
+```
+bin/hacktest [OPTIONS] PATH [PATH ...]
+```
 
 ## Examples
 
-```Hack
-<?hh // strict
+### "I want to test all files in a directory"
+```
+$ bin/hacktest tests/clean/exit/
+HackTest 1.0 by Wilson Lin and contributors.
 
-use namespace HH\Lib\{Vec,Dict,Keyset,Str,Math};
+...
 
-function main(vec<?int> $foo): vec<string> {
-  return $foo
-    |> Vec\filter_nulls($$)
-    |> Vec\map($$, $it ==> (string) $it);
-}
+Summary: 3 test(s), 3 passed, 0 failed, 0 skipped, 0 error(s).
 ```
 
-For a real-world example, see [bin/generate-docs.php](bin/generate-docs.php).
+### "I want to run all tests in a specific file"
 
-## Finding Functions
+```
+$ bin/hacktest tests/dirty/DirtyAsyncTest.php
+HackTest 1.0 by Wilson Lin and contributors.
 
-Functions in the HSL are organized into namespaces according to the following
-rule:
+FFF
 
-If a function returns a particular type or only operates on that type, it
-belongs in that namespace.
+1) DirtyAsyncTest::testWithNonNullableTypesAsync
+Failed asserting that Array &0 (
+    0 => 1
+    1 => 'foo'
+) is not identical to Array &0 (
+    0 => 1
+    1 => 'foo'
+).
 
-Here are some examples:
+/fakepath/hacktest/tests/dirty/DirtyAsyncTest.php(22): Facebook\FBExpect\ExpectObj->toNotBeSame()
+/fakepath/hacktest/src/Framework/HackTestCase.php(43): DirtyAsyncTest->testWithNonNullableTypesAsync()
 
-### "I want a vec containing the keys of a particular container."
+2)...
 
-Based on the `vec` return type, you'd look in the Vec namespace and come across
-`Vec\keys`. Instead, if you wanted a keyset, you'd look in the Keyset namespace
-and find `Keyset\keys`.
+Summary: 3 test(s), 0 passed, 3 failed, 0 skipped, 0 error(s).
+```
 
-### "I want the largest value in a particular container."
-
-Because the function is a math operation, you'd look in
-the Math namespace and find `Math\max` and `Math\max_by`.
-
-## Full Documentation
-
-Automatically-generated documentation is available on
-[docs.hhvm.com](https://docs.hhvm.com/hsl/reference/).
+For an example in verbose mode, see [example.txt](example.txt)
 
 ## Installation
 
@@ -64,48 +59,20 @@ to add an
 to your project first.
 
 ```
-$ composer require hhvm/hsl
+$ composer require hhvm/hacktest
 ```
 
 ## Principles
-
- - All functions should be typed as strictly as possible in Hack
- - The library should be internally consistent
- - References may not be used
- - Arguments should be as general as possible. For example, for Hack array
-   functions, prefer `Traversable`/`KeyedTraversable` inputs where practical,
-   falling back to `Container`/`KeyedContainer` when needed
- - Return types should be as specific as possible
- - All files should be `<?hh // strict`
-
-### Consistency Rules
-
-This is not an exhaustive list.
-
- - Functions argument order should be consistent within the library
-   - All container-related functions take the container as the first argument
-     (e.g. `Vec\map()` and `Vec\filter()`)
-   - `$haystack`, `$needle`, and `$pattern` are in the same order for all
-     functions that take them
- - Functions should be consistently named
- - If an operation can conceivably operate on either keys or values, the default
-   is to operate on the values - the version that operates on keys should have
-   a `_key` suffix (e.g. `C\find()`, `C\find_key()`,
-   `C\contains()`, `C\contains_key()`)
- - Find-like operations that can fail should return `?T`; a second function
-   should be added with an `x` suffix that uses an invariant to return `T`
-   (e.g. `C\first()`, `C\firstx()`)
- - Container functions that do an operation based on a user-supplied keying
-   function for each element should be suffixed with `_by` (e.g.
-   `Vec\sort_by()`, `Dict\group_by()`, `Math\max_by()`)
+- Test files must end in 'Test.php' or 'Test.hh'
+- Test classes must extend `HackTestCase`
+- Class names must match base filenames
+- Only test methods and data providers can be public
+- Test methods must begin with 'test'
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md); in particular, new features should be
-contributed to
-[the experimental repository](https://github.com/hhvm/hsl-experimental/)
-instead.
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-The Hack Standard Library is MIT-licensed.
+The HackTest framework is MIT-licensed.
