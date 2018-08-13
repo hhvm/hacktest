@@ -17,20 +17,18 @@ final class ClassRetrieverTest extends HackTestCase {
 
   public function testClassMatchFileName(): void {
     $path = 'tests/clean/hsl/tuple';
-    $file_retriever = new FileRetriever($path);
-    foreach ($file_retriever->getTestFiles() as $file) {
-      $cr = new ClassRetriever($file);
+    $files = (new FileRetriever($path))->getTestFiles();
+    foreach ($files as $file) {
+      $cr = ClassRetriever::forFile($file);
       $classname = $cr->getTestClassName()
         |> Str\split($$, '\\')
         |> C\lastx($$);
-      $filename = $file->getFilename()
+      $filename = $file
         |> Str\split($$, '/')
         |> C\lastx($$)
         |> Str\split($$, '.')
         |> C\firstx($$);
 
-      $parent = $file->getClass($classname)->getParentClassName();
-      expect($parent)->toBeSame(HackTestCase::class);
       expect($classname)->toBeSame($filename);
     }
   }

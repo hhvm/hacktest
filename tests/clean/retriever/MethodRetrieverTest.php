@@ -19,7 +19,7 @@ final class MethodRetrieverTest extends HackTestCase {
     $path = 'tests/clean/hsl/tuple';
     $file_retriever = new FileRetriever($path);
     foreach ($file_retriever->getTestFiles() as $file) {
-      $classname = (new ClassRetriever($file))->getTestClassName();
+      $classname = ClassRetriever::forFile($file)->getTestClassName();
       $test_methods = (new $classname())->getTestMethods();
       foreach ($test_methods as $method) {
         expect(Str\starts_with($method->getName(), 'test'))->toBeTrue();

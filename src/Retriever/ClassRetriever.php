@@ -12,25 +12,64 @@ namespace Facebook\HackTest;
 
 use namespace Facebook\TypeAssert;
 use namespace HH\Lib\{C, Str, Vec};
-use type Facebook\DefinitionFinder\FileParser;
 use function Facebook\FBExpect\expect;
 
 final class ClassRetriever {
+  const type TFacts = shape(
+    'types' => array<shape(
+      'name' => string,
+      'baseTypes' => array<string>,
+      'kindOf' => string,
+      ...
+    )>,
+    ...
+  );
 
-  public function __construct(private FileParser $fp) {
+  public function __construct(
+    private string $filename,
+    private self::TFacts $facts,
+  ) {
+  }
+
+  public static function forFile(string $path): ClassRetriever {
+    return C\onlyx(self::forFiles(keyset[$path]));
+  }
+
+  public static function forFiles(
+    keyset<string> $paths,
+  ): vec<ClassRetriever> {
+    $all_facts = \HH\facts_parse(
+      /* root = */ '/',
+      /* HH_FIXME[4007] need a PHP array here for now */
+      (array) $paths,
+      /* force_hh = */ false,
+      /* multithreaded = */ true,
+    );
+    return Vec\map(
+      $paths,
+      $path ==> {
+        $file_facts = TypeAssert\matches_type_structure(
+          type_structure(self::class, 'TFacts'),
+          $all_facts[$path],
+        );
+        return new self($path, $file_facts);
+      },
+    );
   }
 
   public function getTestClassName(): classname<HackTestCase> {
-    $test_classes = Vec\filter(
-      $this->fp->getClassNames(),
-      $name ==> \is_subclass_of($name, HackTestCase::class, true),
-    );
+    $test_classes = $this->facts['types']
+      |> Vec\map($$, $t ==> $t['name'])
+      |> Vec\filter(
+        $$,
+        $name ==> \is_subclass_of($name, HackTestCase::class, true),
+      );
 
     if (C\count($test_classes) !== 1) {
       throw new InvalidTestClassException(
         Str\format(
           'There must be exactly one test class in %s',
-          $this->fp->getFilename(),
+          $this->filename,
         ),
       );
     }
@@ -39,7 +78,7 @@ final class ClassRetriever {
     $class_name = $name
       |> Str\split($$, '\\')
       |> C\lastx($$);
-    $filename = $this->fp->getFilename()
+    $filename = $this->filename
       |> Str\split($$, '/')
       |> C\lastx($$)
       |> Str\split($$, '.')

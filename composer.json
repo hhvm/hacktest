@@ -13,7 +13,6 @@
     "hhvm": "^3.27.0",
     "hhvm/hhvm-autoload": "^1.6",
     "hhvm/hsl": "^3.26",
-    "facebook/definition-finder": "^2.0",
     "facebook/hh-clilib": "^1.0",
     "facebook/hh-apidoc": "^0.1",
     "hhvm/type-assert": "^3.2"
