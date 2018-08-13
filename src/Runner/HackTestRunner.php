@@ -10,8 +10,7 @@
 
 namespace Facebook\HackTest;
 
-use type Facebook\DefinitionFinder\FileParser;
-use namespace HH\Lib\{C, Str};
+use namespace HH\Lib\{Keyset, Vec};
 
 abstract final class HackTestRunner {
 
@@ -20,14 +19,18 @@ abstract final class HackTestRunner {
     (function(TestResult): void) $writer,
   ): Awaitable<dict<string, dict<string, ?\Throwable>>> {
     $errors = dict[];
+    $files = keyset[];
     foreach ($paths as $path) {
-      $file_retriever = new FileRetriever($path);
-      foreach ($file_retriever->getTestFiles() as $file) {
-        $classname = (new ClassRetriever($file))->getTestClassName();
-        $test_case = new $classname();
-        /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-        $errors[$classname] = await $test_case->runAsync($writer);
-      }
+      $files = Keyset\union($files, (new FileRetriever($path))->getTestFiles());
+    }
+
+    $classes = ClassRetriever::forFiles($files)
+      |> Vec\map($$, $r ==> $r->getTestClassName());
+
+    foreach ($classes as $classname) {
+      $test_case = new $classname();
+      /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
+      $errors[$classname] = await $test_case->runAsync($writer);
     }
     return $errors;
   }

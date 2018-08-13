@@ -10,16 +10,17 @@
 
 namespace Facebook\HackTest;
 
-use type Facebook\DefinitionFinder\FileParser;
 use namespace HH\Lib\Str;
 
 final class FileRetriever {
+  private string $path;
 
-  public function __construct(private string $path = '.') {
+  public function __construct(string $path = '.') {
+    $this->path = \realpath($path);
   }
 
-  public function getTestFiles(): vec<FileParser> {
-    $files = vec[];
+  public function getTestFiles(): keyset<string> {
+    $files = keyset[];
     if (!\is_dir($this->path)) {
       $file = $this->path;
       if (!\is_file($file)) {
@@ -28,7 +29,7 @@ final class FileRetriever {
         );
       }
       if ($this->isTestFile($file)) {
-        return vec[FileParser::fromFile($file)];
+        return keyset[$file];
       }
       throw new InvalidTestFileException(
         Str\format(
@@ -44,7 +45,7 @@ final class FileRetriever {
     foreach ($rii as $file) {
       $filename = $file->getPathname();
       if (!$file->isDir() && $this->isTestFile($filename)) {
-        $files[] = FileParser::fromFile($filename);
+        $files[] = $filename;
       }
     }
 
