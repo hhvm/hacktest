@@ -8,126 +8,230 @@
  *
  */
 
+// @lint-ignore-every NAMESPACES
+// @lint-ignore-every HackLint5583 await in loop for tests
+
 namespace Facebook\HackTest;
 
 use type Facebook\HHAPIDoc\DocBlock\DocBlock;
-use namespace HH\Lib\{C, Vec, Str};
+use namespace HH\Lib\{C, Str, Vec};
 
 class HackTestCase {
 
   private vec<\ReflectionMethod> $methods = vec[];
 
+  private ?string $expectedException = null;
+  private ?string $expectedExceptionMessage = null;
+  private ?int $expectedExceptionCode = null;
+  private bool $setUpNeeded = true;
+  const bool ALLOW_STATIC_TEST_METHODS = false;
+
   public final function __construct() {
+    $class = new \ReflectionClass($this);
     $this->methods = Vec\filter(
-      (new \ReflectionClass($this))->getMethods(),
-      $method ==> $method->class !== self::class,
+      $class->getMethods(),
+      $method ==> Str\starts_with($method->getName(), 'test'),
     );
-    $this->methods = $this->getTestMethods();
+    $this->filterTestMethods();
+    $this->validateTestMethods();
   }
 
   public final async function runAsync(
     (function(TestResult): void) $write_progress,
   ): Awaitable<dict<string, ?\Throwable>> {
+
     $errors = dict[];
-    $to_run = dict[];
+    await static::beforeFirstTest();
+
     foreach ($this->methods as $method) {
-      $method_name = $method->getName();
+      $to_run = dict[];
+
+      $this->clearExpectedException();
+      $exception = $method->getAttribute('ExpectedException');
+      if ($exception !== null) {
+        $exception_message = $method->getAttribute('ExpectedExceptionMessage');
+        $msg = null;
+        $code = null;
+        if ($exception_message !== null) {
+          $msg = (string)C\onlyx($exception_message);
+        }
+        $exception_code = $method->getAttribute('ExpectedExceptionCode');
+        if ($exception_code !== null) {
+          $code = (int)C\onlyx($exception_code);
+        }
+        $this->setExpectedException((string)C\onlyx($exception), $msg, $code);
+      }
+
       $doc = $method->getDocComment();
       $providers = vec[];
-      if ($doc !== null) {
+      if ($doc !== false) {
         $block = new DocBlock((string)$doc);
         $providers = $block->getTagsByName('@dataProvider');
       }
+      $provider = $method->getAttribute('DataProvider');
+      if ($provider !== null) {
+        $providers[] = (string)C\onlyx($provider);
+      }
+
+      $method_name = $method->getName();
       if (C\is_empty($providers)) {
         /* HH_IGNORE_ERROR[2011] this is unsafe */
         $to_run[$method_name] = () ==> $this->$method_name();
-        continue;
-      }
-      if (C\count($providers) > 1) {
-        throw new InvalidTestMethodException(
-          Str\format('There can only be one data provider in %s', $method_name),
-        );
-      }
-      $provider = C\onlyx($providers);
-      try {
-        /* HH_IGNORE_ERROR[2011] this is unsafe */
-        $tuples = $this->$provider();
-        if (C\is_empty($tuples)) {
-          throw new InvalidDataProviderException(
-            Str\format(
-              'This test depends on a provider (%s) that returns no data.',
-              $provider,
-            ),
-          );
-        }
-      } catch (\Throwable $e) {
-        $this->writeError($e, $write_progress);
-        $errors[$method_name] = $e;
-        continue;
-      }
-      $tuple_num = 0;
-      foreach ($tuples as $tuple) {
-        $tuple_num++;
-        $key = Str\format(
-          '%s.%d.%s',
-          $method_name,
-          $tuple_num,
-          $this->prettyFormat($tuple),
-        );
-        /* HH_IGNORE_ERROR[2011] this is unsafe */
-        $to_run[$key] = () ==> $this->$method_name(...$tuple);
-      }
-    }
-
-    foreach ($to_run as $key => $runnable) {
-      try {
-        $res = $runnable();
-        if ($res instanceof Awaitable) {
-          /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-          await $res;
-        }
-        $write_progress(TestResult::PASSED);
-        $errors[$key] = null;
-      } catch (\Throwable $e) {
-        $errors[$key] = $e;
-        $this->writeError($e, $write_progress);
-      }
-    }
-
-    return $errors;
-  }
-
-  public final function getTestMethods(): vec<\ReflectionMethod> {
-    $methods = vec[];
-    foreach ($this->methods as $method) {
-      if ($method->isPublic() && !$method->isStatic()) {
-        $method_name = $method->getName();
-        if (Str\starts_with($method_name, 'test')) {
-          $type = Str\replace($method->getReturnTypeText(), 'HH\\', '');
-          if ($type !== 'void' && $type !== 'Awaitable<void>') {
-            throw new InvalidTestMethodException(
-              Str\format(
-                'Test method (%s) must return void or Awaitable<void> (for async methods)',
-                $method_name,
-              ),
-            );
-          }
-          $methods[] = $method;
-        } else if (!Str\starts_with($method_name, 'provide')) {
+      } else {
+        if (C\count($providers) > 1) {
           throw new InvalidTestMethodException(
             Str\format(
-              'Only test methods and data providers can be public. Consider changing %s to a private or protected method.',
+              'There can only be one data provider in %s',
               $method_name,
             ),
           );
         }
+        $provider = C\onlyx($providers);
+        /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
+        await $this->beforeEachTest();
+        $this->setUpNeeded = false;
+        try {
+          /* HH_IGNORE_ERROR[2011] this is unsafe */
+          $tuples = $this->$provider();
+          if (C\is_empty($tuples)) {
+            throw new InvalidDataProviderException(
+              Str\format(
+                'This test depends on a provider (%s) that returns no data.',
+                $provider,
+              ),
+            );
+          }
+        } catch (\Throwable $e) {
+          $this->writeError($e, $write_progress);
+          $errors[$method_name] = $e;
+          /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
+          await $this->afterEachTest();
+          continue;
+        }
+
+        $tuple_num = 0;
+        foreach ($tuples as $tuple) {
+          $tuple as Container<_>;
+          $tuple_num++;
+          $key = Str\format(
+            '%s.%d.%s',
+            $method_name,
+            $tuple_num,
+            $this->prettyFormat($tuple),
+          );
+          /* HH_IGNORE_ERROR[2011] this is unsafe */
+          $to_run[$key] = () ==> $this->$method_name(...$tuple);
+        }
+      }
+
+      foreach ($to_run as $key => $runnable) {
+        if ($this->setUpNeeded) {
+          /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
+          await $this->beforeEachTest();
+        } else {
+          $this->setUpNeeded = true;
+        }
+        $clean = false;
+        try {
+          $res = $runnable();
+          if ($res instanceof Awaitable) {
+            /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
+            await $res;
+          }
+          /* HH_IGNORE_ERROR[6002] this is used in catch block */
+          $clean = true;
+          /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
+          await $this->afterEachTest();
+          if ($this->expectedException !== null) {
+            throw new ExpectationFailedException(
+              Str\format(
+                'Failed asserting that %s was thrown',
+                $this->expectedException,
+              ),
+            );
+          }
+          $write_progress(TestResult::PASSED);
+          $errors[$key] = null;
+        } catch (\Throwable $e) {
+          if (!$clean) {
+            /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
+            await $this->afterEachTest();
+          }
+          $pass = false;
+          if (
+            $this->expectedException !== null &&
+            !($e instanceof SkippedTestException) &&
+            \is_a($e, $this->expectedException)
+          ) {
+            $pass = true;
+            $expected_message = (string)$this->expectedExceptionMessage;
+            if (!Str\contains($e->getMessage(), $expected_message)) {
+              $e = new ExpectationFailedException(
+                Str\format(
+                  'Failed asserting that the exception message \'%s\' contains \'%s\'',
+                  $e->getMessage(),
+                  $expected_message,
+                ),
+              );
+              $pass = false;
+            } else if (
+              $this->expectedExceptionCode !== null &&
+              $this->expectedExceptionCode !== $e->getCode()
+            ) {
+              $exception_code = (int)$this->expectedExceptionCode;
+              $e = new ExpectationFailedException(
+                Str\format(
+                  'Failed asserting that the exception code %d is equal to %d',
+                  (int)$e->getCode(),
+                  $exception_code,
+                ),
+              );
+              $pass = false;
+            }
+          }
+          if ($pass) {
+            $write_progress(TestResult::PASSED);
+            $errors[$key] = null;
+          } else {
+            $errors[$key] = $e;
+            $this->writeError($e, $write_progress);
+          }
+        }
       }
     }
+    await static::afterLastTest();
 
-    return $methods;
+    return $errors;
   }
 
-  public final function writeError(
+  private final function filterTestMethods(): void {
+    $methods = vec[];
+    foreach ($this->methods as $method) {
+      $type = Str\replace($method->getReturnTypeText(), 'HH\\', '');
+      if ($type === 'void' || $type === 'Awaitable<void>') {
+        $methods[] = $method;
+      }
+    }
+    $this->methods = $methods;
+  }
+
+  private final function validateTestMethods(): void {
+    foreach ($this->methods as $method) {
+      $method_name = $method->getName();
+      if (!$method->isPublic()) {
+        throw new InvalidTestMethodException(
+          Str\format('Test method (%s) must be public', $method_name),
+        );
+      }
+      if (!static::ALLOW_STATIC_TEST_METHODS && $method->isStatic()) {
+        throw new InvalidTestMethodException(
+          Str\format('Test method (%s) cannot be static', $method_name),
+        );
+      }
+    }
+  }
+
+  private final function writeError(
     \Throwable $e,
     (function(TestResult): void) $write_progress,
   ): void {
@@ -135,21 +239,24 @@ class HackTestCase {
     if ($e instanceof SkippedTestException) {
       $status = TestResult::SKIPPED;
     } else if (
-      \is_a($e, 'PHPUnit\\Framework\\ExpectationFailedException', true) ||
-      \is_a($e, 'PHPUnit_Framework_ExpectationFailedException', true)
+      \is_a($e, 'PHPUnit\\Framework\\ExpectationFailedException') ||
+      \is_a($e, 'PHPUnit_Framework_ExpectationFailedException') ||
+      $e instanceof ExpectationFailedException
     ) {
       $status = TestResult::FAILED;
     }
     $write_progress($status);
   }
 
-  public final function prettyFormat(Container<mixed> $tuple): string {
+  private final function prettyFormat(Container<mixed> $tuple): string {
     $data = '';
-    if (C\count($tuple) > 1) {
+    $size = C\count($tuple);
+    $num_arg = 1;
+    if ($size > 1) {
       $data .= '(';
       foreach ($tuple as $arg) {
         $data .= \var_export($arg, true);
-        if ($arg !== C\lastx($tuple)) {
+        if ($num_arg++ !== $size) {
           $data .= ', ';
         }
       }
@@ -161,8 +268,37 @@ class HackTestCase {
     return $data;
   }
 
-  public final function markTestSkipped(string $message): void {
+  public static final function markTestSkipped(string $message): void {
     throw new SkippedTestException($message);
   }
+
+  public static function markTestIncomplete(string $message): void {
+    throw new SkippedTestException($message);
+  }
+
+  public static final function fail(string $message = ''): void {
+    throw new \RuntimeException($message);
+  }
+
+  public final function setExpectedException(
+    string $exception,
+    ?string $exception_message = '',
+    ?int $exception_code = null,
+  ): void {
+    $this->expectedException = $exception;
+    $this->expectedExceptionMessage = $exception_message;
+    $this->expectedExceptionCode = $exception_code;
+  }
+
+  private function clearExpectedException(): void {
+    $this->expectedException = null;
+    $this->expectedExceptionMessage = null;
+    $this->expectedExceptionCode = null;
+  }
+
+  public async function beforeEachTest(): Awaitable<void> {}
+  public async function afterEachTest(): Awaitable<void> {}
+  public static async function beforeFirstTest(): Awaitable<void> {}
+  public static async function afterLastTest(): Awaitable<void> {}
 
 }

@@ -28,7 +28,7 @@ abstract final class HackLibTestTraversables {
   }
 
   // For testing functions that accept KeyedTraversables
-  public static function getKeyedIterator<Tk as arraykey, Tv>(
+  public static function getKeyedIterator<Tk, Tv>(
     KeyedTraversable<Tk, Tv> $ary,
   ): KeyedIterator<Tk, Tv> {
     return new HackLibTestForwardOnlyIterator(dict($ary));
