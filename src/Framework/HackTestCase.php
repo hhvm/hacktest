@@ -169,8 +169,9 @@ class HackTestCase {
             \is_a($e, $this->expectedException)
           ) {
             $pass = true;
+            $message = (string)$e->getMessage();
             $expected_message = (string)$this->expectedExceptionMessage;
-            if (!Str\contains($e->getMessage(), $expected_message)) {
+            if (!Str\contains($message, $expected_message)) {
               $e = new ExpectationFailedException(
                 Str\format(
                   'Failed asserting that the exception message \'%s\' contains \'%s\'',
