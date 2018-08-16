@@ -36,7 +36,7 @@ class HackTestCase {
     $this->validateTestMethods();
   }
 
-  public final async function runAsync(
+  public final async function genRunTests(
     (function(TestResult): void) $write_progress,
   ): Awaitable<dict<string, ?\Throwable>> {
 
