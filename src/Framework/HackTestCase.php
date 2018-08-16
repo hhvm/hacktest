@@ -212,7 +212,13 @@ class HackTestCase {
   private final function filterTestMethods(): void {
     $methods = vec[];
     foreach ($this->methods as $method) {
-      $type = Str\replace($method->getReturnTypeText(), 'HH\\', '');
+      $type_text = $method->getReturnTypeText();
+      if ($type_text === false) {
+        // nothing we can really do if a method begins with 'test' and has no return type hint
+        $methods[] = $method;
+        continue;
+      }
+      $type = Str\replace($type_text, 'HH\\', '');
       if ($type === 'void' || $type === 'Awaitable<void>') {
         $methods[] = $method;
       }
