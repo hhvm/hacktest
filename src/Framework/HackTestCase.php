@@ -57,7 +57,7 @@ class HackTestCase {
         }
         $exception_code = $method->getAttribute('ExpectedExceptionCode');
         if ($exception_code !== null) {
-          $code = (int)C\onlyx($exception_code);
+          $code = (string)C\onlyx($exception_code);
         }
         $this->setExpectedException((string)C\onlyx($exception), $msg, $code);
       }
@@ -283,17 +283,29 @@ class HackTestCase {
   public final function setExpectedException(
     string $exception,
     ?string $exception_message = '',
-    ?int $exception_code = null,
+    mixed $exception_code = null,
   ): void {
     $this->expectedException = $exception;
     $this->expectedExceptionMessage = $exception_message;
-    $this->expectedExceptionCode = $exception_code;
+    $this->expectedExceptionCode = static::computeExpectedExceptionCode($exception_code);
   }
 
   private function clearExpectedException(): void {
     $this->expectedException = null;
     $this->expectedExceptionMessage = null;
     $this->expectedExceptionCode = null;
+  }
+
+  public static function computeExpectedExceptionCode(mixed $exception_code): ?int {
+    if ($exception_code is int) {
+      return $exception_code;
+    }
+    if (PHP\ctype_digit($exception_code)) {
+      return (int)$exception_code;
+    }
+
+    // can't handle arbitrary enums for open source
+    return null;
   }
 
   public async function beforeEachTest(): Awaitable<void> {}
