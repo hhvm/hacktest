@@ -102,6 +102,11 @@ class HackTestCase {
             $tuples = await $tuples;
           }
           if (C\is_empty($tuples)) {
+            if ($this->isHackyDataProvider($provider)) {
+              /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
+              await $this->afterEachTest();
+              continue;
+            }
             throw new InvalidDataProviderException(
               Str\format(
                 'This test depends on a provider (%s) that returns no data.',
@@ -321,6 +326,10 @@ class HackTestCase {
 
     // can't handle arbitrary enums for open source
     return null;
+  }
+
+  public function isHackyDataProvider(string $provider): bool {
+    return false;
   }
 
   public async function beforeEachTest(): Awaitable<void> {}
