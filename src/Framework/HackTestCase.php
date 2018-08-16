@@ -98,6 +98,9 @@ class HackTestCase {
             /* HH_IGNORE_ERROR[2011] this is unsafe */
             $tuples = $this->$provider();
           }
+          if ($tuples instanceof Awaitable) {
+            $tuples = await $tuples;
+          }
           if (C\is_empty($tuples)) {
             throw new InvalidDataProviderException(
               Str\format(
