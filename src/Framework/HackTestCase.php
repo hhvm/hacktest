@@ -91,8 +91,13 @@ class HackTestCase {
         await $this->beforeEachTest();
         $this->setUpNeeded = false;
         try {
-          /* HH_IGNORE_ERROR[2011] this is unsafe */
-          $tuples = $this->$provider();
+          if (Str\contains($provider, '::')) {
+            /* HH_IGNORE_ERROR[4009] this is unsafe */
+            $tuples = $provider();
+          } else {
+            /* HH_IGNORE_ERROR[2011] this is unsafe */
+            $tuples = $this->$provider();
+          }
           if (C\is_empty($tuples)) {
             throw new InvalidDataProviderException(
               Str\format(
