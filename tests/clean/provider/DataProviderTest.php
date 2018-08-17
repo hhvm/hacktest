@@ -49,7 +49,7 @@ final class DataProviderTest extends HackTestCase {
   }
 
   public function provideSkip(): void {
-    $this->markTestSkipped('This test depends on a data provider that is not ready yet.');
+    self::markTestSkipped('This test depends on a data provider that is not ready yet.');
   }
 
   /** @dataProvider provideSkip */
