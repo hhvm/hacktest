@@ -30,7 +30,7 @@ abstract final class HackTestRunner {
     foreach ($classes as $classname) {
       $test_case = new $classname();
       /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-      $errors[$classname] = await $test_case->runAsync($writer);
+      $errors[$classname] = await $test_case->runTestsAsync($writer);
     }
     return $errors;
   }
