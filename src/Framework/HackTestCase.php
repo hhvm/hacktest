@@ -150,6 +150,9 @@ class HackTestCase {
         } else {
           $this->setUpNeeded = true;
         }
+        if ($exception === null) {
+          $this->clearExpectedException();
+        }
         $clean = false;
         try {
           $res = $runnable();
