@@ -36,6 +36,11 @@ class HackTestCase {
     $this->validateTestMethods();
   }
 
+  final public function getTestMethods(
+  ): vec<\ReflectionMethod> {
+    return $this->methods;
+  }
+
   public final async function runTestsAsync(
     (function(TestResult): void) $write_progress,
   ): Awaitable<dict<string, ?\Throwable>> {
@@ -124,7 +129,8 @@ class HackTestCase {
 
         $tuple_num = 0;
         foreach ($tuples as $tuple) {
-          $tuple as Container<_>;
+          $tuple = vec($tuple);
+          // 3.28+ $tuple as Container<_>;
           $tuple_num++;
           $key = Str\format(
             '%s.%d.%s',
@@ -317,11 +323,15 @@ class HackTestCase {
   }
 
   public static function computeExpectedExceptionCode(mixed $exception_code): ?int {
-    if ($exception_code is int) {
+    if (is_int($exception_code)) {
       return $exception_code;
     }
-    if (PHP\ctype_digit($exception_code)) {
-      return (int)$exception_code;
+    if (!is_string($exception_code)) {
+      return null;
+    }
+    $int = Str\to_int($exception_code);
+    if ($int !== null) {
+      return $int;
     }
 
     // can't handle arbitrary enums for open source
@@ -336,5 +346,4 @@ class HackTestCase {
   public async function afterEachTest(): Awaitable<void> {}
   public static async function beforeFirstTest(): Awaitable<void> {}
   public static async function afterLastTest(): Awaitable<void> {}
-
 }
