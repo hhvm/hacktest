@@ -46,7 +46,7 @@ class HackTestCase {
   ): Awaitable<dict<string, ?\Throwable>> {
 
     $errors = dict[];
-    await static::beforeFirstTest();
+    await static::genBeforeFirstTest();
 
     foreach ($this->methods as $method) {
       $to_run = dict[];
@@ -93,7 +93,7 @@ class HackTestCase {
         }
         $provider = C\onlyx($providers);
         /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-        await $this->beforeEachTest();
+        await $this->genBeforeEachTest();
         $this->setUpNeeded = false;
         try {
           if (Str\contains($provider, '::')) {
@@ -104,12 +104,13 @@ class HackTestCase {
             $tuples = $this->$provider();
           }
           if ($tuples instanceof Awaitable) {
+            /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
             $tuples = await $tuples;
           }
           if (C\is_empty($tuples)) {
             if ($this->isHackyDataProvider($provider)) {
               /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-              await $this->afterEachTest();
+              await $this->genAfterEachTest();
               continue;
             }
             throw new InvalidDataProviderException(
@@ -123,7 +124,7 @@ class HackTestCase {
           $this->writeError($e, $write_progress);
           $errors[$method_name] = $e;
           /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-          await $this->afterEachTest();
+          await $this->genAfterEachTest();
           continue;
         }
 
@@ -146,7 +147,7 @@ class HackTestCase {
       foreach ($to_run as $key => $runnable) {
         if ($this->setUpNeeded) {
           /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-          await $this->beforeEachTest();
+          await $this->genBeforeEachTest();
         } else {
           $this->setUpNeeded = true;
         }
@@ -163,7 +164,7 @@ class HackTestCase {
           /* HH_IGNORE_ERROR[6002] this is used in catch block */
           $clean = true;
           /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-          await $this->afterEachTest();
+          await $this->genAfterEachTest();
           if ($this->expectedException !== null) {
             throw new ExpectationFailedException(
               Str\format(
@@ -177,7 +178,7 @@ class HackTestCase {
         } catch (\Throwable $e) {
           if (!$clean) {
             /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-            await $this->afterEachTest();
+            await $this->genAfterEachTest();
           }
           $pass = false;
           if (
@@ -222,7 +223,7 @@ class HackTestCase {
         }
       }
     }
-    await static::afterLastTest();
+    await static::genAfterLastTest();
 
     return $errors;
   }
@@ -345,8 +346,9 @@ class HackTestCase {
     return false;
   }
 
-  public async function beforeEachTest(): Awaitable<void> {}
-  public async function afterEachTest(): Awaitable<void> {}
-  public static async function beforeFirstTest(): Awaitable<void> {}
-  public static async function afterLastTest(): Awaitable<void> {}
+  public async function beforeEachTestAsync(): Awaitable<void> {}
+  public async function afterEachTestAsync(): Awaitable<void> {}
+  public static async function beforeFirstTestAsync(): Awaitable<void> {}
+  public static async function afterLastTestAsync(): Awaitable<void> {}
+
 }

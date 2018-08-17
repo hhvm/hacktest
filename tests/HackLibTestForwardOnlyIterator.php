@@ -12,7 +12,7 @@
  * Iterator that implements the same behavior as generators when
  * Hack.Lang.AutoprimeGenerators is false
  */
-final class HackLibTestForwardOnlyIterator<Tk, Tv>
+final class HackLibTestForwardOnlyIterator<Tk as arraykey, Tv>
 implements Iterator<Tv>, KeyedIterator<Tk, Tv> {
   private bool $used = false;
   private int $keyIdx = 0;
