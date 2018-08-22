@@ -327,10 +327,10 @@ class HackTestCase {
   }
 
   public static function computeExpectedExceptionCode(mixed $exception_code): ?int {
-    if ($exception_code is int) {
+    if (is_int($exception_code)) {
       return $exception_code;
     }
-    if (!($exception_code is string)) {
+    if (!is_string($exception_code)) {
       return null;
     }
     $int = Str\to_int($exception_code);
