@@ -10,7 +10,7 @@
     "hhvm/hhast": "^3.27"
   },
   "require": {
-    "hhvm": "^3.27.0",
+    "hhvm": "^3.28.0",
     "hhvm/hhvm-autoload": "^1.6",
     "hhvm/hsl": "^3.26",
     "facebook/hh-clilib": "^1.0",
