@@ -40,8 +40,7 @@ final class HackTestCLI extends CLIWithRequiredArguments {
 
   <<__Override>>
   public async function mainAsync(): Awaitable<int> {
-    $this->getStdout()
-      ->write("HackTest 1.0 by Wilson Lin and contributors.\n\n");
+    $this->getStdout()->write("\n");
     $errors = await HackTestRunner::runAsync(
       $this->getArguments(),
       inst_meth($this, 'writeProgress'),

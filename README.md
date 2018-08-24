@@ -15,7 +15,6 @@ bin/hacktest [OPTIONS] PATH [PATH ...]
 ### "I want to test all files in a directory"
 ```
 $ bin/hacktest tests/clean/exit/
-HackTest 1.0 by Wilson Lin and contributors.
 
 ...
 
@@ -26,7 +25,6 @@ Summary: 3 test(s), 3 passed, 0 failed, 0 skipped, 0 error(s).
 
 ```
 $ bin/hacktest tests/dirty/DirtyAsyncTest.php
-HackTest 1.0 by Wilson Lin and contributors.
 
 FFF
 
