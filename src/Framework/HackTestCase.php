@@ -67,12 +67,7 @@ class HackTestCase {
         $this->setExpectedException((string)C\onlyx($exception), $msg, $code);
       }
 
-      $doc = $method->getDocComment();
       $providers = vec[];
-      if ($doc !== false) {
-        $block = new DocBlock((string)$doc);
-        $providers = $block->getTagsByName('@dataProvider');
-      }
       $provider = $method->getAttribute('DataProvider');
       if ($provider !== null) {
         $providers[] = (string)C\onlyx($provider);
