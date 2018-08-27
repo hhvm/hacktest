@@ -31,7 +31,7 @@ final class DataProviderTest extends HackTestCase {
     ];
   }
 
-  /** @dataProvider provideSimple */
+  <<DataProvider('provideSimple')>>
   public function testSimple(Traversable<string> $traversable): void {
     expect(Str\join($traversable, '-'))->toBeSame('the-quick-brown-fox-1');
   }
@@ -43,7 +43,7 @@ final class DataProviderTest extends HackTestCase {
     ];
   }
 
-  /** @dataProvider provideMultipleArgs */
+  <<DataProvider('provideMultipleArgs')>>
   public function testMultipleArgs(int $a, int $b): void {
     expect($a + $b)->toBeSame(3);
   }
@@ -52,9 +52,9 @@ final class DataProviderTest extends HackTestCase {
     self::markTestSkipped('This test depends on a data provider that is not ready yet.');
   }
 
-  /** @dataProvider provideSkip */
+  <<DataProvider('provideSkip')>>
   public function testProviderSkip(int $a): void {}
 
-  /** @dataProvider provideSkip */
+  <<DataProvider('provideSkip')>>
   public function testProviderSkipDup(int $a): void {}
 }

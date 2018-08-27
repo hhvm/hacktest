@@ -31,7 +31,7 @@ final class DirtyProviderTest extends HackTestCase {
     ];
   }
 
-  /** @dataProvider provideDirtyData */
+  <<DataProvider('provideDirtyData')>>
   public function testDirtyData(Traversable<string> $traversable): void {
     expect(Str\join($traversable, '-'))->toBeSame('the-quick-brown-fox-1');
   }
@@ -40,12 +40,12 @@ final class DirtyProviderTest extends HackTestCase {
     return vec[];
   }
 
-  /** @dataProvider provideNoData */
+  <<DataProvider('provideNoData')>>
   public function testNoData(int $a): void {
     expect($a)->toBeSame(1);
   }
 
-  /** @dataProvider provideNoData */
+  <<DataProvider('provideNoData')>>
   public function testNoDataDup(int $a): void {
     expect($a)->toBeSame(1);
   }
@@ -58,9 +58,9 @@ final class DirtyProviderTest extends HackTestCase {
     ];
   }
 
-  /** @dataProvider provideError */
+  <<DataProvider('provideError')>>
   public function testProviderError(int $a, int $b): void {}
 
-  /** @dataProvider provideError */
+  <<DataProvider('provideError')>>
   public function testProviderErrorDup(int $a, int $b): void {}
 }

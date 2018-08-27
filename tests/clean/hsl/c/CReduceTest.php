@@ -41,7 +41,7 @@ final class CReduceTest extends HackTestCase {
     ];
   }
 
-  /** @dataProvider provideTestReduce */
+  <<DataProvider('provideTestReduce')>>
   public function testReduce<Tv, Ta>(
     Traversable<Tv> $traversable,
     (function(Ta, Tv): Ta) $accumulator,
@@ -82,7 +82,7 @@ final class CReduceTest extends HackTestCase {
     ];
   }
 
-  /** @dataProvider provideTestReduceWithKey */
+  <<DataProvider('provideTestReduceWithKey')>>
   public function testReduceWithKey(
     string $_,
     KeyedTraversable<int, int> $traversable,
