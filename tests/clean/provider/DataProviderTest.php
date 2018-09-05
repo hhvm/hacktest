@@ -53,8 +53,8 @@ final class DataProviderTest extends HackTestCase {
   }
 
   <<DataProvider('provideSkip')>>
-  public function testProviderSkip(int $a): void {}
+  public function testProviderSkip(int $_a): void {}
 
   <<DataProvider('provideSkip')>>
-  public function testProviderSkipDup(int $a): void {}
+  public function testProviderSkipDup(int $_a): void {}
 }
