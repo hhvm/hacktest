@@ -19,5 +19,5 @@ final class DirtyErrorTest extends HackTestCase {
     invariant(0 === 1, 'This should count as an error rather than a test failure');
   }
 
-  public function testArgumentCountError(int $bad_arg): void {}
+  public function testArgumentCountError(int $_bad_arg): void {}
 }
