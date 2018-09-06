@@ -8,8 +8,8 @@
  *
  */
 
-use namespace HH\Lib\{C, Math, Str, Vec};
-use function \Facebook\FBExpect\expect;
+use namespace HH\Lib\{C, Str, Vec};
+use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\HackTestCase;
 // @oss-disable: use InvariantViolationException as InvariantException;
 

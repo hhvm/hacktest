@@ -59,8 +59,8 @@ final class DirtyProviderTest extends HackTestCase {
   }
 
   <<DataProvider('provideError')>>
-  public function testProviderError(int $a, int $b): void {}
+  public function testProviderError(int $_a, int $_b): void {}
 
   <<DataProvider('provideError')>>
-  public function testProviderErrorDup(int $a, int $b): void {}
+  public function testProviderErrorDup(int $_a, int $_b): void {}
 }

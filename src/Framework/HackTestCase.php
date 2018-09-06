@@ -13,7 +13,6 @@
 
 namespace Facebook\HackTest;
 
-use type Facebook\HHAPIDoc\DocBlock\DocBlock;
 use namespace HH\Lib\{C, Str, Vec};
 
 class HackTestCase {
@@ -337,7 +336,7 @@ class HackTestCase {
     return null;
   }
 
-  public function isHackyDataProvider(string $provider): bool {
+  public function isHackyDataProvider(string $_provider): bool {
     return false;
   }
 
