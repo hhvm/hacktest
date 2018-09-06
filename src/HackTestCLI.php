@@ -51,6 +51,7 @@ final class HackTestCLI extends CLIWithRequiredArguments {
     $num_skipped = 0;
     $output = '';
     foreach ($errors as $class => $result) {
+      $file = (new \ReflectionClass($class))->getFileName() as string;
       foreach ($result as $test_params => $err) {
         $num_tests++;
         if ($err === null) {
@@ -92,7 +93,7 @@ final class HackTestCLI extends CLIWithRequiredArguments {
           $trace = Str\split($err->getTraceAsString(), '#');
           $out = '';
           foreach ($trace as $line) {
-            if (Str\contains($line, $class)) {
+            if (Str\contains($line, $file)) {
               $out .= Str\slice($line, 2);
             }
           }
