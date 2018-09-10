@@ -13,9 +13,7 @@ use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\HackTestCase;
 // @oss-disable: use InvariantViolationException as InvariantException;
 
-/**
- * @emails oncall+hack
- */
+<<Oncalls('hack')>>
 final class VecTransformTest extends HackTestCase {
 
   public static function provideTestChunk(): vec<mixed> {

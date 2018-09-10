@@ -13,9 +13,7 @@ namespace Facebook\HackTest;
 use function Facebook\FBExpect\expect;
 use namespace Facebook\CLILib\TestLib;
 use type Facebook\CLILib\Terminal;
-/**
- * @emails oncall+hack
- */
+<<Oncalls('hack')>>
 final class ExitCodeTest extends HackTestCase {
 
   public async function testExitSuccess(): Awaitable<void> {

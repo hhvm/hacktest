@@ -12,9 +12,7 @@ use namespace HH\Lib\Math;
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\HackTestCase;
 
-/**
- * @emails oncall+hack
- */
+<<Oncalls('hack')>>
 final class MathContainersTest extends HackTestCase {
 
   public static function provideTestMax(): vec<mixed> {

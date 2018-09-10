@@ -12,9 +12,7 @@ use namespace HH\Lib\Keyset;
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\HackTestCase;
 
-/**
- * @emails oncall+hack
- */
+<<Oncalls('hack')>>
 final class KeysetIntrospectTest extends HackTestCase {
 
   public static function provideTestEqual(): vec<mixed> {

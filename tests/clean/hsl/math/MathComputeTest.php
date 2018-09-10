@@ -18,9 +18,7 @@ use type Facebook\HackTest\HackTestCase;
 // our usual trivial wrapper isn't available in open source.
 use function md5 as non_crypto_md5;
 
-/**
- * @emails oncall+hack
- */
+<<Oncalls('hack')>>
 final class MathComputeTest extends HackTestCase {
   public static function provideTestAbs(): vec<mixed> {
     return vec[

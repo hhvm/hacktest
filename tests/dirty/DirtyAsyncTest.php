@@ -12,9 +12,7 @@ use namespace HH\Lib\Tuple as Tuple;
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\HackTestCase;
 
-/**
- * @emails oncall+hack
- */
+<<Oncalls('hack')>>
 final class DirtyAsyncTest extends HackTestCase {
 
   public async function testWithNonNullableTypesAsync(): Awaitable<void> {
