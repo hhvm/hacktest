@@ -12,9 +12,7 @@ use namespace HH\Lib\C;
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\HackTestCase;
 
-/**
- * @emails oncall+hack
- */
+<<Oncalls('hack')>>
 final class CIntrospectTest extends HackTestCase {
 
   public static function provideTestAny(): vec<mixed> {

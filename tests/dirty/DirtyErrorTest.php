@@ -10,9 +10,7 @@
 
 use type Facebook\HackTest\HackTestCase;
 
-/**
- * @emails oncall+hack
- */
+<<Oncalls('hack')>>
 final class DirtyErrorTest extends HackTestCase {
 
   public function testInvariantException(): void {

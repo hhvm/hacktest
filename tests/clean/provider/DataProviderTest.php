@@ -12,9 +12,7 @@ use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\HackTestCase;
 use namespace HH\Lib\Str;
 
-/**
- * @emails oncall+hack
- */
+<<Oncalls('hack')>>
 final class DataProviderTest extends HackTestCase {
 
   public function provideSimple(): vec<mixed> {

@@ -12,9 +12,7 @@ use namespace HH\Lib\{C, Math, Str, Vec};
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\HackTestCase;
 
-/**
- * @emails oncall+hack
- */
+<<Oncalls('hack')>>
 final class VecSelectTest extends HackTestCase {
 
   public static function provideTestDiff(): vec<mixed> {
