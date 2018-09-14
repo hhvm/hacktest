@@ -40,10 +40,9 @@ final class HackTestCLI extends CLIWithRequiredArguments {
 
   <<__Override>>
   public async function mainAsync(): Awaitable<int> {
-    $this->getStdout()->write("\n");
     $errors = await HackTestRunner::runAsync(
       $this->getArguments(),
-      inst_meth($this, 'writeProgress'),
+      async $result ==> await $this->writeProgressAsync($result),
     );
     $num_tests = 0;
     $num_msg = 0;
@@ -118,12 +117,14 @@ final class HackTestCLI extends CLIWithRequiredArguments {
       $num_skipped,
       $num_errors,
     );
-    $this->getStdout()->write($output);
+    await $this->getStdout()->writeAsync($output);
 
     return $exit;
   }
 
-  public function writeProgress(TestResult $progress): void {
+  public async function writeProgressAsync(
+    TestResult $progress,
+  ): Awaitable<void> {
     $status = '';
     switch ($progress) {
       case TestResult::PASSED:
@@ -139,6 +140,6 @@ final class HackTestCLI extends CLIWithRequiredArguments {
         $status = 'E';
         break;
     }
-    $this->getStdout()->write($status);
+    await $this->getStdout()->writeAsync($status);
   }
 }

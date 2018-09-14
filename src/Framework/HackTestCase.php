@@ -41,7 +41,7 @@ class HackTestCase {
   }
 
   public final async function runTestsAsync(
-    (function(TestResult): void) $write_progress,
+    (function(TestResult): Awaitable<void>) $write_progress,
   ): Awaitable<dict<string, ?\Throwable>> {
 
     $errors = dict[];
@@ -115,7 +115,8 @@ class HackTestCase {
             );
           }
         } catch (\Throwable $e) {
-          $this->writeError($e, $write_progress);
+          /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
+          await $this->writeErrorAsync($e, $write_progress);
           $errors[$method_name] = $e;
           /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
           await $this->afterEachTestAsync();
@@ -167,7 +168,8 @@ class HackTestCase {
               ),
             );
           }
-          $write_progress(TestResult::PASSED);
+          /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
+          await $write_progress(TestResult::PASSED);
           $errors[$key] = null;
         } catch (\Throwable $e) {
           if (!$clean) {
@@ -208,11 +210,11 @@ class HackTestCase {
             }
           }
           if ($pass) {
-            $write_progress(TestResult::PASSED);
+            await $write_progress(TestResult::PASSED);
             $errors[$key] = null;
           } else {
             $errors[$key] = $e;
-            $this->writeError($e, $write_progress);
+            await $this->writeErrorAsync($e, $write_progress);
           }
         }
       }
@@ -255,10 +257,10 @@ class HackTestCase {
     }
   }
 
-  private final function writeError(
+  private final async function writeErrorAsync(
     \Throwable $e,
-    (function(TestResult): void) $write_progress,
-  ): void {
+    (function(TestResult): Awaitable<void>) $write_progress,
+  ): Awaitable<void> {
     $status = TestResult::ERROR;
     if ($e instanceof SkippedTestException) {
       $status = TestResult::SKIPPED;
@@ -269,7 +271,7 @@ class HackTestCase {
     ) {
       $status = TestResult::FAILED;
     }
-    $write_progress($status);
+    await $write_progress($status);
   }
 
   private final function prettyFormat(Container<mixed> $tuple): string {
