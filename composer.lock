@@ -56,6 +56,33 @@
             "time": "2018-08-31T19:24:45+00:00"
         },
         {
+            "name": "facebook/difflib",
+            "version": "v0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hhvm/difflib.git",
+                "reference": "6c3132642b8b8a691875c5bc9ddfd00f851ccd8c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hhvm/difflib/zipball/6c3132642b8b8a691875c5bc9ddfd00f851ccd8c",
+                "reference": "6c3132642b8b8a691875c5bc9ddfd00f851ccd8c",
+                "shasum": ""
+            },
+            "require": {
+                "hhvm/hsl": "^3.28"
+            },
+            "require-dev": {
+                "hhvm/hhast": "^3.28"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "time": "2018-09-05T19:26:26+00:00"
+        },
+        {
             "name": "facebook/fbmarkdown",
             "version": "v1.3.1",
             "source": {
@@ -125,16 +152,16 @@
         },
         {
             "name": "facebook/hh-clilib",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hhvm/hh-clilib.git",
-                "reference": "d8d19b4f230b6f02c6fc2be16ec1fb19c3fcbc0e"
+                "reference": "12542c339972c6fd77b2037a41b8f9b53212adcf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/hh-clilib/zipball/d8d19b4f230b6f02c6fc2be16ec1fb19c3fcbc0e",
-                "reference": "d8d19b4f230b6f02c6fc2be16ec1fb19c3fcbc0e",
+                "url": "https://api.github.com/repos/hhvm/hh-clilib/zipball/12542c339972c6fd77b2037a41b8f9b53212adcf",
+                "reference": "12542c339972c6fd77b2037a41b8f9b53212adcf",
                 "shasum": ""
             },
             "require": {
@@ -142,33 +169,38 @@
                 "hhvm/type-assert": "^3.2"
             },
             "require-dev": {
-                "91carriage/phpunit-hhi": "^5.7",
-                "facebook/fbexpect": "^1.1.0",
-                "hhvm/hhast": "^3.27.0",
-                "phpunit/phpunit": "^5.7"
+                "facebook/fbexpect": "^2.1.0",
+                "hhvm/hacktest": "^0.2.0",
+                "hhvm/hhast": "~3.28.0"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
-            "time": "2018-08-27T20:03:09+00:00"
+            "time": "2018-09-14T20:36:22+00:00"
         },
         {
             "name": "hhvm/hhast",
-            "version": "v3.28.1",
+            "version": "v3.28.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hhvm/hhast.git",
-                "reference": "ef96527025803cb41ab13f657651cef3ff5bfb8f"
+                "reference": "ae01c46743371aaa2dc99ab5946a94551adbeb8c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/hhast/zipball/ef96527025803cb41ab13f657651cef3ff5bfb8f",
-                "reference": "ef96527025803cb41ab13f657651cef3ff5bfb8f",
+                "url": "https://api.github.com/repos/hhvm/hhast/zipball/ae01c46743371aaa2dc99ab5946a94551adbeb8c",
+                "reference": "ae01c46743371aaa2dc99ab5946a94551adbeb8c",
                 "shasum": ""
             },
             "require": {
+                "facebook/difflib": "^0.1.0",
                 "facebook/hh-clilib": "^1.1.1",
                 "hhvm": "^3.28.0",
                 "hhvm/hsl": "^1.0.0|^3.26.0",
@@ -190,7 +222,7 @@
             "license": [
                 "MIT"
             ],
-            "time": "2018-08-29T18:15:15+00:00"
+            "time": "2018-09-06T16:25:02+00:00"
         },
         {
             "name": "hhvm/hhvm-autoload",

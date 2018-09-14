@@ -16,7 +16,7 @@ abstract final class HackTestRunner {
 
   public static async function runAsync(
     vec<string> $paths,
-    (function(TestResult): void) $writer,
+    (function(TestResult): Awaitable<void>) $writer,
   ): Awaitable<dict<string, dict<string, ?\Throwable>>> {
     $errors = dict[];
     $files = keyset[];
