@@ -28,6 +28,9 @@ abstract final class HackTestRunner {
       |> Vec\map($$, $r ==> $r->getTestClassName());
 
     foreach ($classes as $classname) {
+      if ($classname === null) {
+        continue;
+      }
       $test_case = new $classname();
       /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
       $errors[$classname] = await $test_case->runTestsAsync($writer);
