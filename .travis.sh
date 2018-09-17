@@ -7,7 +7,9 @@ composer install
 hh_client
 
 bin/hacktest tests/clean/
-hhvm vendor/bin/hhast-lint
+if !(hhvm --version | grep -q -- -dev); then
+  hhvm vendor/bin/hhast-lint
+fi
 
 echo > .hhconfig
 hh_server --check $(pwd)
