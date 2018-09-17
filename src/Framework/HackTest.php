@@ -15,7 +15,7 @@ namespace Facebook\HackTest;
 
 use namespace HH\Lib\{C, Str, Vec};
 
-class HackTestCase {
+class HackTest {
 
   private vec<\ReflectionMethod> $methods = vec[];
 

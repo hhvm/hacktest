@@ -10,10 +10,10 @@
 
 use namespace HH\Lib\Dict;
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTestCase;
+use type Facebook\HackTest\HackTest;
 
 <<Oncalls('hack')>>
-final class DictOrderTest extends HackTestCase {
+final class DictOrderTest extends HackTest {
 
   public static function provideTestReverse(): vec<mixed> {
     return vec[

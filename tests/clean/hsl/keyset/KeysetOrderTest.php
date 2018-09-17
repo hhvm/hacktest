@@ -10,10 +10,10 @@
 
 use namespace HH\Lib\Keyset;
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTestCase;
+use type Facebook\HackTest\HackTest;
 
 <<Oncalls('hack')>>
-final class KeysetOrderTest extends HackTestCase {
+final class KeysetOrderTest extends HackTest {
 
   public static function provideSort(): vec<mixed> {
     return vec[

@@ -10,10 +10,10 @@
 
 use namespace HH\Lib\{Dict, Str};
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTestCase;
+use type Facebook\HackTest\HackTest;
 
 <<Oncalls('hack')>>
-final class DictTransformTest extends HackTestCase {
+final class DictTransformTest extends HackTest {
 
   public static function provideTestChunk(): vec<mixed> {
     return vec[

@@ -10,10 +10,10 @@
 
 use namespace HH\Lib\Keyset;
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTestCase;
+use type Facebook\HackTest\HackTest;
 
 <<Oncalls('hack')>>
-final class KeysetIntrospectTest extends HackTestCase {
+final class KeysetIntrospectTest extends HackTest {
 
   public static function provideTestEqual(): vec<mixed> {
     return vec[

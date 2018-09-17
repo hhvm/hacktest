@@ -9,11 +9,11 @@
  */
 
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTestCase;
+use type Facebook\HackTest\HackTest;
 use namespace HH\Lib\Str;
 
 <<Oncalls('hack')>>
-final class DataProviderTest extends HackTestCase {
+final class DataProviderTest extends HackTest {
 
   public function provideSimple(): vec<mixed> {
     $elements = vec['the', 'quick', 'brown', 'fox', 1];

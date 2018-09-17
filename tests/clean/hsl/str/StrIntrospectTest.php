@@ -10,11 +10,11 @@
 
 use namespace HH\Lib\Str;
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTestCase;
+use type Facebook\HackTest\HackTest;
 // @oss-disable: use InvariantViolationException as InvariantException;
 
 <<Oncalls('hack')>>
-final class StrIntrospectTest extends HackTestCase {
+final class StrIntrospectTest extends HackTest {
 
   public static function provideCompare(): vec<mixed> {
     return vec[

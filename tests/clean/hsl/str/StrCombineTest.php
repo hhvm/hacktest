@@ -10,10 +10,10 @@
 
 use namespace HH\Lib\Str;
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTestCase;
+use type Facebook\HackTest\HackTest;
 
 <<Oncalls('hack')>>
-final class StrCombineTest extends HackTestCase {
+final class StrCombineTest extends HackTest {
 
   public static function provideJoin(): vec<mixed> {
     $elements = vec['the', 'quick', 'brown', 'fox', 1];

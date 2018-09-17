@@ -12,7 +12,7 @@ namespace Facebook\HackTest;
 
 use function Facebook\FBExpect\expect;
 
-final class FileRetrieverTest extends HackTestCase {
+final class FileRetrieverTest extends HackTest {
 
   public function testValidTestFiles(): void {
     $path = 'tests/clean/hsl/tuple';

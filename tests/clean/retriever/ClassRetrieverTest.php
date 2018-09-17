@@ -13,7 +13,7 @@ namespace Facebook\HackTest;
 use function Facebook\FBExpect\expect;
 use namespace HH\Lib\{C, Str};
 
-final class ClassRetrieverTest extends HackTestCase {
+final class ClassRetrieverTest extends HackTest {
 
   public function testClassMatchFileName(): void {
     $path = 'tests/clean/hsl/tuple';

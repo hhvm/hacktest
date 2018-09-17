@@ -10,10 +10,10 @@
 
 use namespace HH\Lib\Tuple as Tuple;
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTestCase;
+use type Facebook\HackTest\HackTest;
 
 <<Oncalls('hack')>>
-final class DirtyAsyncTest extends HackTestCase {
+final class DirtyAsyncTest extends HackTest {
 
   public async function testWithNonNullableTypesAsync(): Awaitable<void> {
     $t = await Tuple\from_async(async { return 1; }, async { return 'foo'; });

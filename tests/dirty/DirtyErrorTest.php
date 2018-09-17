@@ -8,10 +8,10 @@
  *
  */
 
-use type Facebook\HackTest\HackTestCase;
+use type Facebook\HackTest\HackTest;
 
 <<Oncalls('hack')>>
-final class DirtyErrorTest extends HackTestCase {
+final class DirtyErrorTest extends HackTest {
 
   public function testInvariantException(): void {
     invariant(0 === 1, 'This should count as an error rather than a test failure');

@@ -10,10 +10,10 @@
 
 use namespace HH\Lib\Str;
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTestCase;
+use type Facebook\HackTest\HackTest;
 
 <<Oncalls('hack')>>
-final class StrDivideTest extends HackTestCase {
+final class StrDivideTest extends HackTest {
 
   public static function provideChunk(): vec<mixed> {
     return vec[

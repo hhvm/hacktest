@@ -10,10 +10,10 @@
 
 use namespace HH\Lib\Math;
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTestCase;
+use type Facebook\HackTest\HackTest;
 
 <<Oncalls('hack')>>
-final class MathCompareTest extends HackTestCase {
+final class MathCompareTest extends HackTest {
 
   public static function provideTestMaxva(): vec<mixed> {
     return vec[

@@ -10,10 +10,10 @@
 
 use namespace HH\Lib\Vec;
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTestCase;
+use type Facebook\HackTest\HackTest;
 
 <<Oncalls('hack')>>
-final class VecAsyncTest extends HackTestCase {
+final class VecAsyncTest extends HackTest {
 
   public static function provideTestGen(): vec<mixed> {
     return vec[
