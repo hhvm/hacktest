@@ -20,7 +20,7 @@ final class ClassRetrieverTest extends HackTestCase {
     $files = (new FileRetriever($path))->getTestFiles();
     foreach ($files as $file) {
       $cr = ClassRetriever::forFile($file);
-      $classname = $cr->getTestClassName()
+      $classname = $cr->getTestClassName() as nonnull
         |> Str\split($$, '\\')
         |> C\lastx($$);
       $filename = $file

@@ -56,7 +56,7 @@ final class ClassRetriever {
     );
   }
 
-  public function getTestClassName(): classname<HackTestCase> {
+  public function getTestClassName(): ?classname<HackTestCase> {
     $test_classes = $this->facts['types']
       |> Vec\map($$, $t ==> $t['name'])
       |> Vec\filter(
@@ -74,6 +74,11 @@ final class ClassRetriever {
     }
 
     $name = C\onlyx($test_classes);
+    $rc = new \ReflectionClass($name);
+    if ($rc->isAbstract()) {
+      return null;
+    }
+
     $class_name = $name
       |> Str\split($$, '\\')
       |> C\lastx($$);
