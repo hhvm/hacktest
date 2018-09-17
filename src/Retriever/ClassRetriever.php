@@ -56,12 +56,12 @@ final class ClassRetriever {
     );
   }
 
-  public function getTestClassName(): ?classname<HackTestCase> {
+  public function getTestClassName(): ?classname<HackTest> {
     $test_classes = $this->facts['types']
       |> Vec\map($$, $t ==> $t['name'])
       |> Vec\filter(
         $$,
-        $name ==> \is_subclass_of($name, HackTestCase::class, true),
+        $name ==> \is_subclass_of($name, HackTest::class, true),
       );
 
     if (C\count($test_classes) !== 1) {
@@ -105,16 +105,16 @@ final class ClassRetriever {
     $classname = $this->convertToClassname($name);
     if ($classname === null) {
       throw new InvalidTestClassException(
-        Str\format('%s does not extend %s', $name, HackTestCase::class),
+        Str\format('%s does not extend %s', $name, HackTest::class),
       );
     }
 
     return $classname;
   }
 
-  private function convertToClassname(string $name): ?classname<HackTestCase> {
+  private function convertToClassname(string $name): ?classname<HackTest> {
     try {
-      return TypeAssert\classname_of(HackTestCase::class, $name);
+      return TypeAssert\classname_of(HackTest::class, $name);
     } catch (TypeAssert\IncorrectTypeException $_) {
       return null;
     }
