@@ -210,10 +210,12 @@ class HackTest {
             }
           }
           if ($pass) {
+            /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
             await $write_progress(TestResult::PASSED);
             $errors[$key] = null;
           } else {
             $errors[$key] = $e;
+            /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
             await $this->writeErrorAsync($e, $write_progress);
           }
         }
