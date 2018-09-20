@@ -16,6 +16,7 @@ abstract final class HackTestRunner {
 
   public static async function runAsync(
     vec<string> $paths,
+    ?string $pattern,
     (function(TestResult): Awaitable<void>) $writer,
   ): Awaitable<dict<string, dict<string, ?\Throwable>>> {
     $errors = dict[];
@@ -33,7 +34,7 @@ abstract final class HackTestRunner {
       }
       $test_case = new $classname();
       /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-      $errors[$classname] = await $test_case->runTestsAsync($writer);
+      $errors[$classname] = await $test_case->runTestsAsync($pattern, $writer);
     }
     return $errors;
   }

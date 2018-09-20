@@ -18,6 +18,7 @@ use namespace HH\Lib\Str;
 final class HackTestCLI extends CLIWithRequiredArguments {
 
   private bool $verbose = false;
+  private ?string $pattern = null;
 
   <<__Override>>
   public static function getHelpTextForRequiredArguments(): vec<string> {
@@ -35,6 +36,14 @@ final class HackTestCLI extends CLIWithRequiredArguments {
         '--verbose',
         '-v',
       ),
+      CLIOptions\with_required_string(
+        ($value) ==> {
+          $this->pattern = $value;
+        },
+        'Only run tests with method names matching this shell pattern', 
+        '--name',
+        '-n', 
+      ),
     ];
   }
 
@@ -42,6 +51,7 @@ final class HackTestCLI extends CLIWithRequiredArguments {
   public async function mainAsync(): Awaitable<int> {
     $errors = await HackTestRunner::runAsync(
       $this->getArguments(),
+      $this->pattern,
       async $result ==> await $this->writeProgressAsync($result),
     );
     $num_tests = 0;

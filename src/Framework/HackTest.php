@@ -36,18 +36,25 @@ class HackTest {
   }
 
   final public function getTestMethods(
+    ?string $pattern = null,
   ): vec<\ReflectionMethod> {
-    return $this->methods;
+    return ($pattern === null)
+      ? $this->methods
+      : Vec\filter(
+          $this->methods,
+          $method ==> \fnmatch($pattern, $method->name),
+        );
   }
 
   public final async function runTestsAsync(
+    ?string $pattern,
     (function(TestResult): Awaitable<void>) $write_progress,
   ): Awaitable<dict<string, ?\Throwable>> {
 
     $errors = dict[];
     await static::beforeFirstTestAsync();
 
-    foreach ($this->methods as $method) {
+    foreach ($this->getTestMethods($pattern) as $method) {
       $to_run = dict[];
 
       $this->clearExpectedException();
@@ -313,7 +320,8 @@ class HackTest {
   ): void {
     $this->expectedException = $exception;
     $this->expectedExceptionMessage = $exception_message;
-    $this->expectedExceptionCode = static::computeExpectedExceptionCode($exception_code);
+    $this->expectedExceptionCode =
+      static::computeExpectedExceptionCode($exception_code);
   }
 
   private function clearExpectedException(): void {
@@ -322,7 +330,9 @@ class HackTest {
     $this->expectedExceptionCode = null;
   }
 
-  public static function computeExpectedExceptionCode(mixed $exception_code): ?int {
+  public static function computeExpectedExceptionCode(
+    mixed $exception_code,
+  ): ?int {
     if ($exception_code is int) {
       return $exception_code;
     }
