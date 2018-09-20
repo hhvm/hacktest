@@ -15,13 +15,15 @@ use namespace HH\Lib\{Keyset, Vec};
 abstract final class HackTestRunner {
 
   public static async function runAsync(
-    vec<string> $paths,
-    ?string $pattern,
-    (function(TestResult): Awaitable<void>) $writer,
+    shape(
+      'paths' => vec<string>,
+      'pattern' => ?string,
+      'writer' => (function(TestResult): Awaitable<void>),
+    ) $options,
   ): Awaitable<dict<string, dict<string, ?\Throwable>>> {
     $errors = dict[];
     $files = keyset[];
-    foreach ($paths as $path) {
+    foreach ($options['paths'] as $path) {
       $files = Keyset\union($files, (new FileRetriever($path))->getTestFiles());
     }
 
@@ -34,7 +36,10 @@ abstract final class HackTestRunner {
       }
       $test_case = new $classname();
       /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-      $errors[$classname] = await $test_case->runTestsAsync($pattern, $writer);
+      $errors[$classname] = await $test_case->runTestsAsync(
+        $options['pattern'],
+        $options['writer'],
+      );
     }
     return $errors;
   }

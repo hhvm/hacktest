@@ -40,9 +40,9 @@ final class HackTestCLI extends CLIWithRequiredArguments {
         ($value) ==> {
           $this->pattern = $value;
         },
-        'Only run tests with method names matching this shell pattern', 
+        'Only run tests with method names matching this shell pattern',
         '--name',
-        '-n', 
+        '-n',
       ),
     ];
   }
@@ -50,9 +50,11 @@ final class HackTestCLI extends CLIWithRequiredArguments {
   <<__Override>>
   public async function mainAsync(): Awaitable<int> {
     $errors = await HackTestRunner::runAsync(
-      $this->getArguments(),
-      $this->pattern,
-      async $result ==> await $this->writeProgressAsync($result),
+      shape(
+        'paths' => $this->getArguments(),
+        'pattern' => $this->pattern,
+        'writer' => async $result ==> await $this->writeProgressAsync($result),
+      ),
     );
     $num_tests = 0;
     $num_msg = 0;
