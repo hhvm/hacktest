@@ -4,10 +4,57 @@
 
 HackTest is a pure Hack alternative to PHPUnit. In order to use this framework, you must migrate assert calls to use the [expect](https://github.com/hhvm/fbexpect) API.
 
-## Usage
+## Installation
 
 ```
-bin/hacktest [OPTIONS] PATH [PATH ...]
+hhvm /path/to/composer.phar require --dev hhvm/hacktest facebook/fbexpect
+```
+
+## Usage
+
+To run tests:
+
+```
+vendor/bin/hacktest [OPTIONS] tests/
+```
+
+To migrate PHPUnit tests to HackTest:
+
+```
+git clone https://github.com/hhvm/hhast.git
+cd hhast
+bin/hhast-migrate --phpunit-to-hacktest /path/to/myproject/tests
+```
+
+Tests are methods in classes, where:
+- the class name matches the file name
+- the class name ends with 'Test'
+- the method is public
+- the method name begins with 'test'
+
+Test methods can be async, and will automatically be awaited.
+
+Additionally, classes can implement several special methods:
+
+- `public static function beforeFirstTestAsync(): Awaitable<void>`
+- `public static function afterLastTestAsync(): Awaitable<void>`
+- `public function beforeEachTestAsync(): Awaitable<void>`
+- `public function afterEachTestAsync(): Awaitable<void>`
+
+Finally, for data-driven tests, the `<<DataProvider>>` attribute can be used:
+
+```Hack
+public function provideFoos(): vec<(string, int)> {
+  return vec[
+    tuple('foo', 123),
+    tuple('bar', 456),
+  ];
+}
+
+<<DataProvider('provideFoos')>>
+public function testFoos(string $a, int $b): void {
+  ....
+}
 ```
 
 ## Examples
@@ -46,26 +93,6 @@ Summary: 3 test(s), 0 passed, 3 failed, 0 skipped, 0 error(s).
 ```
 
 For an example in verbose mode, see [example.txt](example.txt)
-
-## Installation
-
-This project uses function autoloading, so requires that your projects use
-[hhvm-autoload](https://github.com/hhvm/hhvm-autoload) instead of Composer's
-built-in autoloading; if you are not already using hhvm-autoload, you will need
-to add an
-[hh_autoload.json](https://github.com/hhvm/hhvm-autoload#configuration-hh_autoloadjson)
-to your project first.
-
-```
-$ composer require hhvm/hacktest
-```
-
-## Principles
-- Test files must end in 'Test.php' or 'Test.hh'
-- Test classes must extend `HackTestCase`
-- Class names must match base filenames
-- Only test methods and data providers can be public
-- Test methods must begin with 'test'
 
 ## Contributing
 
