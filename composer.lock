@@ -4,152 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1d7e7ca9fc81f3d4f419ca58fcf0f2a8",
+    "content-hash": "9c76cec61c4d9d770872e4d040050145",
     "packages": [
-        {
-            "name": "facebook/definition-finder",
-            "version": "v2.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hhvm/definition-finder.git",
-                "reference": "347f0a5fb9acd6ea6953de4f7051141dcc5c75cd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/definition-finder/zipball/347f0a5fb9acd6ea6953de4f7051141dcc5c75cd",
-                "reference": "347f0a5fb9acd6ea6953de4f7051141dcc5c75cd",
-                "shasum": ""
-            },
-            "require": {
-                "hhvm": "^3.26.0",
-                "hhvm/hhast": "^3.28.1",
-                "hhvm/hhvm-autoload": "^1.6",
-                "hhvm/hsl": "^3.26.0",
-                "hhvm/type-assert": "^3.2"
-            },
-            "require-dev": {
-                "91carriage/phpunit-hhi": "~5.1",
-                "facebook/fbexpect": "^1.0.0",
-                "phpunit/phpunit": "~5.1"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ],
-                "files": [
-                    "autoload_files.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Find definitions in PHP or Hack files. Useful for autoloaders.",
-            "homepage": "https://github.com/hhvm/definitions-finder",
-            "keywords": [
-                "autoload",
-                "definitions",
-                "hack",
-                "hhvm"
-            ],
-            "time": "2018-08-31T19:24:45+00:00"
-        },
-        {
-            "name": "facebook/difflib",
-            "version": "v0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hhvm/difflib.git",
-                "reference": "6c3132642b8b8a691875c5bc9ddfd00f851ccd8c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/difflib/zipball/6c3132642b8b8a691875c5bc9ddfd00f851ccd8c",
-                "reference": "6c3132642b8b8a691875c5bc9ddfd00f851ccd8c",
-                "shasum": ""
-            },
-            "require": {
-                "hhvm/hsl": "^3.28"
-            },
-            "require-dev": {
-                "hhvm/hhast": "^3.28"
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "time": "2018-09-05T19:26:26+00:00"
-        },
-        {
-            "name": "facebook/fbmarkdown",
-            "version": "v1.3.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hhvm/fbmarkdown.git",
-                "reference": "581c301d7523aa4354276297747b4441d70b0f3f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/fbmarkdown/zipball/581c301d7523aa4354276297747b4441d70b0f3f",
-                "reference": "581c301d7523aa4354276297747b4441d70b0f3f",
-                "shasum": ""
-            },
-            "require": {
-                "hhvm/hhvm-autoload": "^1.5",
-                "hhvm/hsl": "^1.1|^3.26.0",
-                "hhvm/type-assert": "^3.1"
-            },
-            "require-dev": {
-                "91carriage/phpunit-hhi": "~5.7",
-                "facebook/fbexpect": "^0.4.0|^1.1.0",
-                "hhvm/hhast": "^1.0|^3.26.0",
-                "phpunit/phpunit": "~5.7"
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Markdown parser and renderer for Hack",
-            "keywords": [
-                "facebook",
-                "gfm",
-                "hack",
-                "markdown"
-            ],
-            "time": "2018-08-31T20:02:36+00:00"
-        },
-        {
-            "name": "facebook/hh-apidoc",
-            "version": "v0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hhvm/hh-apidoc.git",
-                "reference": "10f05bf1d36990e4d7ef2fb7b7f344df1e3c9b5f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/hh-apidoc/zipball/10f05bf1d36990e4d7ef2fb7b7f344df1e3c9b5f",
-                "reference": "10f05bf1d36990e4d7ef2fb7b7f344df1e3c9b5f",
-                "shasum": ""
-            },
-            "require": {
-                "facebook/definition-finder": "^2.0.0",
-                "facebook/fbmarkdown": "^1.0",
-                "facebook/hh-clilib": "^1.0.0",
-                "hhvm": "^3.27.0",
-                "hhvm/hhast": "^3.26.0",
-                "hhvm/hsl": "^1.4|^3.26.0"
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "time": "2018-06-29T16:31:51+00:00"
-        },
         {
             "name": "facebook/hh-clilib",
             "version": "v1.2.1",
@@ -184,45 +40,6 @@
                 "MIT"
             ],
             "time": "2018-09-14T20:36:22+00:00"
-        },
-        {
-            "name": "hhvm/hhast",
-            "version": "v3.28.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hhvm/hhast.git",
-                "reference": "ae01c46743371aaa2dc99ab5946a94551adbeb8c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/hhast/zipball/ae01c46743371aaa2dc99ab5946a94551adbeb8c",
-                "reference": "ae01c46743371aaa2dc99ab5946a94551adbeb8c",
-                "shasum": ""
-            },
-            "require": {
-                "facebook/difflib": "^0.1.0",
-                "facebook/hh-clilib": "^1.1.1",
-                "hhvm": "^3.28.0",
-                "hhvm/hsl": "^1.0.0|^3.26.0",
-                "hhvm/type-assert": "^3.1"
-            },
-            "require-dev": {
-                "91carriage/phpunit-hhi": "^5.7",
-                "facebook/fbexpect": "^1.1.0",
-                "facebook/hack-codegen": "~3.2.1",
-                "hhvm/hhvm-autoload": "^1.5",
-                "phpunit/phpunit": "^5.7"
-            },
-            "bin": [
-                "bin/hhast-lint",
-                "bin/hhast-inspect"
-            ],
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "time": "2018-09-06T16:25:02+00:00"
         },
         {
             "name": "hhvm/hhvm-autoload",
@@ -399,6 +216,7 @@
                 "phpunit",
                 "testing"
             ],
+            "abandoned": "hhvm/hacktest",
             "time": "2018-08-15T10:19:54+00:00"
         },
         {
@@ -456,6 +274,40 @@
             "time": "2017-07-22T11:58:36+00:00"
         },
         {
+            "name": "facebook/difflib",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hhvm/difflib.git",
+                "reference": "09505c7d66224fa7e5a8f775825bd70f05e57b01"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hhvm/difflib/zipball/09505c7d66224fa7e5a8f775825bd70f05e57b01",
+                "reference": "09505c7d66224fa7e5a8f775825bd70f05e57b01",
+                "shasum": ""
+            },
+            "require": {
+                "hhvm/hsl": "^3.28"
+            },
+            "require-dev": {
+                "facebook/fbexpect": "^2.1.2",
+                "hhvm/hacktest": "^1.0",
+                "hhvm/hhast": "^3.28"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.2.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "time": "2018-09-24T22:01:02+00:00"
+        },
+        {
             "name": "facebook/fbexpect",
             "version": "v1.1.0",
             "source": {
@@ -490,6 +342,49 @@
             ],
             "description": "Unit test helpers for Facebook projects",
             "time": "2018-06-11T22:04:56+00:00"
+        },
+        {
+            "name": "hhvm/hhast",
+            "version": "v3.28.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hhvm/hhast.git",
+                "reference": "89461d6ac4230238c8b2015a4ade68de1015aea4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hhvm/hhast/zipball/89461d6ac4230238c8b2015a4ade68de1015aea4",
+                "reference": "89461d6ac4230238c8b2015a4ade68de1015aea4",
+                "shasum": ""
+            },
+            "require": {
+                "facebook/difflib": "^1.0.0",
+                "facebook/hh-clilib": "^1.1.1",
+                "hhvm": "^3.28.0",
+                "hhvm/hsl": "^1.0.0|^3.26.0",
+                "hhvm/type-assert": "^3.1"
+            },
+            "require-dev": {
+                "facebook/fbexpect": "^2.1.1",
+                "facebook/hack-codegen": "~3.2.1",
+                "hhvm/hacktest": "^1.0",
+                "hhvm/hhvm-autoload": "^1.5"
+            },
+            "bin": [
+                "bin/hhast-lint",
+                "bin/hhast-inspect"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "time": "2018-09-25T16:16:32+00:00"
         },
         {
             "name": "myclabs/deep-copy",
