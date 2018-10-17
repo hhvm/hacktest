@@ -13,7 +13,7 @@ namespace Facebook\HackTest;
 use function Facebook\FBExpect\expect;
 use namespace Facebook\CLILib\TestLib;
 use type Facebook\CLILib\Terminal;
-<<Oncalls('hack')>>
+// @oss-disable: <<Oncalls('hack')>>
 final class ExitCodeTest extends HackTest {
 
   public async function testExitSuccess(): Awaitable<void> {

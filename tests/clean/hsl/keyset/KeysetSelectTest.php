@@ -10,9 +10,9 @@
 
 use namespace HH\Lib\{Keyset, Str};
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTest;
+use type Facebook\HackTest\{DataProvider, HackTest};
 
-<<Oncalls('hack')>>
+// @oss-disable: <<Oncalls('hack')>>
 final class KeysetSelectTest extends HackTest {
 
   public static function provideTestDiff(): vec<mixed> {

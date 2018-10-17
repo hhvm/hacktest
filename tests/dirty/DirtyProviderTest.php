@@ -9,10 +9,10 @@
  */
 
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTest;
+use type Facebook\HackTest\{DataProvider, HackTest};
 use namespace HH\Lib\Str;
 
-<<Oncalls('hack')>>
+// @oss-disable: <<Oncalls('hack')>>
 final class DirtyProviderTest extends HackTest {
 
   public function provideDirtyData(): vec<mixed> {

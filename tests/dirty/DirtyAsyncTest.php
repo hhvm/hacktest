@@ -10,9 +10,9 @@
 
 use namespace HH\Lib\Tuple as Tuple;
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTest;
+use type Facebook\HackTest\{DataProvider, HackTest};
 
-<<Oncalls('hack')>>
+// @oss-disable: <<Oncalls('hack')>>
 final class DirtyAsyncTest extends HackTest {
 
   public async function testWithNonNullableTypesAsync(): Awaitable<void> {
