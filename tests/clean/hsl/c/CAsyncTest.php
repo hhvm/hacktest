@@ -8,12 +8,12 @@
  *
  */
 
-use namespace HH\Lib\C as C;
+use namespace HH\Lib\C;
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTest;
+use type Facebook\HackTest\{DataProvider, HackTest};
 // @oss-disable: use InvariantViolationException as InvariantException;
 
-<<Oncalls('hack')>>
+// @oss-disable: <<Oncalls('hack')>>
 final class CAsyncTest extends HackTest {
 
   public static function provideTestGenFirst(): vec<mixed> {

@@ -272,6 +272,8 @@ class HackTest {
       $e instanceof ExpectationFailedException
     ) {
       $status = TestResult::FAILED;
+    } else {
+      \var_dump($e);
     }
     await $write_progress($status);
   }

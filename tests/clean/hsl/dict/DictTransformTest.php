@@ -10,9 +10,9 @@
 
 use namespace HH\Lib\{Dict, Str};
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTest;
+use type Facebook\HackTest\{DataProvider, HackTest};
 
-<<Oncalls('hack')>>
+// @oss-disable: <<Oncalls('hack')>>
 final class DictTransformTest extends HackTest {
 
   public static function provideTestChunk(): vec<mixed> {
