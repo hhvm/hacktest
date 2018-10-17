@@ -10,7 +10,7 @@
 
 use type Facebook\HackTest\HackTest;
 
-<<Oncalls('hack')>>
+// @oss-disable: <<Oncalls('hack')>>
 final class DirtyErrorTest extends HackTest {
 
   public function testInvariantException(): void {

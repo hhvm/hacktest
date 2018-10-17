@@ -10,8 +10,8 @@
 
 use namespace HH\Lib\C;
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTest;
-<<Oncalls('hack')>>
+use type Facebook\HackTest\{DataProvider, HackTest};
+// @oss-disable: <<Oncalls('hack')>>
 final class CReduceTest extends HackTest {
 
   public static function provideTestReduce(): vec<mixed> {
