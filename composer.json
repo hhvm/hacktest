@@ -11,7 +11,7 @@
     "hhvm": "^3.28.0",
     "hhvm/hhvm-autoload": "^1.6",
     "hhvm/hsl": "^3.26",
-    "facebook/hh-clilib": "^1.2.1",
+    "facebook/hh-clilib": "^2.0.0",
     "hhvm/type-assert": "^3.2"
   }
 }

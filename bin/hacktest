@@ -33,4 +33,8 @@ if (!$found_autoloader) {
   exit(1);
 }
 
-HackTestCLI::main();
+<<__Entrypoint>>
+async function hackTestMainAsync(): Awaitable<noreturn> {
+  $exit_code = await HackTestCLI::runAsync();
+  exit($exit_code);
+}

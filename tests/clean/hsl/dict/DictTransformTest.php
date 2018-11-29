@@ -205,7 +205,7 @@ final class DictTransformTest extends HackTest {
 
   <<DataProvider('provideTestFlatten')>>
   public function testFlatten<Tk as arraykey, Tv>(
-    Traversable<KeyedTraversable<Tk, Tv>> $traversables,
+    Traversable<\HH\Rx\KeyedTraversable<Tk, Tv>> $traversables,
     dict<Tk, Tv> $expected,
   ): void {
     expect(Dict\flatten($traversables))->toBeSame($expected);
