@@ -10,7 +10,7 @@
   },
   "require-dev": {
     "facebook/fbexpect": "^2.3.0",
-    "hhvm/hhast": "^3.27"
+    "hhvm/hhast": "^3.29.1"
   },
   "require": {
     "hhvm": "^3.28.0",
