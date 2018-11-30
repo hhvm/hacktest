@@ -71,14 +71,12 @@ final class HackTestCLI extends CLIWithRequiredArguments {
           $output .=
             Str\format("\n\n%d) %s::%s\n", $num_msg, $class, $test_params);
         }
-        if ($err instanceof SkippedTestException) {
+        if ($err is SkippedTestException) {
           $num_skipped++;
           $output .= 'Skipped: '.$err->getMessage();
           continue;
-        } else if (
-          \is_a($err, 'PHPUnit\\Framework\\ExpectationFailedException', true) ||
-          \is_a($err, 'PHPUnit_Framework_ExpectationFailedException', true)
-        ) {
+        }
+        if ($err is ExpectationFailedException) {
           $num_failed++;
         }
         if ($this->verbose) {

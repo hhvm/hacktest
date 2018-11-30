@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0d22ed86b37f1c2cfbab0f8ba6928ed1",
+    "content-hash": "997b7b9fd929d477cd7c1fce706abd6d",
     "packages": [
         {
             "name": "facebook/hh-clilib",
@@ -238,26 +238,24 @@
         },
         {
             "name": "facebook/fbexpect",
-            "version": "v2.2.0",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hhvm/fbexpect.git",
-                "reference": "beff71282013f01609815acd3b8819685112ee4a"
+                "reference": "22b9d59d9ab5e22a07e66fe1d07ba8d0472ae49b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/fbexpect/zipball/beff71282013f01609815acd3b8819685112ee4a",
-                "reference": "beff71282013f01609815acd3b8819685112ee4a",
+                "url": "https://api.github.com/repos/hhvm/fbexpect/zipball/22b9d59d9ab5e22a07e66fe1d07ba8d0472ae49b",
+                "reference": "22b9d59d9ab5e22a07e66fe1d07ba8d0472ae49b",
                 "shasum": ""
             },
             "require": {
                 "facebook/difflib": "^1.0.0",
                 "hhvm": "^3.28",
+                "hhvm/hacktest": "^1.0",
                 "hhvm/hhvm-autoload": "^1.6",
                 "hhvm/hsl": "^3.26"
-            },
-            "require-dev": {
-                "hhvm/hacktest": "^1.0"
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
@@ -265,7 +263,7 @@
                 "MIT"
             ],
             "description": "Unit test helpers for Facebook projects",
-            "time": "2018-10-18T16:44:23+00:00"
+            "time": "2018-11-29T21:04:58+00:00"
         },
         {
             "name": "hhvm/hhast",

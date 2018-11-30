@@ -3,8 +3,13 @@
   "bin": ["bin/hacktest"],
   "description": "The Hack Test Library",
   "license": "MIT",
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.x-dev"
+    }
+  },
   "require-dev": {
-    "facebook/fbexpect": "^2.0.0",
+    "facebook/fbexpect": "^2.3.0",
     "hhvm/hhast": "^3.27"
   },
   "require": {
