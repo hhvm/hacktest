@@ -10,7 +10,7 @@
 
 use namespace HH\Lib\Tuple as Tuple;
 use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use type Facebook\HackTest\HackTest;
 
 // @oss-disable: <<Oncalls('hack')>>
 final class TupleAsyncTest extends HackTest {
