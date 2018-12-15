@@ -53,7 +53,7 @@ final class FileRetriever {
   }
 
   private function isTestFile(string $filename): bool {
-    return \preg_match('/Test(\.php|\.hh)$/', $filename) === 1;
+    return \preg_match('/Test(\.php|\.hh|\.hack|\.hck)$/', $filename) === 1;
   }
 
 }
