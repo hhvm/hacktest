@@ -4,7 +4,7 @@ php:
  - hhvm-nightly
 matrix:
   allow_failures:
-  - php: hhvm
+  - php: hvm-nightly
 script:
  - ./.travis.sh
 notifications:
