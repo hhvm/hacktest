@@ -97,7 +97,7 @@ class HackTest {
             /* HH_IGNORE_ERROR[2011] this is unsafe */
             $tuples = $this->$provider();
           }
-          if ($tuples instanceof Awaitable) {
+          if ($tuples is Awaitable<_>) {
             /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
             $tuples = await $tuples;
           }
@@ -152,7 +152,7 @@ class HackTest {
         $clean = false;
         try {
           $res = $runnable();
-          if ($res instanceof Awaitable) {
+          if ($res is Awaitable<_>) {
             /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
             await $res;
           }
