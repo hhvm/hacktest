@@ -10,12 +10,12 @@
   },
   "require-dev": {
     "facebook/fbexpect": "^2.3.0",
-    "hhvm/hhast": "^3.29.1"
+    "hhvm/hhast": "^4.0"
   },
   "require": {
-    "hhvm": "^3.28.0",
-    "hhvm/hhvm-autoload": "^1.6",
-    "hhvm/hsl": "^3.26",
+    "hhvm": "^4.0",
+    "hhvm/hhvm-autoload": "^2.0",
+    "hhvm/hsl": "^4.0",
     "facebook/hh-clilib": "^2.0.0",
     "hhvm/type-assert": "^3.2"
   }
