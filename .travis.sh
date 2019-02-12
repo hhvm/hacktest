@@ -17,6 +17,3 @@ bin/hacktest tests/clean/
 if !(hhvm --version | grep -q -- -dev); then
   hhvm vendor/bin/hhast-lint
 fi
-
-echo > .hhconfig
-hh_server --check $(pwd)
