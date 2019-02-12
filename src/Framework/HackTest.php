@@ -179,7 +179,7 @@ class HackTest {
           $pass = false;
           if (
             $this->expectedException !== null &&
-            !($e instanceof SkippedTestException) &&
+            !($e is SkippedTestException) &&
             \is_a($e, $this->expectedException)
           ) {
             $pass = true;
@@ -264,12 +264,12 @@ class HackTest {
     (function(TestResult): Awaitable<void>) $write_progress,
   ): Awaitable<void> {
     $status = TestResult::ERROR;
-    if ($e instanceof SkippedTestException) {
+    if ($e is SkippedTestException) {
       $status = TestResult::SKIPPED;
     } else if (
       \is_a($e, 'PHPUnit\\Framework\\ExpectationFailedException') ||
       \is_a($e, 'PHPUnit_Framework_ExpectationFailedException') ||
-      $e instanceof ExpectationFailedException
+      $e is ExpectationFailedException
     ) {
       $status = TestResult::FAILED;
     }
