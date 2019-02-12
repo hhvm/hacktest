@@ -363,8 +363,8 @@ final class MathComputeTest extends HackTest {
 
   <<DataProvider('provideTestLogNoBase')>>
   public function testLogNoBase(num $base): void {
-    expect(Math\log($base))->toBeSame(log($base));
-    expect(Math\log($base, null))->toBeSame(log($base));
+    expect(Math\log($base))->toBeSame(log((float)$base));
+    expect(Math\log($base, null))->toBeSame(log((float)$base));
   }
 
   public function testLogException(): void {
