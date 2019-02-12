@@ -14,7 +14,7 @@ namespace Facebook\HackTest;
 $root = realpath(__DIR__.'/..');
 $found_autoloader = false;
 while (true) {
-  $autoloader = $root.'/vendor/autoload.hack';
+  $autoloader = $root.'/vendor/hh_autoload.php';
   if (file_exists($autoloader)) {
     $found_autoloader = true;
     require_once($autoloader);
