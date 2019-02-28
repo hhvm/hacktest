@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.com/hhvm/hacktest.svg?token=zPvriessjph1qhCX5PxF&branch=master)](https://travis-ci.com/hhvm/hacktest)
-
 # HackTest
+
+[![Build Status](https://travis-ci.org/hhvm/hacktest.svg?branch=master)](https://travis-ci.org/hhvm/hacktest)
 
 HackTest is a pure Hack alternative to PHPUnit. In order to use this framework, you must migrate assert calls to use the [expect](https://github.com/hhvm/fbexpect) API.
 
