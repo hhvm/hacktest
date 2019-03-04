@@ -16,7 +16,13 @@ abstract final class HackTestRunner {
 
   public static async function runAsync(
     vec<string> $paths,
-    (function(TestResult): Awaitable<void>) $writer,
+    (function(
+      classname<HackTest>,
+      ?string,
+      ?arraykey,
+      TestProgressEvent,
+    ): Awaitable<void>) $progress_writer,
+    (function(TestResult): Awaitable<void>) $result_writer,
   ): Awaitable<dict<string, dict<string, ?\Throwable>>> {
     $errors = dict[];
     $files = keyset[];
@@ -31,9 +37,14 @@ abstract final class HackTestRunner {
       if ($classname === null) {
         continue;
       }
+      /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
+      await $progress_writer($classname, null, null, TestProgressEvent::STARTING);
       $test_case = new $classname();
       /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-      $errors[$classname] = await $test_case->runTestsAsync($writer);
+      $errors[$classname] =
+        await $test_case->runTestsAsync($progress_writer, $result_writer);
+      /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
+      await $progress_writer($classname, null, null, TestProgressEvent::FINISHED);
     }
     return $errors;
   }

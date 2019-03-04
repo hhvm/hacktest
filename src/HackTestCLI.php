@@ -42,7 +42,9 @@ final class HackTestCLI extends CLIWithRequiredArguments {
   public async function mainAsync(): Awaitable<int> {
     $errors = await HackTestRunner::runAsync(
       $this->getArguments(),
-      async $result ==> await $this->writeProgressAsync($result),
+      async ($class, $method, $dataKey, $event) ==>
+        await $this->writeProgressAsync($class, $method, $dataKey, $event),
+      async $result ==> await $this->writeResultAsync($result),
     );
     $num_tests = 0;
     $num_msg = 0;
@@ -121,21 +123,55 @@ final class HackTestCLI extends CLIWithRequiredArguments {
   }
 
   public async function writeProgressAsync(
+    classname<HackTest> $class,
+    ?string $method,
+    ?arraykey $data_key,
+    TestProgressEvent $event,
+  ): Awaitable<void> {
+    if (!$this->verbose) {
+      return;
+    }
+
+		if ($method is nonnull) {
+      $text = '  ::'.$method;
+			if ($data_key is nonnull) {
+				$text .= '['.((string)$data_key).']';
+			}
+      $text .= '> ';
+		} else {
+      $text = $class.'> ';
+		}
+
+    switch ($event) {
+      case TestProgressEvent::CALLING_DATAPROVIDERS:
+        $text .= 'calling data providers...';
+        break;
+        case TestProgressEvent::STARTING:
+        $text .= 'starting...';
+        break;
+        case TestProgressEvent::FINISHED:
+        $text .= '...complete.';
+        break;
+    }
+    await $this->getStdout()->writeAsync($text."\n");
+  }
+
+  public async function writeResultAsync(
     TestResult $progress,
   ): Awaitable<void> {
-    $status = '';
+    $v = $this->verbose;
     switch ($progress) {
       case TestResult::PASSED:
-        $status = '.';
+        $status = $v ? "PASS\n" : '.';
         break;
       case TestResult::SKIPPED:
-        $status = 'S';
+        $status = $v ? "SKIP\n" : 'S';
         break;
       case TestResult::FAILED:
-        $status = 'F';
+        $status = $v ? "FAIL\n" : 'F';
         break;
       case TestResult::ERROR:
-        $status = 'E';
+        $status = $v ? "ERROR\n" : 'E';
         break;
     }
     await $this->getStdout()->writeAsync($status);

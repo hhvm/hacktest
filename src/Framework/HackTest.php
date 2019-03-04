@@ -35,20 +35,25 @@ class HackTest {
     $this->validateTestMethods();
   }
 
-  final public function getTestMethods(
-  ): vec<\ReflectionMethod> {
+  final public function getTestMethods(): vec<\ReflectionMethod> {
     return $this->methods;
   }
 
   public final async function runTestsAsync(
-    (function(TestResult): Awaitable<void>) $write_progress,
+    (function(
+      classname<HackTest>,
+      ?string,
+      ?arraykey,
+      TestProgressEvent,
+    ): Awaitable<void>) $progress_writer,
+    (function(TestResult): Awaitable<void>) $result_writer,
   ): Awaitable<dict<string, ?\Throwable>> {
 
     $errors = dict[];
     await static::beforeFirstTestAsync();
 
     foreach ($this->methods as $method) {
-      $to_run = dict[];
+      $to_run = vec[];
 
       $this->clearExpectedException();
       $exception = $method->getAttribute('ExpectedException');
@@ -75,7 +80,7 @@ class HackTest {
       $method_name = $method->getName();
       if (C\is_empty($providers)) {
         /* HH_IGNORE_ERROR[2011] this is unsafe */
-        $to_run[$method_name] = () ==> $this->$method_name();
+        $to_run[] = tuple($method_name, null, () ==> $this->$method_name());
       } else {
         if (C\count($providers) > 1) {
           throw new InvalidTestMethodException(
@@ -85,6 +90,13 @@ class HackTest {
             ),
           );
         }
+      /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
+        await $progress_writer(
+          static::class,
+          $method_name,
+          null,
+          TestProgressEvent::CALLING_DATAPROVIDERS,
+        );
         $provider = C\onlyx($providers);
         /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
         await $this->beforeEachTestAsync();
@@ -116,7 +128,7 @@ class HackTest {
           }
         } catch (\Throwable $e) {
           /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-          await $this->writeErrorAsync($e, $write_progress);
+          await $this->writeErrorAsync($e, $result_writer);
           $errors[$method_name] = $e;
           /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
           await $this->afterEachTestAsync();
@@ -128,18 +140,28 @@ class HackTest {
           $tuple = vec($tuple);
           // 3.28+ $tuple as Container<_>;
           $tuple_num++;
-          $key = Str\format(
-            '%s.%d.%s',
+          $to_run[] = tuple(
             $method_name,
             $tuple_num,
-            $this->prettyFormat($tuple),
-          );
           /* HH_IGNORE_ERROR[2011] this is unsafe */
-          $to_run[$key] = () ==> $this->$method_name(...$tuple);
+            () ==> $this->$method_name(...$tuple),
+          );
         }
       }
 
-      foreach ($to_run as $key => $runnable) {
+      foreach ($to_run as list($method, $data_provider_key, $runnable)) {
+        $key = $method;
+        if ($data_provider_key is nonnull) {
+          $key .= '['.$data_provider_key.']';
+        }
+        $p = async $event ==> await $progress_writer(
+          static::class,
+          $method,
+          $data_provider_key,
+          $event,
+        );
+        /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
+        await $p(TestProgressEvent::STARTING);
         if ($this->setUpNeeded) {
           /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
           await $this->beforeEachTestAsync();
@@ -169,7 +191,7 @@ class HackTest {
             );
           }
           /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-          await $write_progress(TestResult::PASSED);
+          await $result_writer(TestResult::PASSED);
           $errors[$key] = null;
         } catch (\Throwable $e) {
           if (!$clean) {
@@ -211,13 +233,16 @@ class HackTest {
           }
           if ($pass) {
             /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-            await $write_progress(TestResult::PASSED);
+            await $result_writer(TestResult::PASSED);
             $errors[$key] = null;
           } else {
             $errors[$key] = $e;
             /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-            await $this->writeErrorAsync($e, $write_progress);
+            await $this->writeErrorAsync($e, $result_writer);
           }
+        } finally {
+          /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
+          await $p(TestProgressEvent::FINISHED);
         }
       }
     }
@@ -261,7 +286,7 @@ class HackTest {
 
   private final async function writeErrorAsync(
     \Throwable $e,
-    (function(TestResult): Awaitable<void>) $write_progress,
+    (function(TestResult): Awaitable<void>) $result_writer,
   ): Awaitable<void> {
     $status = TestResult::ERROR;
     if ($e is SkippedTestException) {
@@ -273,27 +298,7 @@ class HackTest {
     ) {
       $status = TestResult::FAILED;
     }
-    await $write_progress($status);
-  }
-
-  private final function prettyFormat(Container<mixed> $tuple): string {
-    $data = '';
-    $size = C\count($tuple);
-    $num_arg = 1;
-    if ($size > 1) {
-      $data .= '(';
-      foreach ($tuple as $arg) {
-        $data .= \var_export($arg, true);
-        if ($num_arg++ !== $size) {
-          $data .= ', ';
-        }
-      }
-      $data .= ')';
-    } else {
-      $data = \var_export(C\onlyx($tuple), true);
-    }
-
-    return $data;
+    await $result_writer($status);
   }
 
   public static final function markTestSkipped(string $message): void {
@@ -315,7 +320,8 @@ class HackTest {
   ): void {
     $this->expectedException = $exception;
     $this->expectedExceptionMessage = $exception_message;
-    $this->expectedExceptionCode = static::computeExpectedExceptionCode($exception_code);
+    $this->expectedExceptionCode =
+      static::computeExpectedExceptionCode($exception_code);
   }
 
   private function clearExpectedException(): void {
@@ -324,7 +330,9 @@ class HackTest {
     $this->expectedExceptionCode = null;
   }
 
-  public static function computeExpectedExceptionCode(mixed $exception_code): ?int {
+  public static function computeExpectedExceptionCode(
+    mixed $exception_code,
+  ): ?int {
     if ($exception_code is int) {
       return $exception_code;
     }
