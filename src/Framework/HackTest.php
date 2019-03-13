@@ -135,14 +135,11 @@ class HackTest {
           continue;
         }
 
-        $tuple_num = 0;
-        foreach ($tuples as $tuple) {
+        foreach ($tuples as $idx => $tuple) {
           $tuple = vec($tuple);
-          // 3.28+ $tuple as Container<_>;
-          $tuple_num++;
           $to_run[] = tuple(
             $method_name,
-            $tuple_num,
+            $idx,
           /* HH_IGNORE_ERROR[2011] this is unsafe */
             () ==> $this->$method_name(...$tuple),
           );
