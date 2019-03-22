@@ -1,4 +1,3 @@
-<?hh // strict
 /*
  *  Copyright (c) 2018-present, Facebook, Inc.
  *  All rights reserved.
@@ -10,8 +9,4 @@
 
 namespace Facebook\HackTest;
 
-enum ExitCode: int as int {
-  SUCCESS = 0;
-  FAILURE = 1;
-  ERROR = 2;
-}
+final class InvalidTestFileException extends \RuntimeException {}

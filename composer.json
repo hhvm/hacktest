@@ -1,6 +1,6 @@
 {
   "name": "hhvm/hacktest",
-  "bin": ["bin/hacktest"],
+  "bin": ["bin/hacktest", "bin/hacktest.hack"],
   "description": "The Hack Test Library",
   "license": "MIT",
   "extra": {

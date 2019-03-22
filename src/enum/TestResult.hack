@@ -1,4 +1,3 @@
-<?hh // strict
 /*
  *  Copyright (c) 2018-present, Facebook, Inc.
  *  All rights reserved.
@@ -10,4 +9,9 @@
 
 namespace Facebook\HackTest;
 
-final class ExpectationFailedException extends \RuntimeException {}
+enum TestResult: int {
+  PASSED = 0;
+  FAILED = 1;
+  ERROR = 2;
+  SKIPPED = 3;
+}
