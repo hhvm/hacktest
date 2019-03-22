@@ -16,5 +16,5 @@ composer install
 
 hh_client
 
-vendor/bin/hacktest tests/
+bin/hacktest tests/clean/
 vendor/bin/hhast-lint
