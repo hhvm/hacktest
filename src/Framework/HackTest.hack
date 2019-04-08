@@ -14,6 +14,7 @@ namespace Facebook\HackTest;
 
 use namespace HH\Lib\{C, Str, Vec};
 
+<<__ConsistentConstruct>>
 class HackTest {
 
   private vec<\ReflectionMethod> $methods = vec[];
