@@ -151,7 +151,7 @@ class HackTest {
         if ($data_provider_key is nonnull) {
           $key .= '['.$data_provider_key.']';
         }
-        $p = async $event ==> await $progress_writer(
+        $p = async (TestProgressEvent $event) ==> await $progress_writer(
           static::class,
           $method,
           $data_provider_key,
