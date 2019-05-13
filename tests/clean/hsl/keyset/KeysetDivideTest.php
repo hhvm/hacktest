@@ -8,17 +8,17 @@
  *
  */
 
-use namespace HH\Lib\Keyset;
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use namespace HH\Lib\{Keyset, Vec};
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class KeysetDivideTest extends HackTest {
 
-  public static function providePartition(): vec<mixed> {
-    return vec[
+  public static function providePartition(): varray<mixed> {
+    return varray[
       tuple(
-        range(1, 10),
+        Vec\range(1, 10),
         $n ==> $n % 2 === 0,
         tuple(
           keyset[2, 4, 6, 8, 10],
@@ -26,7 +26,7 @@ final class KeysetDivideTest extends HackTest {
         ),
       ),
       tuple(
-        HackLibTestTraversables::getIterator(range(1, 10)),
+        HackLibTestTraversables::getIterator(Vec\range(1, 10)),
         $n ==> $n % 2 === 0,
         tuple(
           keyset[2, 4, 6, 8, 10],

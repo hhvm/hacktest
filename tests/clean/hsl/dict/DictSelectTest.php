@@ -8,18 +8,18 @@
  *
  */
 
-use namespace HH\Lib\{Dict, Str};
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use namespace HH\Lib\{Dict, Str, Vec};
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class DictSelectTest extends HackTest {
 
-  public static function provideTestDiffByKey(): vec<mixed> {
-    return vec[
+  public static function provideTestDiffByKey(): varray<mixed> {
+    return varray[
       tuple(
         darray[],
-        range(0, 100),
+        Vec\range(0, 100),
         darray[],
         dict[],
       ),
@@ -36,11 +36,11 @@ final class DictSelectTest extends HackTest {
         dict['baz' => 'qux'],
       ),
       tuple(
-        range(0, 9),
+        Vec\range(0, 9),
         dict[2 => 4, 4 => 8, 8 => 16],
-        vec[
+        varray[
           Map {1 => 1, 2 => 2},
-          HackLibTestTraversables::getKeyedIterator(range(0, 3)),
+          HackLibTestTraversables::getKeyedIterator(Vec\range(0, 3)),
         ],
         dict[5 => 5, 6 => 6, 7 => 7, 9 => 9],
       ),
@@ -51,14 +51,14 @@ final class DictSelectTest extends HackTest {
   public function testDiffByKey<Tk1 as arraykey, Tk2 as arraykey, Tv>(
     KeyedTraversable<Tk1, Tv> $first,
     KeyedTraversable<Tk2, mixed> $second,
-    Container<KeyedTraversable<Tk2, mixed>> $rest,
+    Container<KeyedContainer<Tk2, mixed>> $rest,
     dict<Tk1, Tv> $expected,
   ): void {
     expect(Dict\diff_by_key($first, $second, ...$rest))->toBeSame($expected);
   }
 
-  public static function provideDrop(): vec<mixed> {
-    return vec[
+  public static function provideDrop(): varray<mixed> {
+    return varray[
       tuple(
         dict[],
         5,
@@ -109,8 +109,8 @@ final class DictSelectTest extends HackTest {
     expect(Dict\drop($traversable, $n))->toBeSame($expected);
   }
 
-  public static function provideTestFilter(): vec<mixed> {
-    return vec[
+  public static function provideTestFilter(): varray<mixed> {
+    return varray[
       tuple(
         dict[],
         $x ==> true,
@@ -132,7 +132,7 @@ final class DictSelectTest extends HackTest {
         dict[],
       ),
       tuple(
-        dict(range(1, 10)),
+        dict(Vec\range(1, 10)),
         $x ==> $x % 2 === 0,
         dict[1 => 2, 3 => 4, 5 => 6, 7 => 8, 9 => 10],
       ),
@@ -142,7 +142,7 @@ final class DictSelectTest extends HackTest {
         dict['donald' => 'duck', 'daffy' => 'duck'],
       ),
       tuple(
-        HackLibTestTraversables::getIterator(range(1, 5)),
+        HackLibTestTraversables::getIterator(Vec\range(1, 5)),
         $x ==> $x % 2 === 0,
         dict[1 => 2, 3 => 4],
       ),
@@ -158,8 +158,8 @@ final class DictSelectTest extends HackTest {
     expect(Dict\filter($traversable, $value_predicate))->toBeSame($expected);
   }
 
-  public static function provideTestFilterWithKey(): vec<mixed> {
-    return vec[
+  public static function provideTestFilterWithKey(): varray<mixed> {
+    return varray[
       tuple(
         dict[],
         ($k, $v) ==> true,
@@ -181,14 +181,14 @@ final class DictSelectTest extends HackTest {
         dict[],
       ),
       tuple(
-        dict(range(1, 10)),
+        dict(Vec\range(1, 10)),
         ($k, $v) ==> $k % 2 === 0 && $v % 2 === 0,
         dict[],
       ),
       tuple(
-        dict(range(1, 10)),
+        dict(Vec\range(1, 10)),
         ($k, $v) ==> $k === $v - 1,
-        dict(range(1, 10)),
+        dict(Vec\range(1, 10)),
       ),
       tuple(
         Map {'donald' => 'duck', 'daffy' => 'duck', 'mickey' => 'mouse'},
@@ -196,7 +196,7 @@ final class DictSelectTest extends HackTest {
         dict['donald' => 'duck'],
       ),
       tuple(
-        HackLibTestTraversables::getIterator(range(1, 5)),
+        HackLibTestTraversables::getIterator(Vec\range(1, 5)),
         ($k, $v) ==> $v % 2 === 0,
         dict[1 => 2, 3 => 4],
       ),
@@ -226,8 +226,8 @@ final class DictSelectTest extends HackTest {
     ]))->toBeSame(dict[3 => 3, 4 => 5, 40 => 40, 70 => 'win!']);
   }
 
-  public static function provideTestFilterKeys(): vec<mixed> {
-    return vec[
+  public static function provideTestFilterKeys(): varray<mixed> {
+    return varray[
       tuple(
         dict[],
         $x ==> true,
@@ -244,12 +244,12 @@ final class DictSelectTest extends HackTest {
         dict['donald' => 'duck', 'daffy' => 'duck'],
       ),
       tuple(
-        dict(range(1, 10)),
+        dict(Vec\range(1, 10)),
         $x ==> $x % 2 === 0,
         dict[0 => 1, 2 => 3, 4 => 5, 6 => 7, 8 => 9],
       ),
       tuple(
-        HackLibTestTraversables::getIterator(range(1, 5)),
+        HackLibTestTraversables::getIterator(Vec\range(1, 5)),
         $x ==> $x % 2 === 0,
         dict[0 => 1, 2 => 3, 4 => 5],
       ),
@@ -276,8 +276,8 @@ final class DictSelectTest extends HackTest {
     ]))->toBeSame(dict[1 => 4, 'hi' => 5]);
   }
 
-  public static function provideTestFilterNulls(): vec<mixed> {
-    return vec[
+  public static function provideTestFilterNulls(): varray<mixed> {
+    return varray[
       tuple(
         darray[
           'foo' => null,
@@ -315,11 +315,11 @@ final class DictSelectTest extends HackTest {
       tuple(
         HackLibTestTraversables::getKeyedIterator(darray[
           1 => null,
-          2 => vec[],
+          2 => varray[],
           3 => '0',
         ]),
         dict[
-          2 => vec[],
+          2 => varray[],
           3 => '0',
         ],
       ),
@@ -337,11 +337,11 @@ final class DictSelectTest extends HackTest {
   public function testFilterAsync(): void {
   }
 
-  public static function provideTestSelectKeys(): vec<mixed> {
-    return vec[
+  public static function provideTestSelectKeys(): varray<mixed> {
+    return varray[
       tuple(
-        vec[],
-        vec[],
+        varray[],
+        varray[],
         dict[],
       ),
       tuple(
@@ -350,7 +350,7 @@ final class DictSelectTest extends HackTest {
           'bar' => 'bar',
           'baz' => 'baz',
         },
-        vec['bar'],
+        varray['bar'],
         dict[
           'bar' => 'bar',
         ],
@@ -377,8 +377,8 @@ final class DictSelectTest extends HackTest {
     expect(Dict\select_keys($container, $keys))->toBeSame($expected);
   }
 
-  public static function provideTake(): vec<mixed> {
-    return vec[
+  public static function provideTake(): varray<mixed> {
+    return varray[
       tuple(
         dict[],
         5,
@@ -433,15 +433,15 @@ final class DictSelectTest extends HackTest {
   }
 
   public function testTakeIter(): void {
-    $iter = HackLibTestTraversables::getKeyedIterator(range(0, 4));
+    $iter = HackLibTestTraversables::getKeyedIterator(Vec\range(0, 4));
     expect(Dict\take($iter, 2))->toBeSame(dict[0=>0, 1=>1]);
     expect(Dict\take($iter, 0))->toBeSame(dict[]);
     expect(Dict\take($iter, 2))->toBeSame(dict[2=>2, 3=>3]);
     expect(Dict\take($iter, 2))->toBeSame(dict[4=>4]);
   }
 
-  public static function provideTestUnique(): vec<mixed> {
-    return vec[
+  public static function provideTestUnique(): varray<mixed> {
+    return varray[
       tuple(
         Map {
           'a' => 1,
@@ -467,12 +467,12 @@ final class DictSelectTest extends HackTest {
     expect(Dict\unique($traversable))->toBeSame($expected);
   }
 
-  public static function provideTestUniqueBy(): vec<mixed> {
+  public static function provideTestUniqueBy(): varray<mixed> {
     $s1 = Set {'foo'};
     $s2 = Set {'bar'};
     $s3 = Set {'foo'};
     $s4 = Set {'baz'};
-    return vec[
+    return varray[
       tuple(
         Vector {$s1, $s2, $s3, $s4},
         ($s) ==> $s->firstKey(),

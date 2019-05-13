@@ -9,24 +9,24 @@
  */
 
 use namespace HH\Lib\Keyset;
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class KeysetCombineTest extends HackTest {
 
-  public static function provideTestUnion(): vec<mixed> {
-    return vec[
+  public static function provideTestUnion(): varray<mixed> {
+    return varray[
       tuple(
-        vec[],
-        vec[
+        varray[],
+        varray[
           vec[],
         ],
         keyset[],
       ),
       tuple(
         keyset[1, 2, 3],
-        vec[
+        varray[
           Vector {'the', 'quick', 'brown'},
           HackLibTestTraversables::getKeyedIterator(darray[
             'the' => 'the',
@@ -43,7 +43,7 @@ final class KeysetCombineTest extends HackTest {
   <<DataProvider('provideTestUnion')>>
   public function testUnion<Tv as arraykey>(
     Traversable<Tv> $first,
-    Container<Traversable<Tv>> $rest,
+    Container<Container<Tv>> $rest,
     keyset<Tv> $expected,
   ): void {
     expect(Keyset\union($first, ...$rest))->toBeSame($expected);

@@ -9,16 +9,16 @@
  */
 
 use namespace HH\Lib\Vec;
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class VecDivideTest extends HackTest {
 
-  public static function providePartition(): vec<mixed> {
-    return vec[
+  public static function providePartition(): varray<mixed> {
+    return varray[
       tuple(
-        range(1, 10),
+        Vec\range(1, 10),
         $n ==> $n % 2 === 0,
         tuple(
           vec[2, 4, 6, 8, 10],
@@ -26,7 +26,7 @@ final class VecDivideTest extends HackTest {
         ),
       ),
       tuple(
-        HackLibTestTraversables::getIterator(range(1, 10)),
+        HackLibTestTraversables::getIterator(Vec\range(1, 10)),
         $n ==> $n % 2 === 0,
         tuple(
           vec[2, 4, 6, 8, 10],

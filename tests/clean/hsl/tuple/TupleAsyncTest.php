@@ -9,36 +9,44 @@
  */
 
 use namespace HH\Lib\Tuple as Tuple;
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\HackTest;
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\HackTest; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class TupleAsyncTest extends HackTest {
-
-  public async function testWithNonNullableTypesAsync(): Awaitable<void> {
-    $t = await Tuple\from_async(async { return 1; }, async { return 'foo'; });
-    expect($t)->toBeSame(tuple(1, 'foo'));
-    list($a, $b) = $t;
-    expect(
-      ((int $x, string $y) ==> tuple($x, $y))($a, $b)
-    )->toBeSame($t);
+  public function testWithNonNullableTypes(): void {
+    /* HH_IGNORE_ERROR[5542] open source */
+    \HH\Asio\join(async {
+      $t = await Tuple\from_async(async { return 1; }, async { return 'foo'; });
+      expect($t)->toBeSame(tuple(1, 'foo'));
+      list($a, $b) = $t;
+      expect(
+        ((int $x, string $y) ==> tuple($x, $y))($a, $b)
+      )->toBeSame($t);
+    });
   }
 
-  public async function testWithNullLiteralsAsync(): Awaitable<void> {
-    $t = await Tuple\from_async(async { return 1; }, null, async { return null; });
-    expect($t)->toBeSame(tuple(1, null, null));
-    list($a, $b, $c) = $t;
-    expect(
-      ((int $x, ?int $y, ?int $z) ==> tuple($x, $y, $z))($a, $b, $c)
-    )->toBeSame($t);
+  public function testWithNullLiterals(): void {
+    /* HH_IGNORE_ERROR[5542] open source */
+    \HH\Asio\join(async {
+      $t = await Tuple\from_async(async { return 1; }, null, async { return null; });
+      expect($t)->toBeSame(tuple(1, null, null));
+      list($a, $b, $c) = $t;
+      expect(
+        ((int $x, ?int $y, ?int $z) ==> tuple($x, $y, $z))($a, $b, $c)
+      )->toBeSame($t);
+    });
   }
 
-  public async function testWithNullableTypesAsync(): Awaitable<void> {
-    $t = await Tuple\from_async(async { return 1; }, async { return 'foo'; });
-    expect($t)->toBeSame(tuple(1, 'foo'));
-    list($a, $b) = $t;
-    expect(
-      ((?int $x, ?string $y) ==> tuple($x, $y))($a, $b)
-    )->toBeSame($t);
+  public function testWithNullableTypes(): void {
+    /* HH_IGNORE_ERROR[5542] open source */
+    \HH\Asio\join(async {
+      $t = await Tuple\from_async(async { return 1; }, async { return 'foo'; });
+      expect($t)->toBeSame(tuple(1, 'foo'));
+      list($a, $b) = $t;
+      expect(
+        ((?int $x, ?string $y) ==> tuple($x, $y))($a, $b)
+      )->toBeSame($t);
+    });
   }
 }

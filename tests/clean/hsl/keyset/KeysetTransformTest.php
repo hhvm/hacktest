@@ -8,18 +8,22 @@
  *
  */
 
-use namespace HH\Lib\{Keyset, Vec};
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use namespace HH\Lib\{Keyset, Str};
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class KeysetTransformTest extends HackTest {
 
-  public static function provideTestChunk(): vec<mixed> {
-    return vec[
-      tuple(Map {}, 10, vec[]),
+  public static function provideTestChunk(): varray<mixed> {
+    return varray[
       tuple(
-        vec[0, 1, 2, 3, 4],
+        Map {},
+        10,
+        vec[],
+      ),
+      tuple(
+        varray[0, 1, 2, 3, 4],
         2,
         vec[
           keyset[0, 1],
@@ -59,16 +63,34 @@ final class KeysetTransformTest extends HackTest {
     expect(Keyset\chunk($traversable, $size))->toBeSame($expected);
   }
 
-  public static function provideTestMap(): vec<mixed> {
+  public static function provideTestMap(): varray<mixed> {
     $doubler = $x ==> $x * 2;
-    return vec[
-      tuple(vec[], $doubler, keyset[]),
-      tuple(vec[1], $doubler, keyset[2]),
-      tuple(range(10, 15), $doubler, keyset[20, 22, 24, 26, 28, 30]),
-      tuple(vec['a'], $x ==> $x.' buzz', keyset['a buzz']),
+    return varray[
       tuple(
-        vec['a', 'bee', 'a bee'],
-        $x ==> $x.' buzz',
+        varray[],
+        $doubler,
+        keyset[],
+      ),
+      tuple(
+        varray[1],
+        $doubler,
+        keyset[2],
+      ),
+      tuple(
+        /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+        /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+        range(10, 15),
+        $doubler,
+        keyset[20, 22, 24, 26, 28, 30],
+      ),
+      tuple(
+        varray['a'],
+        $x ==> $x. ' buzz',
+        keyset['a buzz'],
+      ),
+      tuple(
+        varray['a', 'bee', 'a bee'],
+        $x ==> $x. ' buzz',
         keyset['a buzz', 'bee buzz', 'a bee buzz'],
       ),
       tuple(
@@ -77,26 +99,36 @@ final class KeysetTransformTest extends HackTest {
           'daffy' => 'duck',
           'mickey' => 'mouse',
         ],
-        fun('strrev'),
+        $s ==> Str\reverse($s),
         keyset['kcud', 'kcud', 'esuom'],
       ),
       tuple(
         Map {'donald' => 'duck', 'daffy' => 'duck', 'mickey' => 'mouse'},
-        fun('strrev'),
+        $s ==> Str\reverse($s),
         keyset['kcud', 'kcud', 'esuom'],
       ),
-      tuple(Vector {10, 20}, $doubler, keyset[20, 40]),
-      tuple(Set {10, 20}, $doubler, keyset[20, 40]),
-      tuple(keyset[10, 20], $doubler, keyset[20, 40]),
       tuple(
-        HackLibTestTraversables::getIterator(vec[1, 2, 3]),
+        Vector {10, 20},
+        $doubler,
+        keyset[20, 40],
+      ),
+      tuple(
+        Set {10, 20},
+        $doubler,
+        keyset[20, 40],
+      ),
+      tuple(
+        keyset[10, 20],
+        $doubler,
+        keyset[20, 40],
+      ),
+      tuple(
+        HackLibTestTraversables::getIterator(varray[1, 2, 3]),
         $doubler,
         keyset[2, 4, 6],
       ),
       tuple(
-        HackLibTestTraversables::getKeyedIterator(
-          darray[10 => 1, 20 => 2, 30 => 3],
-        ),
+        HackLibTestTraversables::getKeyedIterator(darray[10 => 1, 20 => 2, 30 => 3]),
         $doubler,
         keyset[2, 4, 6],
       ),
@@ -112,20 +144,32 @@ final class KeysetTransformTest extends HackTest {
     expect(Keyset\map($traversable, $value_func))->toBeSame($expected);
   }
 
-  public static function provideTestMapWithKey(): vec<mixed> {
-    return vec[
-      tuple(vec[], ($a, $b) ==> null, keyset[]),
+  public static function provideTestMapWithKey(): varray<mixed> {
+    return varray[
+      tuple(
+        varray[],
+        ($a, $b) ==> null,
+        keyset[],
+      ),
       tuple(
         Vector {'the', 'quick', 'brown', 'fox'},
         ($k, $v) ==> (string)$k.$v,
         keyset['0the', '1quick', '2brown', '3fox'],
       ),
       tuple(
+        /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+        /* HH_IGNORE_ERROR[4107] __PHPStdLib */
         HackLibTestTraversables::getKeyedIterator(range(1, 5)),
         ($k, $v) ==> $v * $k,
         keyset[0, 2, 6, 12, 20],
       ),
-      tuple(range(1, 6), ($k, $v) ==> ($k + $v) % 5, keyset[1, 3, 0, 2, 4]),
+      tuple(
+        /* HH_IGNORE_ERROR[2049] __PHPStdLib */
+        /* HH_IGNORE_ERROR[4107] __PHPStdLib */
+        range(1, 6),
+        ($k, $v) ==> ($k + $v) % 5,
+        keyset[1, 3, 0, 2, 4],
+      ),
     ];
   }
 
@@ -140,20 +184,35 @@ final class KeysetTransformTest extends HackTest {
   }
 
   public static function provideTestFlatten(
-  ): vec<(Traversable<Traversable<arraykey>>, keyset<arraykey>)> {
-    return vec[
-      tuple(vec[keyset[1, 2], keyset[2, 3, 4]], keyset[1, 2, 3, 4]),
-      tuple(vec[keyset[1]], keyset[1]),
-      tuple(vec[], keyset[]),
-      tuple(vec[keyset[], keyset[]], keyset[]),
-      tuple(vec[vec[1, 2], vec[2, 3]], keyset[1, 2, 3]),
+  ): varray<(Traversable<Traversable<arraykey>>, keyset<arraykey>)> {
+    return varray[
+      tuple(
+        vec[keyset[1,2], keyset[2,3,4]],
+        keyset[1,2,3,4],
+      ),
+      tuple(
+        vec[keyset[1]],
+        keyset[1],
+      ),
+      tuple(
+        vec[],
+        keyset[],
+      ),
+      tuple(
+        vec[keyset[], keyset[]],
+        keyset[],
+      ),
+      tuple(
+        vec[vec[1,2],vec[2,3]],
+        keyset[1,2,3],
+      ),
       tuple(
         dict['a' => keyset['apple', 'banana'], 'b' => vec['grape']],
         keyset['apple', 'banana', 'grape'],
       ),
       tuple(
-        vec[
-          vec[1, 2, 3],
+        varray[
+          varray[1, 2, 3],
           Vector {'the', 'quick', 'brown'},
           HackLibTestTraversables::getKeyedIterator(darray[
             'the' => 'the',
@@ -169,11 +228,9 @@ final class KeysetTransformTest extends HackTest {
 
   <<DataProvider('provideTestFlatten')>>
   public function testFlatten<Tv as arraykey>(
-    Traversable<Traversable<Tv>> $traversables,
+    Traversable<Container<Tv>> $traversables,
     keyset<Tv> $expected,
   ): void {
-    expect(Keyset\flatten(Vec\map($traversables, $t ==> vec($t))))->toBeSame(
-      $expected,
-    );
+    expect(Keyset\flatten($traversables))->toBeSame($expected);
   }
 }

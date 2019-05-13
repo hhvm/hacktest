@@ -9,32 +9,32 @@
  */
 
 use namespace HH\Lib\Vec;
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class VecCombineTest extends HackTest {
 
-  public static function provideTestConcat(): vec<mixed> {
-    return vec[
+  public static function provideTestConcat(): varray<mixed> {
+    return varray[
       tuple(
-        vec[],
-        vec[],
+        varray[],
+        varray[],
         vec[],
       ),
       tuple(
         vec[],
-        vec[
+        varray[
           darray[], Vector {}, Map {}, Set {},
         ],
         vec[],
       ),
       tuple(
-        vec['the', 'quick'],
-        vec[
+        varray['the', 'quick'],
+        varray[
           Vector {'brown', 'fox'},
           Map {'jumped' => 'over'},
-          HackLibTestTraversables::getIterator(vec['the', 'lazy', 'dog']),
+          HackLibTestTraversables::getIterator(varray['the', 'lazy', 'dog']),
         ],
         vec['the', 'quick', 'brown', 'fox', 'over', 'the', 'lazy', 'dog'],
       ),
@@ -44,7 +44,7 @@ final class VecCombineTest extends HackTest {
   <<DataProvider('provideTestConcat')>>
   public function testConcat<Tv>(
     Traversable<Tv> $first,
-    Container<Traversable<Tv>> $rest,
+    Container<Container<Tv>> $rest,
     vec<Tv> $expected,
   ): void {
     expect(Vec\concat($first, ...$rest))->toBeSame($expected);

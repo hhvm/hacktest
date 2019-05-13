@@ -9,15 +9,15 @@
  */
 
 use namespace HH\Lib\Str;
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class StrCombineTest extends HackTest {
 
-  public static function provideJoin(): vec<mixed> {
-    $elements = vec['the', 'quick', 'brown', 'fox', 1];
-    return vec[
+  public static function provideJoin(): varray<mixed> {
+    $elements = varray['the', 'quick', 'brown', 'fox', 1];
+    return varray[
       tuple($elements),
       tuple(new Vector($elements)),
       tuple(new Set($elements)),

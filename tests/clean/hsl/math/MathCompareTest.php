@@ -9,14 +9,14 @@
  */
 
 use namespace HH\Lib\Math;
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class MathCompareTest extends HackTest {
 
-  public static function provideTestMaxva(): vec<mixed> {
-    return vec[
+  public static function provideTestMaxva(): varray<mixed> {
+    return varray[
       tuple(1, 2, vec[], 2),
       tuple(2, 1, vec[], 2),
       tuple(1.0, 2.0, vec[], 2.0),
@@ -40,8 +40,8 @@ final class MathCompareTest extends HackTest {
     expect(Math\maxva($first, $second, ...$rest))->toBeSame($expected);
   }
 
-  public static function provideTestMinva(): vec<mixed> {
-    return vec[
+  public static function provideTestMinva(): varray<mixed> {
+    return varray[
       tuple(1, 2, vec[], 1),
       tuple(2, 1, vec[], 1),
       tuple(1.0, 2.0, vec[], 1.0),

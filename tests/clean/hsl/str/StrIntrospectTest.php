@@ -9,15 +9,15 @@
  */
 
 use namespace HH\Lib\Str;
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use function Facebook\FBExpect\expect; // @oss-enable
 // @oss-disable: use InvariantViolationException as InvariantException;
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class StrIntrospectTest extends HackTest {
 
-  public static function provideCompare(): vec<mixed> {
-    return vec[
+  public static function provideCompare(): varray<mixed> {
+    return varray[
       tuple('foo', 'foo', 0),
       tuple('foo', 'Foo', 1),
       tuple('Foo', 'foo', -1),
@@ -40,8 +40,8 @@ final class StrIntrospectTest extends HackTest {
     }
   }
 
-  public static function provideCompareCI(): vec<mixed> {
-    return vec[
+  public static function provideCompareCI(): varray<mixed> {
+    return varray[
       tuple('foo', 'foo', 0),
       tuple('foo', 'Foo', 0),
       tuple('Foo', 'foo', 0),
@@ -64,8 +64,8 @@ final class StrIntrospectTest extends HackTest {
     }
   }
 
-  public static function provideContains(): vec<mixed> {
-    return vec[
+  public static function provideContains(): varray<mixed> {
+    return varray[
       tuple('', '', 0, true),
       tuple('foo', '', 0, true),
       tuple('foo', '', 3, true),
@@ -90,8 +90,8 @@ final class StrIntrospectTest extends HackTest {
     expect(Str\contains($haystack, $needle, $offset))->toBeSame($expected);
   }
 
-  public static function provideContainsCI(): vec<mixed> {
-    return vec[
+  public static function provideContainsCI(): varray<mixed> {
+    return varray[
       tuple('', '', 0, true),
       tuple('foo', '', 0, true),
       tuple('foo', '', 3, true),
@@ -134,8 +134,8 @@ final class StrIntrospectTest extends HackTest {
       ->toThrow(InvariantException::class);
   }
 
-  public static function provideEndsWith(): vec<mixed> {
-    return vec[
+  public static function provideEndsWith(): varray<mixed> {
+    return varray[
       tuple(
         '',
         '',
@@ -178,8 +178,8 @@ final class StrIntrospectTest extends HackTest {
     expect(Str\ends_with($string, $suffix))->toBeSame($expected);
   }
 
-  public static function provideEndsWithCI(): vec<mixed> {
-    return vec[
+  public static function provideEndsWithCI(): varray<mixed> {
+    return varray[
       tuple(
         '',
         '',
@@ -222,8 +222,8 @@ final class StrIntrospectTest extends HackTest {
     expect(Str\ends_with_ci($string, $suffix))->toBeSame($expected);
   }
 
-  public static function provideIsEmpty(): vec<mixed> {
-    return vec[
+  public static function provideIsEmpty(): varray<mixed> {
+    return varray[
       tuple(null, true),
       tuple('', true),
       tuple('0', false),
@@ -240,8 +240,8 @@ final class StrIntrospectTest extends HackTest {
     expect(Str\is_empty($string))->toBeSame($expected);
   }
 
-  public static function provideLength(): vec<mixed> {
-    return vec[
+  public static function provideLength(): varray<mixed> {
+    return varray[
       tuple('', 0),
       tuple('0', 1),
       tuple('hello', 5),
@@ -256,8 +256,8 @@ final class StrIntrospectTest extends HackTest {
     expect(Str\length($string))->toBeSame($expected);
   }
 
-  public static function provideSearch(): vec<mixed> {
-    return vec[
+  public static function provideSearch(): varray<mixed> {
+    return varray[
       tuple('', 'foo', 0, null),
       tuple('fooBar', 'oB', 0, 2),
       tuple('fooBar', 'oB', 3, null),
@@ -279,8 +279,8 @@ final class StrIntrospectTest extends HackTest {
     expect(Str\search($haystack, $needle, $offset))->toBeSame($expected);
   }
 
-  public static function provideSearchCI(): vec<mixed> {
-    return vec[
+  public static function provideSearchCI(): varray<mixed> {
+    return varray[
       tuple('', 'foo', 0, null),
       tuple('fooBar', 'oB', 0, 2),
       tuple('fooBar', 'oB', 3, null),
@@ -302,8 +302,8 @@ final class StrIntrospectTest extends HackTest {
     expect(Str\search_ci($haystack, $needle, $offset))->toBeSame($expected);
   }
 
-  public static function provideSearchLast(): vec<mixed> {
-    return vec[
+  public static function provideSearchLast(): varray<mixed> {
+    return varray[
       tuple('foofoofoo', 'foo', 0, 6),
       tuple('foofoofoo', 'bar', 0, null),
       tuple('foobarbar', 'foo', 3, null),
@@ -344,8 +344,8 @@ final class StrIntrospectTest extends HackTest {
       ->toThrow(InvariantException::class);
   }
 
-  public static function provideStartsWith(): vec<mixed> {
-    return vec[
+  public static function provideStartsWith(): varray<mixed> {
+    return varray[
       tuple(
         '',
         '',
@@ -388,8 +388,8 @@ final class StrIntrospectTest extends HackTest {
     expect(Str\starts_with($string, $prefix))->toBeSame($expected);
   }
 
-  public static function provideStartsWithCI(): vec<mixed> {
-    return vec[
+  public static function provideStartsWithCI(): varray<mixed> {
+    return varray[
       tuple(
         '',
         '',

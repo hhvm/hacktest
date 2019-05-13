@@ -8,15 +8,15 @@
  *
  */
 
-use namespace HH\Lib\Dict;
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use namespace HH\Lib\{Dict, Str, Vec};
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class DictAsyncTest extends HackTest {
 
-  public static function provideTestGen(): vec<mixed> {
-    return vec[
+  public static function provideTestGen(): varray<mixed> {
+    return varray[
       tuple(
         Vector {
           async {return 'the';},
@@ -66,11 +66,11 @@ final class DictAsyncTest extends HackTest {
     });
   }
 
-  public static function provideTestGenFromKeys(): vec<mixed> {
-    return vec[
+  public static function provideTestGenFromKeys(): varray<mixed> {
+    return varray[
       tuple(
         Vector {'the', 'quick', 'brown', 'fox'},
-        async ($word) ==> strlen($word),
+        async ($word) ==> Str\length($word),
         dict[
           'the' => 3,
           'quick' => 5,
@@ -80,9 +80,9 @@ final class DictAsyncTest extends HackTest {
       ),
       tuple(
         HackLibTestTraversables::getIterator(
-          vec['the', 'quick', 'brown', 'fox'],
+          varray['the', 'quick', 'brown', 'fox'],
         ),
-        async ($word) ==> strlen($word),
+        async ($word) ==> Str\length($word),
         dict[
           'the' => 3,
           'quick' => 5,
@@ -119,12 +119,12 @@ final class DictAsyncTest extends HackTest {
         },
       );
       expect($actual)->toBeSame(dict[1 => 1, 2 => 2]);
-      expect($run_cnt['value'])->toBePHPEqual(2);
+      expect($run_cnt['value'])->toBeSame(2);
     });
   }
 
-  public static function provideTestGenFilter(): vec<mixed> {
-    return vec[
+  public static function provideTestGenFilter(): varray<mixed> {
+    return varray[
       tuple(
         darray[
           2 => 'two',
@@ -132,7 +132,7 @@ final class DictAsyncTest extends HackTest {
           6 => 'six',
           8 => 'eight',
         ],
-        async ($word) ==> strlen($word) % 2 === 1,
+        async ($word) ==> Str\length($word) % 2 === 1,
         dict[
           2 => 'two',
           6 => 'six',
@@ -146,7 +146,7 @@ final class DictAsyncTest extends HackTest {
           6 => 'six',
           '8' => 'eight',
         ],
-        async ($word) ==> strlen($word) % 2 === 1,
+        async ($word) ==> Str\length($word) % 2 === 1,
         dict[
           '2' => 'two',
           6 => 'six',
@@ -155,7 +155,7 @@ final class DictAsyncTest extends HackTest {
       ),
       tuple(
         Vector {'the', 'quick', 'brown', 'fox', 'jumped', 'over'},
-        async ($word) ==> strlen($word) % 2 === 0,
+        async ($word) ==> Str\length($word) % 2 === 0,
         dict[
           4 => 'jumped',
           5 => 'over',
@@ -177,10 +177,62 @@ final class DictAsyncTest extends HackTest {
     });
   }
 
-  public static function provideTestGenMap(): vec<mixed> {
-    return vec[
+  public static function provideTestGenFilterWithKey(): varray<mixed> {
+    return varray[
       tuple(
-        vec[],
+        darray[
+          2 => 'two',
+          4 => 'four',
+          6 => 'six',
+          8 => 'eight',
+        ],
+        async ($_key, $word) ==> Str\length($word) % 2 === 1,
+        dict[
+          2 => 'two',
+          6 => 'six',
+          8 => 'eight',
+        ],
+      ),
+      tuple(
+        dict[
+          '2' => 'two',
+          '4' => 'four',
+          6 => 'six',
+          '8' => 'eight',
+        ],
+        async ($key, $word) ==> Str\length($word) % 2 === 1 && $key === '2',
+        dict[
+          '2' => 'two',
+        ],
+      ),
+      tuple(
+        Vector {'the', 'quick', 'brown', 'fox', 'jumped', 'over'},
+        async ($_key, $word) ==> Str\length($word) % 2 === 0,
+        dict[
+          4 => 'jumped',
+          5 => 'over',
+        ],
+      ),
+    ];
+  }
+
+  <<DataProvider('provideTestGenFilterWithKey')>>
+  public async function testFilterWithKeyAsync<Tk as arraykey, Tv>(
+    KeyedContainer<Tk, Tv> $container,
+    (function(Tk, Tv): Awaitable<bool>) $predicate,
+    dict<Tk, Tv> $expected,
+  ): Awaitable<void> {
+    $actual = await Dict\filter_with_key_async(
+      $container,
+      $predicate,
+    );
+    expect($actual)->toBeSame($expected);
+  }
+
+  public static function provideTestGenMap(): varray<mixed> {
+    return varray[
+      tuple(
+        varray[],
         $x ==> $x,
         dict[],
       ),
@@ -199,7 +251,7 @@ final class DictAsyncTest extends HackTest {
       ),
       tuple(
         Vector {'the', 'quick', 'brown', 'fox'},
-        async ($word) ==> strrev($word),
+        async ($word) ==> Str\reverse($word),
         dict[
           0 => 'eht',
           1 => 'kciuq',
@@ -209,9 +261,9 @@ final class DictAsyncTest extends HackTest {
       ),
       tuple(
         HackLibTestTraversables::getIterator(
-          vec['the', 'quick', 'brown', 'fox'],
+          varray['the', 'quick', 'brown', 'fox'],
         ),
-        async ($word) ==> strrev($word),
+        async ($word) ==> Str\reverse($word),
         dict[
           0 => 'eht',
           1 => 'kciuq',
@@ -232,6 +284,55 @@ final class DictAsyncTest extends HackTest {
     \HH\Asio\join(async {
       $actual = await Dict\map_async($traversable, $value_func);
       expect($actual)->toBeSame($expected);
+    });
+  }
+
+  public static function provideTestGenMapWithKey(): varray<mixed> {
+    return varray[
+      tuple(
+        varray[],
+        async ($a, $b) ==> null,
+        dict[],
+      ),
+      tuple(
+        vec[1, 2, 3],
+        async ($k, $v) ==> (string)$k.$v,
+        dict[0 => '01', 1 => '12', 2 => '23'],
+      ),
+      tuple(
+        Vector {'the', 'quick', 'brown', 'fox'},
+        async ($k, $v) ==> (string)$k.$v,
+        dict[
+          0 => '0the',
+          1 => '1quick',
+          2 => '2brown',
+          3 => '3fox',
+        ],
+      ),
+      tuple(
+        HackLibTestTraversables::getKeyedIterator(Vec\range(1, 5)),
+        async ($k, $v) ==> $k * $v,
+        dict[
+          0 => 0,
+          1 => 2,
+          2 => 6,
+          3 => 12,
+          4 => 20,
+        ],
+      ),
+    ];
+  }
+
+  <<DataProvider('provideTestGenMapWithKey')>>
+  public function testMapWithKeyAsync<Tk as arraykey, Tv1, Tv2>(
+    KeyedTraversable<Tk, Tv1> $traversable,
+    (function(Tk, Tv1): Awaitable<Tv2>) $value_func,
+    dict<Tk, Tv2> $expected,
+  ): void {
+    /* HH_IGNORE_ERROR[5542] open source */
+    \HH\Asio\join(async {
+      $result = await Dict\map_with_key_async($traversable, $value_func);
+      expect($result)->toBeSame($expected);
     });
   }
 }

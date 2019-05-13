@@ -8,15 +8,15 @@
  *
  */
 
-use namespace HH\Lib\Vec;
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use namespace HH\Lib\{Str, Vec};
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class VecAsyncTest extends HackTest {
 
-  public static function provideTestGen(): vec<mixed> {
-    return vec[
+  public static function provideTestGen(): varray<mixed> {
+    return varray[
       tuple(
         Vector {
           async {return 'the';},
@@ -34,7 +34,7 @@ final class VecAsyncTest extends HackTest {
         vec[1, 2],
       ),
       tuple(
-        HackLibTestTraversables::getIterator(vec[
+        HackLibTestTraversables::getIterator(varray[
           async {return 'the';},
           async {return 'quick';},
           async {return 'brown';},
@@ -57,8 +57,8 @@ final class VecAsyncTest extends HackTest {
     });
   }
 
-  public static function provideTestGenFilter(): vec<mixed> {
-    return vec[
+  public static function provideTestGenFilter(): varray<mixed> {
+    return varray[
       tuple(
         darray[
           2 => 'two',
@@ -66,12 +66,12 @@ final class VecAsyncTest extends HackTest {
           6 => 'six',
           8 => 'eight',
         ],
-        async ($word) ==> strlen($word) % 2 === 1,
+        async ($word) ==> Str\length($word) % 2 === 1,
         vec['two', 'six', 'eight'],
       ),
       tuple(
         Vector {'the', 'quick', 'brown', 'fox', 'jumped', 'over'},
-        async ($word) ==> strlen($word) % 2 === 0,
+        async ($word) ==> Str\length($word) % 2 === 0,
         vec['jumped', 'over'],
       ),
     ];
@@ -90,18 +90,18 @@ final class VecAsyncTest extends HackTest {
     });
   }
 
-  public static function provideTestGenMap(): vec<mixed> {
-    return vec[
+  public static function provideTestGenMap(): varray<mixed> {
+    return varray[
       tuple(
         Vector {'the', 'quick', 'brown', 'fox'},
-        async ($word) ==> strrev($word),
+        async ($word) ==> Str\reverse($word),
         vec['eht', 'kciuq', 'nworb', 'xof'],
       ),
       tuple(
         HackLibTestTraversables::getIterator(
-          vec['the', 'quick', 'brown', 'fox'],
+          varray['the', 'quick', 'brown', 'fox'],
         ),
-        async ($word) ==> strrev($word),
+        async ($word) ==> Str\reverse($word),
         vec['eht', 'kciuq', 'nworb', 'xof'],
       ),
     ];

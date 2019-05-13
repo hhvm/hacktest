@@ -9,14 +9,14 @@
  */
 
 use namespace HH\Lib\Dict;
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class DictIntrospectTest extends HackTest {
 
-  public static function provideTestEqual(): vec<mixed> {
-    return vec[
+  public static function provideTestEqual(): varray<mixed> {
+    return varray[
       tuple(
         dict[1 => 1, 2 => 2, 3 => 3],
         dict[1 => 1, 2 => 2, 3 => 3],

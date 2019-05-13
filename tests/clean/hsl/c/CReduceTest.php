@@ -9,13 +9,14 @@
  */
 
 use namespace HH\Lib\C;
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
+
 // @oss-disable: <<Oncalls('hack')>>
 final class CReduceTest extends HackTest {
 
-  public static function provideTestReduce(): vec<mixed> {
-    return vec[
+  public static function provideTestReduce(): varray<mixed> {
+    return varray[
       tuple(
         Set {'the', ' quick', ' brown', ' fox'},
         ($a, $s) ==> $a.$s,
@@ -24,14 +25,14 @@ final class CReduceTest extends HackTest {
       ),
       tuple(
         HackLibTestTraversables::getIterator(
-          vec['the', ' quick', ' brown', ' fox'],
+          varray['the', ' quick', ' brown', ' fox'],
         ),
         ($a, $s) ==> $a.$s,
         '',
         'the quick brown fox',
       ),
       tuple(
-        vec['the', 'quick', 'brown', 'fox'],
+        varray['the', 'quick', 'brown', 'fox'],
         ($a, $s) ==> $a->add($s),
         Vector {},
         Vector {'the', 'quick', 'brown', 'fox'},
@@ -49,8 +50,8 @@ final class CReduceTest extends HackTest {
     expect(C\reduce($traversable, $accumulator, $initial))->toBePHPEqual($expected);
   }
 
-  public static function provideTestReduceWithKey(): vec<mixed> {
-    return vec[
+  public static function provideTestReduceWithKey(): varray<mixed> {
+    return varray[
       tuple(
         'dict',
         dict[1 => 2, 2 => 3, 3 => 4, 4 => 5],

@@ -8,15 +8,15 @@
  *
  */
 
-use namespace HH\Lib\Dict;
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use namespace HH\Lib\{Dict, Vec};
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class DictCombineTest extends HackTest {
 
-  public static function provideTestAssociate(): vec<mixed> {
-    return vec[
+  public static function provideTestAssociate(): varray<mixed> {
+    return varray[
       tuple(
         vec[3, 2, 1],
         Vector {'a', 'b', 'c'},
@@ -27,8 +27,8 @@ final class DictCombineTest extends HackTest {
         ],
       ),
       tuple(
-        range(0, 3),
-        HackLibTestTraversables::getIterator(range(0, 3)),
+        Vec\range(0, 3),
+        HackLibTestTraversables::getIterator(Vec\range(0, 3)),
         dict[
           0 => 0,
           1 => 1,
@@ -62,8 +62,8 @@ final class DictCombineTest extends HackTest {
     expect(Dict\associate($keys, $values))->toBeSame($expected);
   }
 
-  public static function provideTestMerge(): vec<mixed> {
-    return vec[
+  public static function provideTestMerge(): varray<mixed> {
+    return varray[
       tuple(
         Map {},
         darray[],
@@ -74,7 +74,7 @@ final class DictCombineTest extends HackTest {
           'one' => 'one',
           'two' => 'two',
         ],
-        vec[
+        varray[
           darray[
             'three' => 'three',
             'one' => 3,
@@ -94,9 +94,9 @@ final class DictCombineTest extends HackTest {
         HackLibTestTraversables::getKeyedIterator(darray[
           'foo' => 'foo',
           'bar' => 'bar',
-          'baz' => vec[1, 2, 3],
+          'baz' => varray[1, 2, 3],
         ]),
-        vec[
+        varray[
           dict[
             'bar' => 'barbar',
           ],
@@ -109,7 +109,7 @@ final class DictCombineTest extends HackTest {
         dict[
           'foo' => 'foo',
           'bar' => 'barbar',
-          'baz' => vec[1, 2, 3],
+          'baz' => varray[1, 2, 3],
           0 => 'I should feel bad for doing this',
           1 => 'gross array behavior',
           'bloop' => 'bloop',
@@ -121,7 +121,7 @@ final class DictCombineTest extends HackTest {
   <<DataProvider('provideTestMerge')>>
   public function testMerge<Tk as arraykey, Tv>(
     KeyedTraversable<Tk, Tv> $first,
-    Container<KeyedTraversable<Tk, Tv>> $rest,
+    Container<KeyedContainer<Tk, Tv>> $rest,
     dict<Tk, Tv> $expected,
   ): void {
     expect(Dict\merge($first, ...$rest))->toBeSame($expected);

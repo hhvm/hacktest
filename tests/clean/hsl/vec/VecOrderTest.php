@@ -8,16 +8,16 @@
  *
  */
 
-use namespace HH\Lib\{C, Str, Vec};
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use namespace HH\Lib\{C, Math, Str, Vec};
+use function \Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 // @oss-disable: use InvariantViolationException as InvariantException;
 
 // @oss-disable: <<Oncalls('hack')>>
 final class VecOrderTest extends HackTest {
 
-  public static function provideTestRange(): vec<mixed> {
-    return vec[
+  public static function provideTestRange(): varray<mixed> {
+    return varray[
       tuple(1, 10, null, vec[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
       tuple(1, 10, 1, vec[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
       tuple(1, 10, 2, vec[1, 3, 5, 7, 9]),
@@ -77,8 +77,8 @@ final class VecOrderTest extends HackTest {
     }
   }
 
-  public static function provideTestRangeException(): vec<mixed> {
-    return vec[
+  public static function provideTestRangeException(): varray<mixed> {
+    return varray[
       tuple(0, 1, 0),
       tuple(-10, 10, -30),
     ];
@@ -94,8 +94,8 @@ final class VecOrderTest extends HackTest {
       ->toThrow(InvariantException::class);
   }
 
-  public static function provideTestReverse(): vec<mixed> {
-    return vec[
+  public static function provideTestReverse(): varray<mixed> {
+    return varray[
       tuple(
         vec[1, 2, 3, 4, 5],
         vec[5, 4, 3, 2, 1],
@@ -105,7 +105,7 @@ final class VecOrderTest extends HackTest {
         vec['jumped', 'fox', 'brown', 'quick', 'the'],
       ),
       tuple(
-        HackLibTestTraversables::getIterator(range(1, 5)),
+        HackLibTestTraversables::getIterator(Vec\range(1, 5)),
         vec[5, 4, 3, 2, 1],
       ),
     ];
@@ -119,48 +119,48 @@ final class VecOrderTest extends HackTest {
     expect(Vec\reverse($traversable))->toBeSame($expected);
   }
 
-  public static function provideTestShuffle(): vec<mixed> {
-    return vec[
-      tuple(
-        vec[8, 6, 7, 5, 3, 0, 9],
-        vec[0, 3, 5, 6, 7, 8, 9],
-      ),
-      tuple(
-        HackLibTestTraversables::getIterator(vec[8, 6, 7, 5, 3, 0, 9]),
-        vec[0, 3, 5, 6, 7, 8, 9],
-      ),
+  public static function provideTestShuffle(): varray<varray<(function(): Traversable<int>)>> {
+    return varray[
+      varray[
+        () ==> vec[8, 6, 7, 5, 3, 0, 9],
+      ],
+      varray[
+        () ==> vec[0, 1, 2, 4, 5, 6, 7],
+      ],
+      varray[
+        () ==> HackLibTestTraversables::getIterator(varray[8, 6, 7, 5, 3, 0, 9]),
+      ],
     ];
   }
 
   <<DataProvider('provideTestShuffle')>>
-  public function testShuffle<Tv>(
-    Traversable<Tv> $traversable,
-    vec<Tv> $expected,
+  public function testShuffle(
+    (function(): Traversable<int>) $input,
   ): void {
-    if (!class_exists('FlibAutoloadMap')) {
-      self::markTestSkipped(
-        "Mocking is not supported externally",
-      );
-      return;
-    }
+    for ($i = 0; $i < 1000; $i++) {
+      $shuffled1 = Vec\shuffle($input());
+      $shuffled2 = Vec\shuffle($input());
+      $vec_input = vec($input());
 
-    try {
-      {
-        // UNSAFE_BLOCK: flib IntegrationTest doesn't exist in open source
-        \IntegrationTest::mockFunctionStatic(fun('shuffle'))
-          ->mockImplementation(fun('sort'));
+      expect(Vec\sort($shuffled1))->toBeSame(Vec\sort($vec_input));
+      expect(Vec\sort($shuffled2))->toBeSame(Vec\sort($vec_input));
+
+      // There is a chance that even if we shuffle we get the same thing twice.
+      // That is ok but if we try 1000 times we should get different things.
+      if (
+        $shuffled1 !== $shuffled2 &&
+        $shuffled1 !== $vec_input &&
+        $shuffled2 !== $vec_input
+      ) {
+        return;
       }
-
-      $shuffled = Vec\shuffle($traversable);
-      expect($shuffled)->toBeSame($expected);
-    } finally {
-      // UNSAFE_BLOCK: flib IntegrationTest doesn't exist in open source
-      \IntegrationTest::unmockFunctionStatic(fun('shuffle'));
     }
+
+    self::fail('We shuffled 1000 times and the value never changed');
   }
 
-  public static function provideTestSort(): vec<mixed> {
-    return vec[
+  public static function provideTestSort(): varray<mixed> {
+    return varray[
       tuple(
         vec['the', 'quick', 'brown', 'fox'],
         null,
@@ -177,7 +177,7 @@ final class VecOrderTest extends HackTest {
         vec[-5.8, -5.7, 1, 1.2],
       ),
       tuple(
-        HackLibTestTraversables::getIterator(vec[8, 6, 7, 5, 3, 0, 9]),
+        HackLibTestTraversables::getIterator(varray[8, 6, 7, 5, 3, 0, 9]),
         null,
         vec[0, 3, 5, 6, 7, 8, 9],
       ),
@@ -193,25 +193,25 @@ final class VecOrderTest extends HackTest {
     expect(Vec\sort($traversable, $comparator))->toBeSame($expected);
   }
 
-  public static function provideTestSortBy(): vec<mixed> {
-    return vec[
+  public static function provideTestSortBy(): varray<mixed> {
+    return varray[
       tuple(
-        vec['the', 'quick', 'brown', 'fox', 'jumped'],
-        fun('strrev'),
+        varray['the', 'quick', 'brown', 'fox', 'jumped'],
+        $s ==> Str\reverse($s),
         null,
         vec['jumped', 'the', 'quick', 'brown', 'fox'],
       ),
       tuple(
         HackLibTestTraversables::getIterator(
-          vec['the', 'quick', 'brown', 'fox', 'jumped'],
+          varray['the', 'quick', 'brown', 'fox', 'jumped'],
         ),
-        fun('strrev'),
+        $s ==> Str\reverse($s),
         null,
         vec['jumped', 'the', 'quick', 'brown', 'fox'],
       ),
       tuple(
         Vector {'the', 'quick', 'brown', 'fox', 'jumped'},
-        fun('strrev'),
+        $s ==> Str\reverse($s),
         ($a, $b) ==> $b <=> $a,
         vec['fox', 'brown', 'quick', 'the', 'jumped'],
       ),
@@ -233,6 +233,14 @@ final class VecOrderTest extends HackTest {
         null,
         vec['the', 'fox', 'over', 'quick', 'jumped'],
       ),
+      // If `scalar_func` returns a tuple, it should sort item-by-item in the tuple
+      // Sort by string length, and sort by the string itself as a tie breaker
+      tuple(
+        vec['hello', 'world', 'an', 'awesome', 'test', 'zeuss', 'hacks'],
+        (string $x) ==> tuple(Str\length($x), $x),
+        null,
+        vec['an', 'test', 'hacks', 'hello', 'world', 'zeuss', 'awesome'],
+      )
     ];
   }
 

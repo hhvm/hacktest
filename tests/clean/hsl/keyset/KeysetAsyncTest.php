@@ -8,15 +8,15 @@
  *
  */
 
-use namespace HH\Lib\Keyset;
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use namespace HH\Lib\{Keyset, Str};
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class KeysetAsyncTest extends HackTest {
 
-  public static function provideTestGen(): vec<mixed> {
-    return vec[
+  public static function provideTestGen(): varray<mixed> {
+    return varray[
       tuple(
         Vector {
           async {return 'the';},
@@ -34,7 +34,7 @@ final class KeysetAsyncTest extends HackTest {
         keyset[1, 2],
       ),
       tuple(
-        HackLibTestTraversables::getIterator(vec[
+        HackLibTestTraversables::getIterator(varray[
           async {return 'the';},
           async {return 'quick';},
           async {return 'brown';},
@@ -57,8 +57,8 @@ final class KeysetAsyncTest extends HackTest {
     });
   }
 
-  public static function provideTestGenMap(): vec<mixed> {
-    return vec[
+  public static function provideTestGenMap(): varray<mixed> {
+    return varray[
       tuple(
         keyset[1,2,3],
         async ($num) ==> $num * 2,
@@ -70,8 +70,8 @@ final class KeysetAsyncTest extends HackTest {
         keyset[2,4,6],
       ),
       tuple(
-        vec['dan', 'danny', 'daniel'],
-        async ($word) ==> strrev($word),
+        varray['dan', 'danny', 'daniel'],
+        async ($word) ==> Str\reverse($word),
         keyset['nad', 'ynnad', 'leinad'],
       ),
     ];
@@ -90,12 +90,12 @@ final class KeysetAsyncTest extends HackTest {
     });
   }
 
-  public static function provideTestGenFilter(): vec<(
+  public static function provideTestGenFilter(): varray<(
     Container<arraykey>,
     (function(arraykey): Awaitable<bool>),
     keyset<arraykey>,
   )> {
-    return vec[
+    return varray[
       tuple(
         darray[
           2 => 'two',
@@ -103,17 +103,17 @@ final class KeysetAsyncTest extends HackTest {
           6 => 'six',
           8 => 'eight',
         ],
-        async ($word) ==> strlen($word as string) % 2 === 1,
+        async ($word) ==> Str\length((string)$word) % 2 === 1,
         keyset['two', 'six', 'eight'],
       ),
       tuple(
         Vector {'jumped', 'over', 'jumped'},
-        async ($word) ==> strlen($word as string) % 2 === 0,
+        async ($word) ==> Str\length((string)$word) % 2 === 0,
         keyset['jumped', 'over'],
       ),
       tuple(
         Set {'the', 'quick', 'brown', 'fox', 'jumped', 'over'},
-        async ($word) ==> strlen($word as string) % 2 === 0,
+        async ($word) ==> Str\length((string)$word) % 2 === 0,
         keyset['jumped', 'over'],
       ),
     ];

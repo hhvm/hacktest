@@ -9,14 +9,14 @@
  */
 
 use namespace HH\Lib\Str;
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class StrFormatTest extends HackTest {
 
-  public static function provideFormat(): vec<mixed> {
-    return vec[
+  public static function provideFormat(): varray<mixed> {
+    return varray[
       tuple(
         Str\format('No format specifiers'),
         'No format specifiers',

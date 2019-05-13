@@ -9,14 +9,14 @@
  */
 
 use namespace HH\Lib\Str;
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class StrDivideTest extends HackTest {
 
-  public static function provideChunk(): vec<mixed> {
-    return vec[
+  public static function provideChunk(): varray<mixed> {
+    return varray[
       tuple(
         'hello',
         1,
@@ -44,8 +44,8 @@ final class StrDivideTest extends HackTest {
     expect(Str\chunk($string, $chunk_size))->toBeSame($expected);
   }
 
-  public static function provideSplit(): vec<mixed> {
-    return vec[
+  public static function provideSplit(): varray<mixed> {
+    return varray[
       tuple(
         '',
         '',

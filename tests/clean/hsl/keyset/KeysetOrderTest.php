@@ -8,15 +8,15 @@
  *
  */
 
-use namespace HH\Lib\Keyset;
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use namespace HH\Lib\{Keyset, Str};
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class KeysetOrderTest extends HackTest {
 
-  public static function provideSort(): vec<mixed> {
-    return vec[
+  public static function provideSort(): varray<mixed> {
+    return varray[
       tuple(
         vec['the', 'quick', 'brown', 'fox'],
         null,
@@ -24,16 +24,16 @@ final class KeysetOrderTest extends HackTest {
       ),
       tuple(
         Vector {'the', 'quick', 'brown', 'fox'},
-        ($a, $b) ==> strcmp($a[1],$b[1]),
+        ($a, $b) ==> Str\compare($a[1],$b[1]),
         keyset['the', 'fox', 'brown', 'quick'],
       ),
       tuple(
-        vec[8, 6, 7, 5, 3, 0, 9],
+        varray[8, 6, 7, 5, 3, 0, 9],
         null,
         keyset[0, 3, 5, 6, 7, 8, 9],
       ),
       tuple(
-        HackLibTestTraversables::getIterator(vec[8, 6, 7, 5, 3, 0, 9]),
+        HackLibTestTraversables::getIterator(varray[8, 6, 7, 5, 3, 0, 9]),
         null,
         keyset[0, 3, 5, 6, 7, 8, 9],
       ),

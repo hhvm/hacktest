@@ -8,15 +8,15 @@
  *
  */
 
-use namespace HH\Lib\Dict;
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use namespace HH\Lib\{Dict, Str, Vec};
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class DictOrderTest extends HackTest {
 
-  public static function provideTestReverse(): vec<mixed> {
-    return vec[
+  public static function provideTestReverse(): varray<mixed> {
+    return varray[
       tuple(
         Map {},
         dict[],
@@ -36,7 +36,7 @@ final class DictOrderTest extends HackTest {
         ],
       ),
       tuple(
-        HackLibTestTraversables::getIterator(range(1, 5)),
+        HackLibTestTraversables::getIterator(Vec\range(1, 5)),
         dict[
           4 => 5,
           3 => 4,
@@ -56,8 +56,8 @@ final class DictOrderTest extends HackTest {
     expect(Dict\reverse($traversable))->toBeSame($expected);
   }
 
-  public static function provideTestSort(): vec<mixed> {
-    return vec[
+  public static function provideTestSort(): varray<mixed> {
+    return varray[
       tuple(
         Map {
           '0' => 'the',
@@ -104,7 +104,7 @@ final class DictOrderTest extends HackTest {
         ],
       ),
       tuple(
-        HackLibTestTraversables::getKeyedIterator(vec[
+        HackLibTestTraversables::getKeyedIterator(varray[
           'the', 'quick', 'brown', 'fox',
         ]),
         ($a, $b) ==> $b[1] <=> $a[1],
@@ -128,11 +128,11 @@ final class DictOrderTest extends HackTest {
     expect(Dict\sort($traversable, $value_comparator))->toBeSame($expected);
   }
 
-  public static function provideTestSortBy(): vec<mixed> {
-    return vec[
+  public static function provideTestSortBy(): varray<mixed> {
+    return varray[
       tuple(
-        vec['the', 'quick', 'brown', 'fox', 'jumped'],
-        fun('strrev'),
+        varray['the', 'quick', 'brown', 'fox', 'jumped'],
+        $s ==> Str\reverse($s),
         null,
         dict[
           4 => 'jumped',
@@ -144,20 +144,20 @@ final class DictOrderTest extends HackTest {
       ),
       tuple(
         Map {
-          0 => vec['eddard', 'stark'],
-          1 => vec['arya', 'stark'],
-          2 => vec['tyrion', 'lannister'],
-          3 => vec['joffrey', 'boratheon'],
-          4 => vec['daenerys', 'targaryen'],
+          0 => varray['eddard', 'stark'],
+          1 => varray['arya', 'stark'],
+          2 => varray['tyrion', 'lannister'],
+          3 => varray['joffrey', 'boratheon'],
+          4 => varray['daenerys', 'targaryen'],
         },
-        fun('array_reverse'),
+        fun('HH\\Lib\\Vec\\reverse'),
         ($a, $b) ==> $b <=> $a,
         dict[
-          4 => vec['daenerys', 'targaryen'],
-          0 => vec['eddard', 'stark'],
-          1 => vec['arya', 'stark'],
-          2 => vec['tyrion', 'lannister'],
-          3 => vec['joffrey', 'boratheon'],
+          4 => varray['daenerys', 'targaryen'],
+          0 => varray['eddard', 'stark'],
+          1 => varray['arya', 'stark'],
+          2 => varray['tyrion', 'lannister'],
+          3 => varray['joffrey', 'boratheon'],
         ],
       ),
     ];
@@ -174,8 +174,8 @@ final class DictOrderTest extends HackTest {
       ->toBeSame($expected);
   }
 
-  public static function provideTestSortByKey(): vec<mixed> {
-    return vec[
+  public static function provideTestSortByKey(): varray<mixed> {
+    return varray[
       tuple(
         Map {
           'the' => 'the',

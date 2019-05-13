@@ -9,14 +9,14 @@
  */
 
 use namespace HH\Lib\Keyset;
-use function Facebook\FBExpect\expect;
-use type Facebook\HackTest\{DataProvider, HackTest};
+use function Facebook\FBExpect\expect; // @oss-enable
+use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
 final class KeysetIntrospectTest extends HackTest {
 
-  public static function provideTestEqual(): vec<mixed> {
-    return vec[
+  public static function provideTestEqual(): varray<mixed> {
+    return varray[
       tuple(
         keyset[1, 2, 3],
         keyset[1, 2, 3],
