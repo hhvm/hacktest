@@ -47,7 +47,9 @@ final class DataProviderTest extends HackTest {
   }
 
   public function provideSkip(): void {
-    self::markTestSkipped('This test depends on a data provider that is not ready yet.');
+    self::markTestSkipped(
+      'This test depends on a data provider that is not ready yet.',
+    );
   }
 
   <<DataProvider('provideSkip')>>
@@ -55,4 +57,14 @@ final class DataProviderTest extends HackTest {
 
   <<DataProvider('provideSkip')>>
   public function testProviderSkipDup(int $_a): void {}
+
+  public static function provideStatic(): vec<(string, string)> {
+    return vec[tuple('foo', 'bar'), tuple('herp', 'derp')];
+  }
+
+  <<DataProvider('provideStatic')>>
+  public function testStaticProvider(string $a, string $b): void {
+    $expected = dict['foo' => 'bar', 'herp' => 'derp'];
+    expect($b)->toBeSame($expected[$a] ?? null);
+  }
 }

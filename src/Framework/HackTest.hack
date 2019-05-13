@@ -107,18 +107,18 @@ class HackTest {
             $tuples = $provider();
           } else {
             /* HH_IGNORE_ERROR[2011] this is unsafe */
-            $tuples = $this->$provider();
+            $rm = new \ReflectionMethod($this, $provider);
+            if ($rm->isStatic()) {
+              $tuples = $rm->invoke(null);
+            } else {
+              $tuples = $rm->invoke($this);
+            }
           }
           if ($tuples is Awaitable<_>) {
             /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
             $tuples = await $tuples;
           }
           if (C\is_empty($tuples)) {
-            if ($this->isHackyDataProvider($provider)) {
-              /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-              await $this->afterEachTestAsync();
-              continue;
-            }
             throw new InvalidDataProviderException(
               Str\format(
                 'This test depends on a provider (%s) that returns no data.',
@@ -343,10 +343,6 @@ class HackTest {
 
     // can't handle arbitrary enums for open source
     return null;
-  }
-
-  public function isHackyDataProvider(string $_provider): bool {
-    return false;
   }
 
   public async function beforeEachTestAsync(): Awaitable<void> {}
