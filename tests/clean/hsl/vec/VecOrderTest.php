@@ -138,8 +138,7 @@ final class VecOrderTest extends HackTest {
     vec<Tv> $expected,
   ): void {
     if (!class_exists('FlibAutoloadMap')) {
-      // UNSAFE_BLOCK (internal PHPUnit uses static::, OSS uses $this->)
-      $this->markTestSkipped(
+      self::markTestSkipped(
         "Mocking is not supported externally",
       );
       return;
