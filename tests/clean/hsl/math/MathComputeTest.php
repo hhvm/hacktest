@@ -14,10 +14,6 @@ use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 // @oss-disable: use InvariantViolationException as InvariantException;
 
-// FB likes to be explicit about md5() being unsuitable for crypto, and
-// our usual trivial wrapper isn't available in open source.
-use function md5 as non_crypto_md5;
-
 // @oss-disable: <<Oncalls('hack')>>
 final class MathComputeTest extends HackTest {
   public static function provideTestAbs(): varray<mixed> {
