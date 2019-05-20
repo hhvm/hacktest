@@ -255,13 +255,6 @@ final class CSelectTest extends HackTest {
         ]),
         'foo',
       ),
-      tuple(
-        () ==> {
-          yield null => 'quux';
-          yield 42 => 'spam';
-        }(),
-        null,
-      ),
     ];
   }
 
@@ -356,18 +349,6 @@ final class CSelectTest extends HackTest {
       tuple(
         dict[3 => 4, 4 => 5],
         5,
-      ),
-      tuple(
-        HackLibTestTraversables::getIterator(varray[]),
-        null,
-      ),
-      tuple(
-        HackLibTestTraversables::getIterator(varray[null]),
-        null,
-      ),
-      tuple(
-        HackLibTestTraversables::getIterator(Vec\range(13, 14)),
-        14,
       ),
     ];
   }
@@ -592,13 +573,6 @@ final class CSelectTest extends HackTest {
       tuple(
         HackLibTestTraversables::getKeyedIterator(darray['' => null]),
         '',
-      ),
-      tuple(
-        () ==> {
-          yield 42 => 'spam';
-          yield null => 'quux';
-        }(),
-        null,
       ),
     ];
   }
