@@ -298,15 +298,15 @@ class HackTest {
     await $result_writer($status);
   }
 
-  public static final function markTestSkipped(string $message): void {
+  public static final function markTestSkipped(string $message): noreturn {
     throw new SkippedTestException($message);
   }
 
-  public static function markTestIncomplete(string $message): void {
+  public static function markTestIncomplete(string $message): noreturn {
     throw new SkippedTestException($message);
   }
 
-  public static final function fail(string $message = ''): void {
+  public static final function fail(string $message = ''): noreturn {
     throw new \RuntimeException($message);
   }
 
