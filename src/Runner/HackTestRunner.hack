@@ -12,9 +12,14 @@ namespace Facebook\HackTest;
 use namespace HH\Lib\{Keyset, Vec};
 
 abstract final class HackTestRunner {
+  const type TFilters = shape(
+    'classes' => (function(classname<HackTest>): bool),
+    'methods' => (function(classname<HackTest>, string): bool),
+  );
 
   public static async function runAsync(
     vec<string> $paths,
+    this::TFilters $filters,
     (function(
       classname<HackTest>,
       ?string,
@@ -32,18 +37,36 @@ abstract final class HackTestRunner {
     $classes = ClassRetriever::forFiles($files)
       |> Vec\map($$, $r ==> $r->getTestClassName());
 
+    $class_filter = $filters['classes'];
+    $method_filter = $filters['methods'];
     foreach ($classes as $classname) {
       if ($classname === null) {
         continue;
       }
+      if (!$class_filter($classname)) {
+        continue;
+      }
       /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-      await $progress_writer($classname, null, null, TestProgressEvent::STARTING);
+      await $progress_writer(
+        $classname,
+        null,
+        null,
+        TestProgressEvent::STARTING,
+      );
       $test_case = new $classname();
       /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-      $errors[$classname] =
-        await $test_case->runTestsAsync($progress_writer, $result_writer);
+      $errors[$classname] = await $test_case->runTestsAsync(
+        $method ==> $method_filter($classname, $method),
+        $progress_writer,
+        $result_writer,
+      );
       /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-      await $progress_writer($classname, null, null, TestProgressEvent::FINISHED);
+      await $progress_writer(
+        $classname,
+        null,
+        null,
+        TestProgressEvent::FINISHED,
+      );
     }
     return $errors;
   }
