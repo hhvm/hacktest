@@ -17,6 +17,8 @@ use namespace HH\Lib\Str;
 final class HackTestCLI extends CLIWithRequiredArguments {
 
   private bool $verbose = false;
+  private ?string $classFilter = null;
+  private ?string $methodFilter = null;
 
   <<__Override>>
   public static function getHelpTextForRequiredArguments(): vec<string> {
@@ -26,6 +28,21 @@ final class HackTestCLI extends CLIWithRequiredArguments {
   <<__Override>>
   protected function getSupportedOptions(): vec<CLIOptions\CLIOption> {
     return vec[
+      CLIOptions\with_required_string(
+        $f ==> {
+          $this->classFilter = $f;
+        },
+        'Filter test class names with the specified glob pattern',
+        '--filter-classes',
+      ),
+      CLIOptions\with_required_string(
+        $f ==> {
+          $this->methodFilter = $f;
+        },
+        'Filter test method names with the specified glob pattern',
+        '--filter-methods',
+      ),
+
       CLIOptions\flag(
         () ==> {
           $this->verbose = true;
@@ -39,8 +56,18 @@ final class HackTestCLI extends CLIWithRequiredArguments {
 
   <<__Override>>
   public async function mainAsync(): Awaitable<int> {
+    $cf = $this->classFilter;
+    $mf = $this->methodFilter;
     $errors = await HackTestRunner::runAsync(
       $this->getArguments(),
+      shape(
+        'classes' => (
+          $cf === null ? ($_ ==> true) : ($c ==> \fnmatch($cf, $c))
+        ),
+        'methods' => (
+          $mf === null ? (($_, $_) ==> true) : (($_c, $m) ==> \fnmatch($mf, $m))
+        ),
+      ),
       async ($class, $method, $dataKey, $event) ==>
         await $this->writeProgressAsync($class, $method, $dataKey, $event),
       async $result ==> await $this->writeResultAsync($result),
@@ -69,8 +96,12 @@ final class HackTestCLI extends CLIWithRequiredArguments {
             $data,
           );
         } else {
-          $output .=
-            Str\format("\n\n%d) %s::%s\n", $num_msg, $class, $test_params);
+          $output .= Str\format(
+            "\n\n%d) %s::%s\n",
+            $num_msg,
+            $class,
+            $test_params,
+          );
         }
         if ($err is SkippedTestException) {
           $num_skipped++;
@@ -131,24 +162,24 @@ final class HackTestCLI extends CLIWithRequiredArguments {
       return;
     }
 
-		if ($method is nonnull) {
+    if ($method is nonnull) {
       $text = '  ::'.$method;
-			if ($data_key is nonnull) {
-				$text .= '['.((string)$data_key).']';
-			}
+      if ($data_key is nonnull) {
+        $text .= '['.((string)$data_key).']';
+      }
       $text .= '> ';
-		} else {
+    } else {
       $text = $class.'> ';
-		}
+    }
 
     switch ($event) {
       case TestProgressEvent::CALLING_DATAPROVIDERS:
         $text .= 'calling data providers...';
         break;
-        case TestProgressEvent::STARTING:
+      case TestProgressEvent::STARTING:
         $text .= 'starting...';
         break;
-        case TestProgressEvent::FINISHED:
+      case TestProgressEvent::FINISHED:
         $text .= '...complete.';
         break;
     }

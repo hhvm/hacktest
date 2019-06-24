@@ -39,7 +39,13 @@ class HackTest {
     return $this->methods;
   }
 
+  const type TFilters = shape(
+    'methods' => (function(string): string),
+    // TODO: dataproviders
+  );
+
   public final async function runTestsAsync(
+    (function(string):bool) $method_filter,
     (function(
       classname<HackTest>,
       ?string,
@@ -54,6 +60,9 @@ class HackTest {
 
     foreach ($this->methods as $method) {
       $to_run = vec[];
+      if (!$method_filter($method->getName())) {
+        continue;
+      }
 
       $this->clearExpectedException();
       $exception = $method->getAttribute('ExpectedException');
