@@ -41,4 +41,32 @@ final class ExitCodeTest extends HackTest {
     $terminal = new Terminal($stdin, $stdout, $stderr);
     return new HackTestCLI($argv, $terminal);
   }
+
+  public async function testFiltering(): Awaitable<void> {
+    expect(await self::makeCLI(vec['', 'tests/mixed'])->mainAsync())->toBeSame(
+      ExitCode::FAILURE,
+    );
+    expect(await self::makeCLI(vec['', 'tests/mixed', '--filter-methods=*Fail'])
+      ->mainAsync())->toBeSame(ExitCode::FAILURE);
+    expect(await self::makeCLI(vec['', 'tests/mixed', '--filter-methods=*Pass'])
+      ->mainAsync())->toBeSame(ExitCode::SUCCESS);
+    expect(await self::makeCLI(vec['', 'tests/mixed', '--filter-groups=passes'])
+      ->mainAsync())->toBeSame(ExitCode::SUCCESS);
+    expect(
+      await self::makeCLI(vec['', 'tests/mixed', '--filter-groups=fails'])
+        ->mainAsync(),
+    )->toBeSame(ExitCode::FAILURE);
+    expect(
+      await self::makeCLI(vec['', 'tests/mixed', '--filter-groups=passes,junk'])
+        ->mainAsync(),
+    )->toBeSame(ExitCode::SUCCESS);
+    expect(
+      await self::makeCLI(vec['', 'tests/mixed', '--filter-groups=fails,junk'])
+        ->mainAsync(),
+    )->toBeSame(ExitCode::FAILURE);
+    expect(await self::makeCLI(
+      vec['', 'tests/mixed', '--filter-groups=passes,fails'],
+    )
+      ->mainAsync())->toBeSame(ExitCode::FAILURE);
+  }
 }

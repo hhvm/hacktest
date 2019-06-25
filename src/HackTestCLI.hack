@@ -11,14 +11,13 @@ namespace Facebook\HackTest;
 
 use type Facebook\CLILib\CLIWithRequiredArguments;
 use namespace Facebook\CLILib\CLIOptions;
-use namespace HH\Lib\Str;
+use namespace HH\Lib\{C, Str};
 
 /** The main `hacktest` CLI */
 final class HackTestCLI extends CLIWithRequiredArguments {
-
   private bool $verbose = false;
   private ?string $classFilter = null;
-  private ?string $methodFilter = null;
+  private ?HackTestRunner::TMethodFilter $methodFilter = null;
 
   <<__Override>>
   public static function getHelpTextForRequiredArguments(): vec<string> {
@@ -37,12 +36,34 @@ final class HackTestCLI extends CLIWithRequiredArguments {
       ),
       CLIOptions\with_required_string(
         $f ==> {
-          $this->methodFilter = $f;
+          $mf = $this->methodFilter;
+          $impl = ($_class, $method) ==> \fnmatch($f, $method->getName());
+          $this->methodFilter = $mf
+            ? (($c, $m) ==> $mf($c, $m) && $impl($c, $m))
+            : $impl;
         },
         'Filter test method names with the specified glob pattern',
         '--filter-methods',
       ),
-
+      CLIOptions\with_required_string(
+        $groups ==> {
+          $groups = Str\split($groups, ',') |> keyset($$);
+          $mf = $this->methodFilter;
+          $impl = ($_class, \ReflectionMethod $method) ==> {
+            $attr = $method->getAttributeClass(TestGroup::class);
+            if ($attr === null) {
+              return false;
+            }
+            return C\any($groups, $group ==> $attr->contains($group));
+          };
+          $this->methodFilter = $mf
+            ? (($c, $m) ==> $mf($c, $m) && $impl($c, $m))
+            : $impl;
+        },
+        'Only run tests with a specified <<TestGroup>> (comma-separated)',
+        '--filter-groups',
+        '-g',
+      ),
       CLIOptions\flag(
         () ==> {
           $this->verbose = true;
@@ -64,9 +85,7 @@ final class HackTestCLI extends CLIWithRequiredArguments {
         'classes' => (
           $cf === null ? ($_ ==> true) : ($c ==> \fnmatch($cf, $c))
         ),
-        'methods' => (
-          $mf === null ? (($_, $_) ==> true) : (($_c, $m) ==> \fnmatch($mf, $m))
-        ),
+        'methods' => ($mf ?? ($_class, $_method) ==> true),
       ),
       async ($class, $method, $dataKey, $event) ==>
         await $this->writeProgressAsync($class, $method, $dataKey, $event),

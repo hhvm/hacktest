@@ -12,9 +12,13 @@ namespace Facebook\HackTest;
 use namespace HH\Lib\{Keyset, Vec};
 
 abstract final class HackTestRunner {
+  const type TMethodFilter = (function(
+    classname<HackTest>,
+    \ReflectionMethod,
+  ): bool);
   const type TFilters = shape(
     'classes' => (function(classname<HackTest>): bool),
-    'methods' => (function(classname<HackTest>, string): bool),
+    'methods' => this::TMethodFilter,
   );
 
   public static async function runAsync(
