@@ -45,7 +45,7 @@ class HackTest {
   );
 
   public final async function runTestsAsync(
-    (function(string):bool) $method_filter,
+    (function(\ReflectionMethod): bool) $method_filter,
     (function(
       classname<HackTest>,
       ?string,
@@ -60,7 +60,7 @@ class HackTest {
 
     foreach ($this->methods as $method) {
       $to_run = vec[];
-      if (!$method_filter($method->getName())) {
+      if (!$method_filter($method)) {
         continue;
       }
 
@@ -99,7 +99,7 @@ class HackTest {
             ),
           );
         }
-      /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
+        /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
         await $progress_writer(
           static::class,
           $method_name,
@@ -149,7 +149,7 @@ class HackTest {
           $to_run[] = tuple(
             $method_name,
             $idx,
-          /* HH_IGNORE_ERROR[2011] this is unsafe */
+            /* HH_IGNORE_ERROR[2011] this is unsafe */
             () ==> $this->$method_name(...$tuple),
           );
         }
@@ -326,8 +326,9 @@ class HackTest {
   ): void {
     $this->expectedException = $exception;
     $this->expectedExceptionMessage = $exception_message;
-    $this->expectedExceptionCode =
-      static::computeExpectedExceptionCode($exception_code);
+    $this->expectedExceptionCode = static::computeExpectedExceptionCode(
+      $exception_code,
+    );
   }
 
   private function clearExpectedException(): void {
