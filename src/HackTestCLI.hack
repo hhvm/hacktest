@@ -131,11 +131,20 @@ final class HackTestCLI extends CLIWithRequiredArguments {
           $num_failed++;
         }
         if ($this->verbose) {
-          $output .= Str\format(
-            "%s\n\n%s",
-            $err->getMessage(),
-            $err->getTraceAsString(),
-          );
+          $curr = $err;
+          while ($curr) {
+            $output .= Str\format(
+              "%s\n\n@  %s(%d)\n%s",
+              $curr->getMessage(),
+              $curr->getFile(),
+              $curr->getLine(),
+              $curr->getTraceAsString(),
+            );
+            $curr = $curr->getPrevious();
+            if ($curr !== null) {
+              $output .= "\n\nPrevious exception:\n\n";
+            }
+          }
         } else {
           $output .= $err->getMessage();
           $trace = Str\split($err->getTraceAsString(), '#');
