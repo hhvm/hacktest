@@ -10,9 +10,11 @@
 
 namespace Facebook\HackTest;
 
-require_once(__FILE__.'.hack');
-
 <<__EntryPoint>>
 async function hack_test_main_async_UNSAFE(): Awaitable<noreturn> {
+  (() ==> {
+    // HHAST-generated to avoid pseudomain local leaks
+    require_once(__FILE__.'.hack');
+  })();
   await hack_test_main_async();
 }
