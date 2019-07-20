@@ -37,9 +37,13 @@ final class HackTestCLI extends CLIWithRequiredArguments {
       CLIOptions\with_required_string(
         $f ==> {
           $mf = $this->methodFilter;
-          $impl = ($_class, $method) ==> \fnmatch($f, $method->getName());
+          $impl = (mixed $_class, \ReflectionMethod $method) ==>
+            \fnmatch($f, $method->getName());
           $this->methodFilter = $mf
-            ? (($c, $m) ==> $mf($c, $m) && $impl($c, $m))
+            ? (
+                (classname<HackTest> $c, \ReflectionMethod $m) ==>
+                  $mf($c, $m) && $impl($c, $m)
+              )
             : $impl;
         },
         'Filter test method names with the specified glob pattern',
@@ -49,7 +53,7 @@ final class HackTestCLI extends CLIWithRequiredArguments {
         $groups ==> {
           $groups = Str\split($groups, ',') |> keyset($$);
           $mf = $this->methodFilter;
-          $impl = ($_class, \ReflectionMethod $method) ==> {
+          $impl = (mixed $_class, \ReflectionMethod $method) ==> {
             $attr = $method->getAttributeClass(TestGroup::class);
             if ($attr === null) {
               return false;
@@ -57,7 +61,10 @@ final class HackTestCLI extends CLIWithRequiredArguments {
             return C\any($groups, $group ==> $attr->contains($group));
           };
           $this->methodFilter = $mf
-            ? (($c, $m) ==> $mf($c, $m) && $impl($c, $m))
+            ? (
+                (classname<HackTest> $c, \ReflectionMethod $m) ==>
+                  $mf($c, $m) && $impl($c, $m)
+              )
             : $impl;
         },
         'Only run tests with a specified <<TestGroup>> (comma-separated)',
