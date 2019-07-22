@@ -10,7 +10,7 @@
 namespace Facebook\HackTest;
 
 use namespace Facebook\TypeAssert;
-use namespace HH\Lib\{C, Str, Vec};
+use namespace HH\Lib\{C, Dict, Keyset, Str, Vec};
 
 final class ClassRetriever {
   const type TFacts = shape(
@@ -33,16 +33,47 @@ final class ClassRetriever {
     return C\onlyx(self::forFiles(keyset[$path]));
   }
 
-  public static function forFiles(
+  private static function getFacts(
     keyset<string> $paths,
-  ): vec<ClassRetriever> {
-    $all_facts = \HH\facts_parse(
+  ): KeyedContainer<string, mixed> {
+    if (\ini_get('hhvm.repo.authoritative')) {
+      return Dict\map(
+        $paths,
+        $path ==>
+          /* HH_FIXME[4110] reified generics */ (new _Private\CacheFile(self::getCacheFile($path)))->fetch(),
+      );
+    }
+    return self::getFactsFromDisk($paths);
+  }
+
+  private static function getCacheFile(string $path): string {
+    return Str\strip_suffix($path, '/').'.hacktest-facts-cache.hack';
+  }
+
+  public static function storeFactsForRepoAuth(keyset<string> $paths): void {
+    $paths = Dict\map_keys($paths, $path ==> \realpath($path));
+    $all_facts = self::getFactsFromDisk(Keyset\keys($paths));
+    foreach ($all_facts as $path => $facts) {
+      (new _Private\CacheFile(self::getCacheFile($paths[$path])))->store(
+        $facts,
+      );
+    }
+  }
+
+  private static function getFactsFromDisk(
+    keyset<string> $paths,
+  ): KeyedContainer<string, mixed> {
+    return \HH\facts_parse(
       /* root = */ '/',
       /* HH_FIXME[4007] need a PHP array here for now */
       (array) $paths,
       /* force_hh = */ false,
       /* multithreaded = */ true,
     );
+  }
+
+  public static function forFiles(keyset<string> $paths): vec<ClassRetriever> {
+    $all_facts = self::getFacts($paths);
     return Vec\map(
       $paths,
       $path ==> {

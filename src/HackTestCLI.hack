@@ -11,11 +11,12 @@ namespace Facebook\HackTest;
 
 use type Facebook\CLILib\CLIWithRequiredArguments;
 use namespace Facebook\CLILib\CLIOptions;
-use namespace HH\Lib\{C, Str};
+use namespace HH\Lib\{C, Keyset, Str};
 
 /** The main `hacktest` CLI */
 final class HackTestCLI extends CLIWithRequiredArguments {
   private bool $verbose = false;
+  private bool $prepareForRepoAuth = false;
   private ?string $classFilter = null;
   private ?HackTestRunner::TMethodFilter $methodFilter = null;
 
@@ -66,6 +67,13 @@ final class HackTestCLI extends CLIWithRequiredArguments {
       ),
       CLIOptions\flag(
         () ==> {
+          $this->prepareForRepoAuth = true;
+        },
+        "Generate data needed to run in repo-authoritative mode",
+        '--prepare-repo-auth',
+      ),
+      CLIOptions\flag(
+        () ==> {
           $this->verbose = true;
         },
         "Increase output verbosity",
@@ -75,8 +83,24 @@ final class HackTestCLI extends CLIWithRequiredArguments {
     ];
   }
 
+  private async function prepareForRepoAuthAsync(): Awaitable<int> {
+    $files = keyset[];
+    foreach ($this->getArguments() as $path) {
+      $fr = (new FileRetriever($path));
+      $fr->storeTestFilesListForRepoAuth();
+      $files = Keyset\union($files, $fr->getTestFiles());
+    }
+    ClassRetriever::storeFactsForRepoAuth($files);
+    await $this->getStdout()
+      ->writeAsync("Generated data files for repo-auth.\n");
+    return 0;
+  }
+
   <<__Override>>
   public async function mainAsync(): Awaitable<int> {
+    if ($this->prepareForRepoAuth) {
+      return await $this->prepareForRepoAuthAsync();
+    }
     $cf = $this->classFilter;
     $mf = $this->methodFilter;
     $errors = await HackTestRunner::runAsync(

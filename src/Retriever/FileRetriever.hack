@@ -14,11 +14,33 @@ use namespace HH\Lib\Str;
 final class FileRetriever {
   private string $path;
 
-  public function __construct(string $path = '.') {
-    $this->path = \realpath($path);
+  public function __construct(private string $rawPath) {
+    $this->path = \realpath($rawPath);
   }
 
   public function getTestFiles(): keyset<string> {
+    if (\ini_get('hhvm.repo.authoritative')) {
+      return /* HH_FIXME[4110] reified generics */
+       (new _Private\CacheFile($this->getCacheFile()))->fetch();
+    }
+    return $this->getTestFilesFromDisk();
+  }
+
+  private function getCacheFile(): string {
+    if (Str\ends_with($this->rawPath, '/')) {
+      return $this->rawPath.'hacktest-files-cache.hack';
+    }
+    return $this->rawPath.'.hacktest-files-cache.hack';
+  }
+
+  public function storeTestFilesListForRepoAuth(): void {
+    // Full paths are more useful, but not safe to deal with in repos
+    $this->path = $this->rawPath;
+    $files = $this->getTestFilesFromDisk();
+    (new _Private\CacheFile($this->getCacheFile()))->store($files);
+  }
+
+  private function getTestFilesFromDisk(): keyset<string> {
     $files = keyset[];
     if (!\is_dir($this->path)) {
       $file = $this->path;

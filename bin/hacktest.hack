@@ -12,22 +12,29 @@ namespace Facebook\HackTest;
 
 <<__EntryPoint>>
 async function hack_test_main_async(): Awaitable<noreturn> {
-  $root = \realpath(__DIR__.'/..');
+  $autoloaders = vec[
+    // vendor/facebook/hacktest/bin/hacktest
+    __DIR__.'/../../../autoload.hack',
+    // bin/hacktest
+    __DIR__.'/../vendor/autoload.hack',
+    // same, but relative to CWD for repo-auth mode
+    '../../../autoload.hack',
+  ];
+  $parts = \explode('/', __DIR__);
+  for ($i = \count($parts) - 2; $i >= 0; --$i) {
+    $autoloaders[] = \array_slice($parts, 0, $i)
+      |> \implode('/', $$)
+      |> $$.'/vendor/autoload.hack';
+  }
   $found_autoloader = false;
-  while (true) {
-    $autoloader = $root.'/vendor/autoload.hack';
-    if (\file_exists($autoloader)) {
-      $found_autoloader = true;
+  foreach ($autoloaders as $autoloader) {
+    try {
       require_once($autoloader);
+      $found_autoloader = true;
       \Facebook\AutoloadMap\initialize();
       break;
+    } catch (\Error $_) {
     }
-    if ($root === '') {
-      break;
-    }
-    $parts = \explode('/', $root);
-    \array_pop(&$parts);
-    $root = \implode('/', $parts);
   }
 
   if (!$found_autoloader) {
