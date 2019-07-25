@@ -9,19 +9,30 @@
 
 namespace Facebook\HackTest;
 
-use namespace HH\Lib\Str;
+use namespace HH\Lib\{Keyset, Str};
 
 final class FileRetriever {
-  private string $path;
 
-  public function __construct(string $path = '.') {
-    $this->path = \realpath($path);
+  public function __construct(private string $path) {
+    $this->path = Str\strip_suffix($this->path, '/');
   }
 
   public function getTestFiles(): keyset<string> {
+    if (\ini_get('hhvm.repo.authoritative')) {
+      return \Facebook\AutoloadMap\Generated\map()['class']
+        |> Keyset\filter(
+          $$,
+          $filename ==> (
+            $filename === $this->path ||
+            Str\starts_with($filename, $this->path.'/')
+          ) && $this->isTestFile($filename),
+        );
+    }
+
+    $path = \realpath($this->path);
     $files = keyset[];
-    if (!\is_dir($this->path)) {
-      $file = $this->path;
+    if (!\is_dir($path)) {
+      $file = $path;
       if (!\is_file($file)) {
         throw new InvalidTestFileException(
           Str\format('File (%s) not found', $file),
@@ -38,7 +49,7 @@ final class FileRetriever {
       );
     }
     $rii = new \RecursiveIteratorIterator(
-      new \RecursiveDirectoryIterator($this->path),
+      new \RecursiveDirectoryIterator($path),
     );
 
     foreach ($rii as $file) {

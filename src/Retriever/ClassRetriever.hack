@@ -10,7 +10,7 @@
 namespace Facebook\HackTest;
 
 use namespace Facebook\TypeAssert;
-use namespace HH\Lib\{C, Str, Vec};
+use namespace HH\Lib\{C, Dict, Keyset, Str, Vec};
 
 final class ClassRetriever {
   const type TFacts = shape(
@@ -25,7 +25,7 @@ final class ClassRetriever {
 
   public function __construct(
     private string $filename,
-    private self::TFacts $facts,
+    private keyset<string> $caseInsensitiveClassnames,
   ) {
   }
 
@@ -36,6 +36,17 @@ final class ClassRetriever {
   public static function forFiles(
     keyset<string> $paths,
   ): vec<ClassRetriever> {
+    if (\ini_get('hhvm.repo.authoritative')) {
+      return Vec\map(
+        $paths,
+        $path ==>
+          \Facebook\AutoloadMap\Generated\map()['class']
+          |> Dict\filter($$, $class_path ==> $class_path === $path)
+          |> Keyset\keys($$)
+          |> new self($path, $$),
+      );
+    }
+
     $all_facts = \HH\facts_parse(
       /* root = */ '/',
       /* HH_FIXME[4007] need a PHP array here for now */
@@ -50,14 +61,16 @@ final class ClassRetriever {
           type_structure(self::class, 'TFacts'),
           $all_facts[$path],
         );
-        return new self($path, $file_facts);
+        return new self(
+          $path,
+          Keyset\map($file_facts['types'], $type ==> $type['name']),
+        );
       },
     );
   }
 
   public function getTestClassName(): ?classname<HackTest> {
-    $test_classes = $this->facts['types']
-      |> Vec\map($$, $t ==> $t['name'])
+    $test_classes = $this->caseInsensitiveClassnames
       |> Vec\filter(
         $$,
         $name ==> \is_subclass_of($name, HackTest::class, true),
@@ -72,11 +85,11 @@ final class ClassRetriever {
       );
     }
 
-    $name = C\onlyx($test_classes);
-    $rc = new \ReflectionClass($name);
+    $rc = new \ReflectionClass(C\onlyx($test_classes));
     if ($rc->isAbstract()) {
       return null;
     }
+    $name = $rc->getName();  // fixes capitalization
 
     $class_name = $name
       |> Str\split($$, '\\')
