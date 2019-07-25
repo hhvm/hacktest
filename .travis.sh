@@ -29,6 +29,9 @@ hhvm --hphp --target hhbc -l 3 \
   --ffile bin/hacktest \
   --output-dir $REPO_DIR
 
+# make sure we don't have any of the source files handy
+cd $(mktemp -d)
+
 hhvm --no-config \
   -d hhvm.repo.authoritative=true \
   -d hhvm.repo.central.path=$REPO_DIR/hhvm.hhbc \
