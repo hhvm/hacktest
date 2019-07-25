@@ -12,22 +12,20 @@ namespace Facebook\HackTest;
 
 <<__EntryPoint>>
 async function hack_test_main_async(): Awaitable<noreturn> {
-  $root = \realpath(__DIR__.'/..');
+  $root = \dirname(__DIR__);
   $found_autoloader = false;
   while (true) {
-    $autoloader = $root.'/vendor/autoload.hack';
-    if (\file_exists($autoloader)) {
+    try {
+      require_once($root.'/vendor/autoload.hack');
       $found_autoloader = true;
-      require_once($autoloader);
       \Facebook\AutoloadMap\initialize();
       break;
+    } catch (\Error $_) {
     }
-    if ($root === '') {
+    if ($root === '/') {
       break;
     }
-    $parts = \explode('/', $root);
-    \array_pop(&$parts);
-    $root = \implode('/', $parts);
+    $root = \dirname($root);
   }
 
   if (!$found_autoloader) {

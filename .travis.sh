@@ -17,3 +17,19 @@ bin/hacktest tests/clean/
 if !(hhvm --version | grep -q -- -dev); then
   vendor/bin/hhast-lint
 fi
+
+# also run tests in repo-authoritative mode
+REPO_DIR=$(mktemp -d)
+
+hhvm --hphp --target hhbc -l 3 \
+  --module bin \
+  --module src \
+  --module tests \
+  --module vendor \
+  --ffile bin/hacktest \
+  --output-dir $REPO_DIR
+
+hhvm --no-config \
+  -d hhvm.repo.authoritative=true \
+  -d hhvm.repo.central.path=$REPO_DIR/hhvm.hhbc \
+  bin/hacktest tests/clean/
