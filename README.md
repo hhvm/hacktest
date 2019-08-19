@@ -7,7 +7,7 @@ HackTest is a pure Hack alternative to PHPUnit. In order to use this framework, 
 ## Installation
 
 ```
-hhvm /path/to/composer.phar require --dev hhvm/hacktest facebook/fbexpect
+php /path/to/composer.phar require --dev hhvm/hacktest facebook/fbexpect
 ```
 
 ## Usage
