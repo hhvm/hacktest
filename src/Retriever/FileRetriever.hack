@@ -30,6 +30,11 @@ final class FileRetriever {
     }
 
     $path = \realpath($this->path);
+    if (!$path) {
+      throw new InvalidTestFileException(
+        Str\format('File or directory (%s) not found', $this->path),
+      );
+    }
     $files = keyset[];
     if (!\is_dir($path)) {
       $file = $path;
