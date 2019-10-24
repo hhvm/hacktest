@@ -11,6 +11,11 @@ namespace Facebook\HackTest;
 
 use namespace Facebook\TypeAssert;
 use namespace HH\Lib\{C, Dict, Keyset, Str, Vec};
+use type Facebook\HackTest\_Private\{
+  ResultOrException,
+  WrappedException,
+  WrappedResult,
+};
 
 final class ClassRetriever {
   const type TFacts = shape(
@@ -30,20 +35,23 @@ final class ClassRetriever {
   }
 
   public static function forFile(string $path): ClassRetriever {
-    return C\onlyx(self::forFiles(keyset[$path]));
+    $res = C\onlyx(self::forFiles(keyset[$path]));
+    if ($res is _Private\WrappedResult<_>) {
+      return $res->getResult();
+    }
+    throw ($res as _Private\WrappedException<_>)->getException();
   }
 
   public static function forFiles(
     keyset<string> $paths,
-  ): vec<ClassRetriever> {
+  ): dict<string, ResultOrException<ClassRetriever>> {
     if (\ini_get('hhvm.repo.authoritative')) {
-      return Vec\map(
+      return Dict\map(
         $paths,
-        $path ==>
-          \Facebook\AutoloadMap\Generated\map()['class']
+        $path ==> \Facebook\AutoloadMap\Generated\map()['class']
           |> Dict\filter($$, $class_path ==> $class_path === $path)
           |> Keyset\keys($$)
-          |> new self($path, $$),
+          |> new WrappedResult(new self($path, $$)),
       );
     }
 
@@ -54,17 +62,21 @@ final class ClassRetriever {
       /* force_hh = */ false,
       /* multithreaded = */ true,
     );
-    return Vec\map(
+    return Dict\map(
       $paths,
       $path ==> {
+        try {
         $file_facts = TypeAssert\matches_type_structure(
           type_structure(self::class, 'TFacts'),
           $all_facts[$path],
         );
-        return new self(
+        return new WrappedResult(new self(
           $path,
           Keyset\map($file_facts['types'], $type ==> $type['name']),
-        );
+        ));
+        } catch (TypeAssert\IncorrectTypeException $e) {
+          return new WrappedException(new InvalidTestFileException("error parsing file"));
+        }
       },
     );
   }
@@ -89,7 +101,7 @@ final class ClassRetriever {
     if ($rc->isAbstract()) {
       return null;
     }
-    $name = $rc->getName();  // fixes capitalization
+    $name = $rc->getName(); // fixes capitalization
 
     $class_name = $name
       |> Str\split($$, '\\')

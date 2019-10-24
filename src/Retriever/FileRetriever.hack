@@ -9,7 +9,7 @@
 
 namespace Facebook\HackTest;
 
-use namespace HH\Lib\{Keyset, Str};
+use namespace HH\Lib\{Keyset, Regex, Str};
 
 final class FileRetriever {
 
@@ -25,7 +25,8 @@ final class FileRetriever {
           $filename ==> (
             $filename === $this->path ||
             Str\starts_with($filename, $this->path.'/')
-          ) && $this->isTestFile($filename),
+          ) &&
+            $this->isTestFile($filename),
         );
     }
 
@@ -48,7 +49,8 @@ final class FileRetriever {
       }
       throw new InvalidTestFileException(
         Str\format(
-          '%s is not a valid test file (ending in Test.php or Test.hh)',
+          "Asked to run tests in %s, but it does not end in 'Test.hack' or ".
+          "or a legacy extension.",
           $file,
         ),
       );
@@ -68,7 +70,7 @@ final class FileRetriever {
   }
 
   private function isTestFile(string $filename): bool {
-    return \preg_match('/Test(\.php|\.hh|\.hack|\.hck)$/', $filename) === 1;
+    return Regex\matches($filename, re"/Test(\.php|\.hh|\.hack|\.hck)$/");
   }
 
 }

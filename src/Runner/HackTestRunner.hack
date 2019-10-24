@@ -9,7 +9,7 @@
 
 namespace Facebook\HackTest;
 
-use namespace HH\Lib\{Keyset, Vec};
+use namespace HH\Lib\{Keyset, Str};
 
 abstract final class HackTestRunner {
   const type TMethodFilter = (function(
@@ -38,8 +38,20 @@ abstract final class HackTestRunner {
       $files = Keyset\union($files, (new FileRetriever($path))->getTestFiles());
     }
 
-    $classes = ClassRetriever::forFiles($files)
-      |> Vec\map($$, $r ==> $r->getTestClassName());
+    $classes_or_exceptions = ClassRetriever::forFiles($files);
+    $classes = vec[];
+    foreach ($classes_or_exceptions as $path => $coe) {
+      if ($coe is _Private\WrappedResult<_>) {
+        $classes[] = $coe->getResult()->getTestClassName();
+        continue;
+      }
+      $wex = $coe as _Private\WrappedException<_>;
+      // FIXME: errors should be keyable by file, not just classname
+      /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
+      await \HH\Lib\Experimental\IO\request_error()->writeAsync(
+        Str\format("Failed to process file %s: %s", $path, $wex->getException()->getMessage())
+      );
+    }
 
     $class_filter = $filters['classes'];
     $method_filter = $filters['methods'];
