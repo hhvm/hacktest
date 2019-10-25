@@ -101,29 +101,20 @@ final class HackTestCLI extends CLIWithRequiredArguments {
       ),
       async $event ==> await $output->writeProgressAsync($stdout, $event),
     );
+
     $result_counts = $output->getResultCounts();
-    $num_tests = Math\sum($result_counts);
-    if ($num_tests === 0) {
-      await $this->getStderr()->writeAsync("0 tests executed");
+
+    if (Math\sum($result_counts) === 0) {
+      await $this->getStderr()->writeAsync("No tests found.\n");
       return ExitCode::ERROR;
     }
 
-    $exit = ExitCode::SUCCESS;
     if (($result_counts[TestResult::ERROR] ?? 0) > 0) {
-      $exit = ExitCode::ERROR;
-    } else if (($result_counts[TestResult::FAILED] ?? 0) > 0) {
-      $exit = ExitCode::FAILURE;
+      return ExitCode::ERROR;
     }
-
-    await $stdout->writeAsync(Str\format(
-      "\n\nSummary: %d test(s), %d passed, %d failed, %d skipped, %d error(s).\n",
-      $num_tests,
-      $result_counts[TestResult::PASSED] ?? 0,
-      $result_counts[TestResult::FAILED] ?? 0,
-      $result_counts[TestResult::SKIPPED] ?? 0,
-      $result_counts[TestResult::ERROR] ?? 0,
-    ));
-
-    return $exit;
+    if (($result_counts[TestResult::FAILED] ?? 0) > 0) {
+      return ExitCode::FAILURE;
+    }
+    return ExitCode::SUCCESS;
   }
 }

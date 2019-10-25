@@ -51,7 +51,7 @@ class HackTest {
   public final async function runTestsAsync(
     (function(\ReflectionMethod): bool) $method_filter,
     (function(ProgressEvent): Awaitable<void>) $progress_callback,
-  ): Awaitable<vec<ErrorProgressEvent>> {
+  ): Awaitable<void> {
     $progress = new _Private\Progress(
       $progress_callback,
       $this->filename,
@@ -225,8 +225,6 @@ class HackTest {
       }
     }
     await static::afterLastTestAsync();
-
-    return $progress->getErrors();
   }
 
   private final function filterTestMethods(): void {
@@ -314,5 +312,4 @@ class HackTest {
   public async function afterEachTestAsync(): Awaitable<void> {}
   public static async function beforeFirstTestAsync(): Awaitable<void> {}
   public static async function afterLastTestAsync(): Awaitable<void> {}
-
 }

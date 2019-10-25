@@ -9,7 +9,7 @@
 
 namespace Facebook\HackTest;
 
-use namespace HH\Lib\{Keyset, Vec};
+use namespace HH\Lib\Keyset;
 
 /* HHAST_IGNORE_ALL[DontAwaitInALoop] */
 
@@ -27,13 +27,12 @@ abstract final class HackTestRunner {
     vec<string> $paths,
     this::TFilters $filters,
     (function(ProgressEvent): Awaitable<void>) $progress_callback,
-  ): Awaitable<vec<ErrorProgressEvent>> {
+  ): Awaitable<void> {
     await $progress_callback(new TestRunStartedProgressEvent());
     await using new _Private\OnScopeExitAsync(
       async () ==> await $progress_callback(new TestRunFinishedProgressEvent()),
     );
 
-    $errors = vec[];
     $files = keyset[];
     foreach ($paths as $path) {
       $files = Keyset\union($files, (new FileRetriever($path))->getTestFiles());
@@ -46,17 +45,15 @@ abstract final class HackTestRunner {
         try {
           $classes[] = tuple($path, $coe->getResult()->getTestClassName());
         } catch (InvalidTestClassException $ex) {
-          $ev = new FileErrorProgressEvent($path, $ex);
-          $errors[] = $ev;
-          await $progress_callback($ev);
+          await $progress_callback(new FileErrorProgressEvent($path, $ex));
         }
         continue;
       }
       $wex = $coe as _Private\WrappedException<_>;
-      $ev = new FileErrorProgressEvent($path, $wex->getException()
-        as InvalidTestFileException);
-      $errors[] = $ev;
-      await $progress_callback($ev);
+      await $progress_callback(new FileErrorProgressEvent(
+        $path,
+        $wex->getException() as InvalidTestFileException,
+      ));
     }
 
     $class_filter = $filters['classes'];
@@ -69,15 +66,19 @@ abstract final class HackTestRunner {
         continue;
       }
       await $progress_callback(new StartingTestClassEvent($path, $classname));
-      $test_case = new $classname();
-      $class_errors = await $test_case->runTestsAsync(
-        $method ==> $method_filter($classname, $method),
-        $progress_callback,
-      );
-      $errors = Vec\concat($errors, $class_errors);
-      /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-      await $progress_callback(new FinishedTestClassEvent($path, $classname));
+      await using (
+        new _Private\OnScopeExitAsync(
+          async () ==> await $progress_callback(
+            new FinishedTestClassEvent($path, $classname),
+          ),
+        )
+      ) {
+        $test_case = new $classname();
+        await $test_case->runTestsAsync(
+          $method ==> $method_filter($classname, $method),
+          $progress_callback,
+        );
+      }
     }
-    return $errors;
   }
 }

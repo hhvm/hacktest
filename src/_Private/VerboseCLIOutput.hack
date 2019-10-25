@@ -26,6 +26,7 @@ final class VerboseCLIOutput extends CLIOutputHandler {
   ): Awaitable<void> {
     if ($e is HackTest\TestRunFinishedProgressEvent) {
       await $this->writeFailureDetailsAsync($handle);
+      await $this->writeSummaryAsync($handle);
       return;
     }
 
