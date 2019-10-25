@@ -11,7 +11,7 @@ namespace Facebook\HackTest;
 
 use type Facebook\CLILib\CLIWithRequiredArguments;
 use namespace Facebook\CLILib\CLIOptions;
-use namespace HH\Lib\{C, Str};
+use namespace HH\Lib\{C, Math, Str};
 
 /** The main `hacktest` CLI */
 final class HackTestCLI extends CLIWithRequiredArguments {
@@ -86,7 +86,12 @@ final class HackTestCLI extends CLIWithRequiredArguments {
   public async function mainAsync(): Awaitable<int> {
     $cf = $this->classFilter;
     $mf = $this->methodFilter;
-    $errors = await HackTestRunner::runAsync(
+    $output = $this->verbose
+      ? new _Private\VerboseCLIOutput()
+      : new _Private\ConciseCLIOutput();
+    $stdout = $this->getStdout();
+
+    await HackTestRunner::runAsync(
       $this->getArguments(),
       shape(
         'classes' => (
@@ -94,151 +99,31 @@ final class HackTestCLI extends CLIWithRequiredArguments {
         ),
         'methods' => ($mf ?? ($_class, $_method) ==> true),
       ),
-      async ($class, $method, $dataKey, $event) ==>
-        await $this->writeProgressAsync($class, $method, $dataKey, $event),
-      async $result ==> await $this->writeResultAsync($result),
+      async $event ==> await $output->writeProgressAsync($stdout, $event),
     );
-    $num_tests = 0;
-    $num_msg = 0;
-    $num_failed = 0;
-    $num_skipped = 0;
-    $output = '';
-    foreach ($errors as $class => $result) {
-      $file = (new \ReflectionClass($class))->getFileName() as string;
-      foreach ($result as $test_params => $err) {
-        $num_tests++;
-        if ($err === null) {
-          continue;
-        }
-        $num_msg++;
-        if (Str\contains($test_params, '.')) {
-          list($method, $tuple_num, $data) = Str\split($test_params, '.');
-          $output .= Str\format(
-            "\n\n%d) %s::%s with data set #%s %s\n",
-            $num_msg,
-            $class,
-            $method,
-            $tuple_num,
-            $data,
-          );
-        } else {
-          $output .= Str\format(
-            "\n\n%d) %s::%s\n",
-            $num_msg,
-            $class,
-            $test_params,
-          );
-        }
-        if ($err is SkippedTestException) {
-          $num_skipped++;
-          $output .= 'Skipped: '.$err->getMessage();
-          continue;
-        }
-        if ($err is ExpectationFailedException) {
-          $num_failed++;
-        }
-        if ($this->verbose) {
-          $curr = $err;
-          while ($curr) {
-            $output .= Str\format(
-              "%s\n\n@  %s(%d)\n%s",
-              $curr->getMessage(),
-              $curr->getFile(),
-              $curr->getLine(),
-              $curr->getTraceAsString(),
-            );
-            $curr = $curr->getPrevious();
-            if ($curr !== null) {
-              $output .= "\n\nPrevious exception:\n\n";
-            }
-          }
-        } else {
-          $output .= $err->getMessage();
-          $trace = Str\split($err->getTraceAsString(), '#');
-          $out = '';
-          foreach ($trace as $line) {
-            if (Str\contains($line, $file)) {
-              $out .= Str\slice($line, 2);
-            }
-          }
-          if (!Str\is_empty($out)) {
-            $output .= "\n\n".$out;
-          }
-        }
-      }
+    $result_counts = $output->getResultCounts();
+    $num_tests = Math\sum($result_counts);
+    if ($num_tests === 0) {
+      await $this->getStderr()->writeAsync("0 tests executed");
+      return ExitCode::ERROR;
     }
-    $num_errors = $num_msg - $num_failed - $num_skipped;
+
     $exit = ExitCode::SUCCESS;
-    if ($num_errors > 0) {
+    if (($result_counts[TestResult::ERROR] ?? 0) > 0) {
       $exit = ExitCode::ERROR;
-    } else if ($num_failed > 0) {
+    } else if (($result_counts[TestResult::FAILED] ?? 0) > 0) {
       $exit = ExitCode::FAILURE;
     }
-    $output .= Str\format(
+
+    await $stdout->writeAsync(Str\format(
       "\n\nSummary: %d test(s), %d passed, %d failed, %d skipped, %d error(s).\n",
       $num_tests,
-      ($num_tests - $num_msg),
-      $num_failed,
-      $num_skipped,
-      $num_errors,
-    );
-    await $this->getStdout()->writeAsync($output);
+      $result_counts[TestResult::PASSED] ?? 0,
+      $result_counts[TestResult::FAILED] ?? 0,
+      $result_counts[TestResult::SKIPPED] ?? 0,
+      $result_counts[TestResult::ERROR] ?? 0,
+    ));
 
     return $exit;
-  }
-
-  public async function writeProgressAsync(
-    classname<HackTest> $class,
-    ?string $method,
-    ?arraykey $data_key,
-    TestProgressEvent $event,
-  ): Awaitable<void> {
-    if (!$this->verbose) {
-      return;
-    }
-
-    if ($method is nonnull) {
-      $text = '  ::'.$method;
-      if ($data_key is nonnull) {
-        $text .= '['.((string)$data_key).']';
-      }
-      $text .= '> ';
-    } else {
-      $text = $class.'> ';
-    }
-
-    switch ($event) {
-      case TestProgressEvent::CALLING_DATAPROVIDERS:
-        $text .= 'calling data providers...';
-        break;
-      case TestProgressEvent::STARTING:
-        $text .= 'starting...';
-        break;
-      case TestProgressEvent::FINISHED:
-        $text .= '...complete.';
-        break;
-    }
-    await $this->getStdout()->writeAsync($text."\n");
-  }
-
-  public async function writeResultAsync(
-    TestResult $progress,
-  ): Awaitable<void> {
-    $v = $this->verbose;
-    switch ($progress) {
-      case TestResult::PASSED:
-        $status = $v ? "PASS\n" : '.';
-        break;
-      case TestResult::SKIPPED:
-        $status = $v ? "SKIP\n" : 'S';
-        break;
-      case TestResult::FAILED:
-        $status = $v ? "FAIL\n" : 'F';
-        break;
-      case TestResult::ERROR:
-        $status = $v ? "ERROR\n" : 'E';
-        break;
-    }
-    await $this->getStdout()->writeAsync($status);
   }
 }

@@ -36,10 +36,10 @@ final class ClassRetriever {
 
   public static function forFile(string $path): ClassRetriever {
     $res = C\onlyx(self::forFiles(keyset[$path]));
-    if ($res is _Private\WrappedResult<_>) {
+    if ($res is WrappedResult<_>) {
       return $res->getResult();
     }
-    throw ($res as _Private\WrappedException<_>)->getException();
+    throw ($res as WrappedException<_>)->getException();
   }
 
   public static function forFiles(
@@ -75,7 +75,9 @@ final class ClassRetriever {
           Keyset\map($file_facts['types'], $type ==> $type['name']),
         ));
         } catch (TypeAssert\IncorrectTypeException $e) {
-          return new WrappedException(new InvalidTestFileException("error parsing file"));
+          return new WrappedException(
+            new InvalidTestFileException("Could not parse file."),
+          );
         }
       },
     );
@@ -88,11 +90,27 @@ final class ClassRetriever {
         $name ==> \is_subclass_of($name, HackTest::class, true),
       );
 
-    if (C\count($test_classes) !== 1) {
+    $count = C\count($test_classes);
+    if ($count !== 1) {
+      $all_classes = '';
+      if (!C\is_empty($this->caseInsensitiveClassnames)) {
+        $all_classes = ':';
+        foreach ($this->caseInsensitiveClassnames as $cn) {
+          $rc = new \ReflectionClass($cn);
+          $all_classes .= "\n - ".$rc->getName();
+          if ($rc->isSubclassOf(HackTest::class)) {
+            $all_classes .= " (is a test class)";
+          } else {
+            $all_classes .= " (is not not a subclass of ".HackTest::class.")";
+          }
+        }
+      }
       throw new InvalidTestClassException(
         Str\format(
-          'There must be exactly one test class in %s',
+          'There must be exactly one test class in %s; found %d%s',
           $this->filename,
+          $count,
+          $all_classes,
         ),
       );
     }

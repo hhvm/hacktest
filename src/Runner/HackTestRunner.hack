@@ -9,7 +9,9 @@
 
 namespace Facebook\HackTest;
 
-use namespace HH\Lib\{Keyset, Str};
+use namespace HH\Lib\{Keyset, Vec};
+
+/* HHAST_IGNORE_ALL[DontAwaitInALoop] */
 
 abstract final class HackTestRunner {
   const type TMethodFilter = (function(
@@ -24,15 +26,14 @@ abstract final class HackTestRunner {
   public static async function runAsync(
     vec<string> $paths,
     this::TFilters $filters,
-    (function(
-      classname<HackTest>,
-      ?string,
-      ?arraykey,
-      TestProgressEvent,
-    ): Awaitable<void>) $progress_writer,
-    (function(TestResult): Awaitable<void>) $result_writer,
-  ): Awaitable<dict<string, dict<string, ?\Throwable>>> {
-    $errors = dict[];
+    (function(ProgressEvent): Awaitable<void>) $progress_callback,
+  ): Awaitable<vec<ErrorProgressEvent>> {
+    await $progress_callback(new TestRunStartedProgressEvent());
+    await using new _Private\OnScopeExitAsync(
+      async () ==> await $progress_callback(new TestRunFinishedProgressEvent()),
+    );
+
+    $errors = vec[];
     $files = keyset[];
     foreach ($paths as $path) {
       $files = Keyset\union($files, (new FileRetriever($path))->getTestFiles());
@@ -42,47 +43,40 @@ abstract final class HackTestRunner {
     $classes = vec[];
     foreach ($classes_or_exceptions as $path => $coe) {
       if ($coe is _Private\WrappedResult<_>) {
-        $classes[] = $coe->getResult()->getTestClassName();
+        try {
+          $classes[] = tuple($path, $coe->getResult()->getTestClassName());
+        } catch (InvalidTestClassException $ex) {
+          $ev = new FileErrorProgressEvent($path, $ex);
+          $errors[] = $ev;
+          await $progress_callback($ev);
+        }
         continue;
       }
       $wex = $coe as _Private\WrappedException<_>;
-      // FIXME: errors should be keyable by file, not just classname
-      /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-      await \HH\Lib\Experimental\IO\request_error()->writeAsync(
-        Str\format("Failed to process file %s: %s", $path, $wex->getException()->getMessage())
-      );
+      $ev = new FileErrorProgressEvent($path, $wex->getException()
+        as InvalidTestFileException);
+      $errors[] = $ev;
+      await $progress_callback($ev);
     }
 
     $class_filter = $filters['classes'];
     $method_filter = $filters['methods'];
-    foreach ($classes as $classname) {
+    foreach ($classes as list($path, $classname)) {
       if ($classname === null) {
         continue;
       }
       if (!$class_filter($classname)) {
         continue;
       }
-      /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-      await $progress_writer(
-        $classname,
-        null,
-        null,
-        TestProgressEvent::STARTING,
-      );
+      await $progress_callback(new StartingTestClassEvent($path, $classname));
       $test_case = new $classname();
-      /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-      $errors[$classname] = await $test_case->runTestsAsync(
+      $class_errors = await $test_case->runTestsAsync(
         $method ==> $method_filter($classname, $method),
-        $progress_writer,
-        $result_writer,
+        $progress_callback,
       );
+      $errors = Vec\concat($errors, $class_errors);
       /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
-      await $progress_writer(
-        $classname,
-        null,
-        null,
-        TestProgressEvent::FINISHED,
-      );
+      await $progress_callback(new FinishedTestClassEvent($path, $classname));
     }
     return $errors;
   }
