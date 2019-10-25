@@ -16,6 +16,7 @@ final class OnScopeExitAsync<Tignored> implements \IAsyncDisposable {
   }
 
   public async function __disposeAsync(): Awaitable<void> {
-    await ($this->callback)();
+    $cb = $this->callback;
+    await $cb();
   }
 }

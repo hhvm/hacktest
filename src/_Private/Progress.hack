@@ -29,7 +29,8 @@ final class Progress {
       $this->class,
       $test_method,
     );
-    await ($this->callback)($ev);
+    $cb = $this->callback;
+    await $cb($ev);
   }
 
   public async function testStartingAsync(
@@ -42,7 +43,8 @@ final class Progress {
       $test_method,
       $data_provider_row,
     );
-    await ($this->callback)($ev);
+    $cb = $this->callback;
+    await $cb($ev);
   }
 
   public async function testPassedAsync(
@@ -55,7 +57,8 @@ final class Progress {
       $test_method,
       $data_provider_row,
     );
-    await ($this->callback)($ev);
+    $cb = $this->callback;
+    await $cb($ev);
   }
 
   public function getErrors(): vec<HackTest\ErrorProgressEvent> {
@@ -95,6 +98,7 @@ final class Progress {
     if ($ev is HackTest\ErrorProgressEvent) {
       $this->errors[] = $ev;
     }
-    await ($this->callback)($ev);
+    $cb = $this->callback;
+    await $cb($ev);
   }
 }
