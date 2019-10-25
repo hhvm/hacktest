@@ -134,8 +134,8 @@ class HackTest {
             );
           }
         } catch (\Throwable $e) {
-          await $progress->testFinishedWithExceptionAsync($provider, null, $e);
           await $this->afterEachTestAsync();
+          await $progress->testFinishedWithExceptionAsync($provider, null, $e);
           continue;
         }
 
