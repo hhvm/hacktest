@@ -20,12 +20,10 @@ use type Facebook\HackTest\TestResult;
 
 final class VerboseCLIOutput extends CLIOutputHandler {
   <<__Override>>
-  public async function writeProgressAsync(
+  protected async function writeProgressImplAsync(
     <<__AcceptDisposable>> IO\WriteHandle $handle,
     HackTest\ProgressEvent $e,
   ): Awaitable<void> {
-    $this->logEvent($e);
-
     if ($e is HackTest\TestRunFinishedProgressEvent) {
       await $this->writeFailureDetailsAsync($handle);
       return;

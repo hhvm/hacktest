@@ -17,7 +17,21 @@ abstract class CLIOutputHandler {
   <<__LateInit>> private dict<HackTest\TestResult, int> $resultCounts;
   <<__LateInit>> private vec<HackTest\ErrorProgressEvent> $errors;
 
-  abstract public function writeProgressAsync(
+  final public async function writeProgressAsync(
+    <<__AcceptDisposable>> IO\WriteHandle $handle,
+    \Facebook\HackTest\ProgressEvent $e,
+  ): Awaitable<void> {
+    if ($e is HackTest\TestRunStartedProgressEvent) {
+      $this->reset();
+      return;
+    }
+
+    $this->logEvent($e);
+
+    await $this->writeProgressImplAsync($handle, $e);
+  }
+
+  abstract protected function writeProgressImplAsync(
     <<__AcceptDisposable>> IO\WriteHandle $handle,
     \Facebook\HackTest\ProgressEvent $e,
   ): Awaitable<void>;
@@ -27,12 +41,7 @@ abstract class CLIOutputHandler {
     $this->errors = vec[];
   }
 
-  final protected function logEvent(HackTest\ProgressEvent $e): void {
-    if ($e is HackTest\TestRunStartedProgressEvent) {
-      $this->reset();
-      return;
-    }
-
+  final private function logEvent(HackTest\ProgressEvent $e): void {
     if ($e is HackTest\TestFinishedProgressEvent) {
       $this->resultCounts[$e->getResult()]++;
     }
