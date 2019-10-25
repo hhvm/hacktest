@@ -29,8 +29,8 @@ abstract final class HackTestRunner {
     (function(ProgressEvent): Awaitable<void>) $progress_callback,
   ): Awaitable<void> {
     await $progress_callback(new TestRunStartedProgressEvent());
-    await using new _Private\OnScopeExitAsync(
-      async () ==> await $progress_callback(new TestRunFinishedProgressEvent()),
+    await using (
+      (new TestRunFinishedProgressEvent())->onScopeExit($progress_callback)
     );
 
     $files = keyset[];
@@ -67,10 +67,8 @@ abstract final class HackTestRunner {
       }
       await $progress_callback(new StartingTestClassEvent($path, $classname));
       await using (
-        new _Private\OnScopeExitAsync(
-          async () ==> await $progress_callback(
-            new FinishedTestClassEvent($path, $classname),
-          ),
+        (new FinishedTestClassEvent($path, $classname))->onScopeExit(
+          $progress_callback,
         )
       ) {
         $test_case = new $classname();

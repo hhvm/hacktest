@@ -10,6 +10,12 @@
 namespace Facebook\HackTest;
 
 abstract class ProgressEvent {
+  <<__ReturnDisposable>>
+  final public function onScopeExit(
+    (function(this): Awaitable<void>) $callback,
+  ): \IAsyncDisposable {
+    return new _Private\OnScopeExitAsync(async () ==> await $callback($this));
+  }
 }
 
 final class TestRunStartedProgressEvent extends ProgressEvent {}
