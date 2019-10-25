@@ -1,7 +1,7 @@
 enable_experimental_tc_features = no_fallback_in_namespaces
 safe_array = true
 safe_vector_array = true
-ignored_paths = [ "vendor/.+/tests/.+", "vendor/hhvm/hhast/.+" ]
+ignored_paths = [ "vendor/.+/tests/.+", "vendor/hhvm/hhast/.+", "vendor/bin/.+" ]
 user_attributes=
 disallow_ambiguous_lambda=true
 disable_unsafe_expr=true
