@@ -11,12 +11,13 @@
 
 namespace Facebook\HackTest\_Private;
 
-use namespace HH\Lib\{Str, Vec};
+use namespace HH\Lib\{Math, Str, Vec};
 use namespace HH\Lib\Experimental\IO;
 use namespace Facebook\HackTest;
 use type Facebook\HackTest\TestResult;
 
 final class ConciseCLIOutput extends CLIOutputHandler {
+
   <<__Override>>
   protected async function writeProgressImplAsync(
     <<__AcceptDisposable>> IO\WriteHandle $handle,
@@ -63,14 +64,16 @@ final class ConciseCLIOutput extends CLIOutputHandler {
         $message = 'Skipped: '.$ex->getMessage();
       } else if ($event is HackTest\FileProgressEvent) {
         $file = $event->getPath();
-        $trace = $ex->getTraceAsString()
+
+        $context = $this->getPrettyContext($ex, $file) ??
+          $ex->getTraceAsString()
           |> Str\split($$, '#')
           |> Vec\filter($$, $line ==> Str\contains($line, $file))
           |> Vec\map($$, $line ==> Str\strip_prefix($line, '  '))
           |> Str\join($$, "\n");
 
-        if ($trace !== '') {
-          $message .= "\n\n".$trace;
+        if ($context !== '') {
+          $message .= "\n\n".$context;
         }
       }
       await $handle->writeAsync($header.$message);

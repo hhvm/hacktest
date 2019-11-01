@@ -9,13 +9,18 @@
 
 namespace Facebook\HackTest\_Private;
 
-use namespace HH\Lib\{Dict, Math, Str};
+use namespace HH\Lib\{C, Dict, Math, Str, Vec};
 use namespace HH\Lib\Experimental\IO;
 use namespace Facebook\HackTest;
 
 abstract class CLIOutputHandler {
   <<__LateInit>> private dict<HackTest\TestResult, int> $resultCounts;
   <<__LateInit>> private vec<HackTest\ErrorProgressEvent> $errors;
+
+  const int CONTEXT_LINES = 3;
+
+  public function __construct(private \Facebook\CLILib\ITerminal $terminal) {
+  }
 
   final public async function writeProgressAsync(
     <<__AcceptDisposable>> IO\WriteHandle $handle,
@@ -109,5 +114,76 @@ abstract class CLIOutputHandler {
       $result_counts[HackTest\TestResult::SKIPPED] ?? 0,
       $result_counts[HackTest\TestResult::ERROR] ?? 0,
     ));
+  }
+
+  final protected function getPrettyContext(
+    \Throwable $ex,
+    string $file,
+  ): ?string {
+    $frame = $ex->getTrace()
+      |> Vec\filter(
+        $$,
+        $row ==>
+          (($row as KeyedContainer<_, _>)['file'] ?? null) as ?string === $file,
+      )
+      |> C\last($$);
+
+    if (!$frame is KeyedContainer<_, _>) {
+      return null;
+    }
+    $colors = $this->terminal->supportsColors();
+    $c_light = $colors ? "\e[2m" : '';
+    $c_bold = $colors ? "\e[1m" : '';
+    $c_red = $colors ? "\e[31m" : '';
+    $c_reset = $colors ? "\e[0m" : '';
+
+    $line = $frame['line'] as int;
+    $line_number_width = Str\length((string)$line) + 2;
+
+    $first_line = Math\maxva(1, $line - self::CONTEXT_LINES);
+    $all_lines = \file_get_contents($file)
+      |> Str\split($$, "\n");
+
+    $context_lines = Vec\slice(
+      $all_lines,
+      $first_line - 1,
+      ($line - $first_line),
+    )
+      |> Vec\map_with_key(
+        $$,
+        ($n, $content) ==> Str\format(
+          "%s| %s%s%s",
+          Str\pad_left((string)($n + $first_line), $line_number_width, ' '),
+          $c_light,
+          $content,
+          $c_reset,
+        ),
+      );
+
+    $blame_line = $all_lines[$line - 1];
+    $fun = $frame['function'] as string;
+    $fun_offset = Str\search($blame_line, $fun) as nonnull;
+
+    $context_lines[] = Str\format(
+      "%s%s>%s %s%s%s%s%s%s",
+      Str\pad_left((string)$line, $line_number_width),
+      $c_red,
+      $c_reset.$c_bold,
+      Str\slice($blame_line, 0, $fun_offset),
+      $c_red,
+      $fun,
+      $c_reset.$c_bold,
+      Str\slice($blame_line, $fun_offset + Str\length($fun)),
+      $c_reset,
+    );
+
+    $context_lines[] = Str\format(
+      "%s%s%s%s",
+      Str\repeat(' ', $line_number_width + $fun_offset + 2),
+      $c_red,
+      Str\repeat('^', Str\length($fun)),
+      $c_reset,
+    );
+    return $file.':'.$line."\n".Str\join($context_lines, "\n");
   }
 }
