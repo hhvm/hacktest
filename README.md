@@ -2,7 +2,8 @@
 
 [![Build Status](https://travis-ci.org/hhvm/hacktest.svg?branch=master)](https://travis-ci.org/hhvm/hacktest)
 
-HackTest is a pure Hack alternative to PHPUnit. In order to use this framework, you must migrate assert calls to use the [expect](https://github.com/hhvm/fbexpect) API.
+HackTest is a unit test runner and base class. Assertions are provided
+by separate libraries, such [fbexpect](https://github.com/hhvm/fbexpect).
 
 ## Installation
 
@@ -16,14 +17,6 @@ To run tests:
 
 ```
 vendor/bin/hacktest [OPTIONS] tests/
-```
-
-To migrate PHPUnit tests to HackTest:
-
-```
-git clone https://github.com/hhvm/hhast.git
-cd hhast
-bin/hhast-migrate --phpunit-to-hacktest /path/to/myproject/tests
 ```
 
 Tests are methods in classes, where:
@@ -61,7 +54,7 @@ public function testFoos(string $a, int $b): void {
 
 ### "I want to test all files in a directory"
 ```
-$ bin/hacktest tests/clean/exit/
+$ vendor/bin/hacktest tests/clean/exit/
 
 ...
 
@@ -71,7 +64,7 @@ Summary: 3 test(s), 3 passed, 0 failed, 0 skipped, 0 error(s).
 ### "I want to run all tests in a specific file"
 
 ```
-$ bin/hacktest tests/dirty/DirtyAsyncTest.php
+$ vendor/bin/hacktest tests/dirty/DirtyAsyncTest.php
 
 FFF
 
