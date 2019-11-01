@@ -87,8 +87,8 @@ final class HackTestCLI extends CLIWithRequiredArguments {
     $cf = $this->classFilter;
     $mf = $this->methodFilter;
     $output = $this->verbose
-      ? new _Private\VerboseCLIOutput()
-      : new _Private\ConciseCLIOutput();
+      ? new _Private\VerboseCLIOutput($this->getTerminal())
+      : new _Private\ConciseCLIOutput($this->getTerminal());
     $stdout = $this->getStdout();
 
     await HackTestRunner::runAsync(

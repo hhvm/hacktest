@@ -102,6 +102,13 @@ final class VerboseCLIOutput extends CLIOutputHandler {
           $message .= "\n\nPrevious exception:\n\n";
         }
       }
+      if ($event is HackTest\FileProgressEvent) {
+        $file = $event->getPath();
+        $context = $this->getPrettyContext($ex, $file);
+        if ($context is nonnull) {
+          $message .= "\n\n".$context;
+        }
+      }
       await $handle->writeAsync($header.$message);
     }
   }
