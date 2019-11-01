@@ -66,14 +66,14 @@ final class ClassRetriever {
       $paths,
       $path ==> {
         try {
-        $file_facts = TypeAssert\matches_type_structure(
-          type_structure(self::class, 'TFacts'),
-          $all_facts[$path],
-        );
-        return new WrappedResult(new self(
-          $path,
-          Keyset\map($file_facts['types'], $type ==> $type['name']),
-        ));
+          $file_facts = TypeAssert\matches_type_structure(
+            type_structure(self::class, 'TFacts'),
+            $all_facts[$path],
+          );
+          return new WrappedResult(new self(
+            $path,
+            Keyset\map($file_facts['types'], $type ==> $type['name']),
+          ));
         } catch (TypeAssert\IncorrectTypeException $e) {
           return new WrappedException(
             new InvalidTestFileException("Could not parse file."),

@@ -23,9 +23,7 @@ use namespace HH\Lib\C;
 final class TestGroup implements \HH\MethodAttribute {
   private keyset<string> $groups;
 
-  public function __construct(
-    string ...$groups
-   ) {
+  public function __construct(string ...$groups) {
     $this->groups = keyset($groups);
   }
 

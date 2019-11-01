@@ -37,6 +37,6 @@ final class DataProvider implements \HH\MethodAttribute {
   public function __construct(
     /** The name of a public method providing parameters for a test */
     public string $provider,
-   ) {
+  ) {
   }
 }

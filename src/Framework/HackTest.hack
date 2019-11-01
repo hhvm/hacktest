@@ -60,7 +60,7 @@ class HackTest {
 
     await static::beforeFirstTestAsync();
     await using new _Private\OnScopeExitAsync(
-      async () ==> await static::afterLastTestAsync()
+      async () ==> await static::afterLastTestAsync(),
     );
 
     foreach ($this->methods as $method) {
