@@ -162,28 +162,49 @@ abstract class CLIOutputHandler {
 
     $blame_line = $all_lines[$line - 1];
     $fun = $frame['function'] as string;
-    $fun_offset = Str\search($blame_line, $fun) as nonnull;
+    $fun_offset = Str\search($blame_line, $fun.'(');
+    if ($fun_offset is null && Str\contains($fun, '\\')) {
+      $fun = Str\split($fun, '\\') |> C\lastx($$);
+      $fun_offset = Str\search($blame_line, $fun.'(');
+    }
+    if (
+      $fun_offset is null && $frame['function'] === "HH\\invariant_violation"
+    ) {
+      $fun = 'invariant';
+      $fun_offset = Str\search($blame_line, 'invariant(');
+    }
 
-    $context_lines[] = Str\format(
-      "%s%s>%s %s%s%s%s%s%s",
-      Str\pad_left((string)$line, $line_number_width),
-      $c_red,
-      $c_reset.$c_bold,
-      Str\slice($blame_line, 0, $fun_offset),
-      $c_red,
-      $fun,
-      $c_reset.$c_bold,
-      Str\slice($blame_line, $fun_offset + Str\length($fun)),
-      $c_reset,
-    );
+    if ($fun_offset is null) {
+      $context_lines[] = Str\format(
+        "%s%s>%s %s%s",
+        Str\pad_left((string)$line, $line_number_width),
+        $c_red,
+        $c_reset.$c_bold,
+        $blame_line,
+        $c_reset,
+      );
+    } else {
+      $context_lines[] = Str\format(
+        "%s%s>%s %s%s%s%s%s%s",
+        Str\pad_left((string)$line, $line_number_width),
+        $c_red,
+        $c_reset.$c_bold,
+        Str\slice($blame_line, 0, $fun_offset),
+        $c_red,
+        $fun,
+        $c_reset.$c_bold,
+        Str\slice($blame_line, $fun_offset + Str\length($fun)),
+        $c_reset,
+      );
 
-    $context_lines[] = Str\format(
-      "%s%s%s%s",
-      Str\repeat(' ', $line_number_width + $fun_offset + 2),
-      $c_red,
-      Str\repeat('^', Str\length($fun)),
-      $c_reset,
-    );
+      $context_lines[] = Str\format(
+        "%s%s%s%s",
+        Str\repeat(' ', $line_number_width + $fun_offset + 2),
+        $c_red,
+        Str\repeat('^', Str\length($fun)),
+        $c_reset,
+      );
+    }
     return $file.':'.$line."\n".Str\join($context_lines, "\n");
   }
 }
