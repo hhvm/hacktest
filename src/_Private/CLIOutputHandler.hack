@@ -120,6 +120,11 @@ abstract class CLIOutputHandler {
     \Throwable $ex,
     string $file,
   ): ?string {
+    if (!\file_exists($file)) {
+      // Possibly running in repo-authoritative mode
+      return null;
+    }
+
     $frame = $ex->getTrace()
       |> Vec\filter(
         $$,
