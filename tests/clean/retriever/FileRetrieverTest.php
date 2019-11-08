@@ -17,7 +17,9 @@ final class FileRetrieverTest extends HackTest {
   public function testValidTestFiles(): void {
     $path = 'tests/clean/hsl/dict';
     $file_retriever = new FileRetriever($path);
-    foreach ($file_retriever->getTestFiles() as $file) {
+    $files = $file_retriever->getTestFiles();
+    expect($files)->toNotBeEmpty("No test files in %s", $path);
+    foreach ($files as $file) {
       expect(\preg_match('/Test(\.php|\.hh|\.hack)$/', $file) === 1)
         ->toBeTrue();
     }

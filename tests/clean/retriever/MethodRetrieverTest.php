@@ -18,7 +18,9 @@ final class MethodRetrieverTest extends HackTest {
   public function testValidTestMethods(): void {
     $path = 'tests/clean/hsl/dict';
     $file_retriever = new FileRetriever($path);
-    foreach ($file_retriever->getTestFiles() as $file) {
+    $files = $file_retriever->getTestFiles();
+    expect($files)->toNotBeEmpty("No test files in %s", $path);
+    foreach ($files as $file) {
       $classname = ClassRetriever::forFile($file)->getTestClassName()
         as nonnull;
       $test_methods = (new $classname())->getTestMethods();
