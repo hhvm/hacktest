@@ -15,10 +15,11 @@ use function Facebook\FBExpect\expect;
 final class FileRetrieverTest extends HackTest {
 
   public function testValidTestFiles(): void {
-    $path = 'tests/clean/hsl/tuple';
+    $path = 'tests/clean/hsl/dict';
     $file_retriever = new FileRetriever($path);
     foreach ($file_retriever->getTestFiles() as $file) {
-      expect(\preg_match('/Test(\.php|\.hh)$/', $file) === 1)->toBeTrue();
+      expect(\preg_match('/Test(\.php|\.hh|\.hack)$/', $file) === 1)
+        ->toBeTrue();
     }
   }
 }
