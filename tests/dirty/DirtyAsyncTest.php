@@ -8,7 +8,6 @@
  *
  */
 
-use namespace HH\Lib\Tuple as Tuple;
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\HackTest;
 
@@ -16,29 +15,46 @@ use type Facebook\HackTest\HackTest;
 final class DirtyAsyncTest extends HackTest {
 
   public async function testWithNonNullableTypesAsync(): Awaitable<void> {
-    $t = await Tuple\from_async(async { return 1; }, async { return 'foo'; });
+    $t = tuple(
+      await async {
+        return 1;
+      },
+      await async {
+        return 'foo';
+      },
+    );
     expect($t)->toNotBeSame(tuple(1, 'foo'));
     list($a, $b) = $t;
-    expect(
-      ((int $x, string $y) ==> tuple($x, $y))($a, $b)
-    )->toBeSame($t);
+    expect(((int $x, string $y) ==> tuple($x, $y))($a, $b))->toBeSame($t);
   }
 
   public async function testWithNullLiteralsAsync(): Awaitable<void> {
-    $t = await Tuple\from_async(async { return 1; }, null, async { return null; });
+    $t = tuple(
+      await async {
+        return 1;
+      },
+      null,
+      await async {
+        return null;
+      },
+    );
     expect($t)->toBeSame(tuple(1, null, null));
     list($a, $b, $c) = $t;
-    expect(
-      ((int $x, ?int $y, ?int $z) ==> tuple($x, $y, $z))($a, $b, $c)
-    )->toBeTrue();
+    expect(((int $x, ?int $y, ?int $z) ==> tuple($x, $y, $z))($a, $b, $c))
+      ->toBeTrue();
   }
 
   public async function testWithNullableTypesAsync(): Awaitable<void> {
-    $t = await Tuple\from_async(async { return 1; }, async { return 'foo'; });
+    $t = tuple(
+      await async {
+        return 1;
+      },
+      await async {
+        return 'foo';
+      },
+    );
     expect($t)->toBeSame(tuple(1, 'foo'));
     list($a, $b) = $t;
-    expect(
-      ((?int $x, ?string $y) ==> tuple($x, $y))($a, $b)
-    )->toBeNull();
+    expect(((?int $x, ?string $y) ==> tuple($x, $y))($a, $b))->toBeNull();
   }
 }
