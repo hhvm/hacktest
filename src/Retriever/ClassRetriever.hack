@@ -101,7 +101,7 @@ final class ClassRetriever {
           if ($rc->isSubclassOf(HackTest::class)) {
             $all_classes .= " (is a test class)";
           } else {
-            $all_classes .= " (is not not a subclass of ".HackTest::class.")";
+            $all_classes .= " (is not a subclass of ".HackTest::class.")";
           }
         }
       }
