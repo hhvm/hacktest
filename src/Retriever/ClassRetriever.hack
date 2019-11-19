@@ -58,7 +58,7 @@ final class ClassRetriever {
     $all_facts = \HH\facts_parse(
       /* root = */ '/',
       /* HH_FIXME[4007] need a PHP array here for now */
-      (array) $paths,
+      varray($paths),
       /* force_hh = */ false,
       /* multithreaded = */ true,
     );

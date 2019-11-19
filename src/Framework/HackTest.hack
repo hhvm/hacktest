@@ -110,8 +110,8 @@ class HackTest {
         $this->setUpNeeded = false;
         try {
           if (Str\contains($provider, '::')) {
-            /* HH_IGNORE_ERROR[4009] this is unsafe */
-            $tuples = $provider();
+            $callable_provider = $provider;
+            $tuples = $callable_provider as dynamic();
           } else {
             /* HH_IGNORE_ERROR[2011] this is unsafe */
             $rm = new \ReflectionMethod($this, $provider);
@@ -140,7 +140,7 @@ class HackTest {
         }
 
         foreach ($tuples as $idx => $tuple) {
-          $tuple = vec($tuple);
+          $tuple = vec($tuple as Traversable<_>);
           $to_run[] = tuple(
             $method_name,
             tuple($idx as arraykey, $tuple as Container<_>),
