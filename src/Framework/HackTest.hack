@@ -110,10 +110,10 @@ class HackTest {
         $this->setUpNeeded = false;
         try {
           if (Str\contains($provider, '::')) {
-            $callable_provider = $provider;
-            $tuples = $callable_provider as dynamic();
+            list($class, $method) = Str\split($provider, '::', 2);
+            $rm = new \ReflectionMethod($class, $method);
+            $tuples = $rm->invoke(null);
           } else {
-            /* HH_IGNORE_ERROR[2011] this is unsafe */
             $rm = new \ReflectionMethod($this, $provider);
             if ($rm->isStatic()) {
               $tuples = $rm->invoke(null);
