@@ -43,6 +43,7 @@ final class VecSelectTest extends HackTest {
     vec<Tv> $expected,
   ): void {
     /* HH_FIXME[4359] Stricter enforcement of argument unpacking arity (T25385321) */
+    /* HH_FIXME[4104] Different code for the same error before HHVM 4.41 */
     expect(Vec\diff($base, ...$traversables))->toBeSame($expected);
   }
 
