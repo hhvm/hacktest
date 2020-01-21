@@ -42,7 +42,7 @@ final class VecSelectTest extends HackTest {
     Container<Container<Tv>> $traversables,
     vec<Tv> $expected,
   ): void {
-    /* HH_FIXME[4104] Stricter enforcement of argument unpacking arity (T25385321) */
+    /* HH_FIXME[4359] Stricter enforcement of argument unpacking arity (T25385321) */
     expect(Vec\diff($base, ...$traversables))->toBeSame($expected);
   }
 
