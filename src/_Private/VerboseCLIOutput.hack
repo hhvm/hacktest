@@ -62,7 +62,7 @@ final class VerboseCLIOutput extends CLIOutputHandler {
       if ($e is HackTest\TestInstanceProgressEvent) {
         $dp = $e->getDataProviderRow();
         if ($dp is nonnull) {
-          $scope .= '['.(string)$dp[0].'];';
+          $scope .= '['.(string)$dp[0].']';
         }
       }
     } else if ($e is HackTest\ClassProgressEvent) {
