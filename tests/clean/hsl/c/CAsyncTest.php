@@ -17,8 +17,8 @@ use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 final class CAsyncTest extends HackTest {
 
   public static function provideTestGenFirst(
-  ): varray<(Awaitable<Traversable<mixed>>, mixed)> {
-    return varray[
+  ): vec<(Awaitable<Traversable<mixed>>, mixed)> {
+    return vec[
       tuple(
         async {
           return varray[];
@@ -48,16 +48,16 @@ final class CAsyncTest extends HackTest {
     Awaitable<Traversable<T>> $awaitable,
     ?T $expected,
   ): void {
-    /* HH_IGNORE_ERROR[5542] open source */
+    /* @lint-ignore HackLint5542 open source */
     \HH\Asio\join(async {
       $actual = await C\first_async($awaitable);
-      expect($actual)->toBeSame($expected);
+      expect($actual)->toEqual($expected);
     });
   }
 
   public static function provideTestGenFirstx(
-  ): varray<(Awaitable<Traversable<mixed>>, mixed)> {
-    return varray[
+  ): vec<(Awaitable<Traversable<mixed>>, mixed)> {
+    return vec[
       tuple(
         async {
           return HackLibTestTraversables::getIterator(Vec\range(1, 5));
@@ -81,16 +81,16 @@ final class CAsyncTest extends HackTest {
     Awaitable<Traversable<T>> $awaitable,
     T $expected,
   ): void {
-    /* HH_IGNORE_ERROR[5542] open source */
+    /* @lint-ignore HackLint5542 open source */
     \HH\Asio\join(async {
       $actual = await C\firstx_async($awaitable);
-      expect($actual)->toBeSame($expected);
+      expect($actual)->toEqual($expected);
     });
   }
 
   public static function provideTestGenFirstxException<T>(
-  ): varray<(Awaitable<Traversable<T>>, classname<Exception>)> {
-    return varray[
+  ): vec<(Awaitable<Traversable<T>>, classname<Exception>)> {
+    return vec[
       tuple(
         async {
           return varray[];
@@ -105,7 +105,7 @@ final class CAsyncTest extends HackTest {
     Awaitable<Traversable<T>> $awaitable,
     classname<Exception> $expected,
   ): void {
-    /* HH_IGNORE_ERROR[5542] open source */
+    /* @lint-ignore HackLint5542 open source */
     \HH\Asio\join(async {
       expect(
         async () ==> await C\firstx_async($awaitable),
