@@ -14,6 +14,9 @@ use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 // @oss-disable: use InvariantViolationException as InvariantException;
 
+// FB likes to be explicit about md5() being unsuitable for crypto, and
+// our usual trivial wrapper isn't available in open source.
+
 // @oss-disable: <<Oncalls('hack')>>
 final class MathComputeTest extends HackTest {
   public static function provideTestAbs(): varray<mixed> {
@@ -29,7 +32,7 @@ final class MathComputeTest extends HackTest {
 
   <<DataProvider('provideTestAbs')>>
   public function testAbs(num $number, num $expected): void {
-    expect(Math\abs($number))->toBeSame($expected);
+    expect(Math\abs($number))->toEqual($expected);
   }
 
   public static function provideTestBaseConvertBijection(): varray<mixed> {
@@ -87,9 +90,9 @@ final class MathComputeTest extends HackTest {
     string $to_value,
   ): void {
     expect(Math\base_convert($from_value, $from_base, $to_base))
-      ->toBeSame($to_value);
+      ->toEqual($to_value);
     expect(Math\base_convert($to_value, $to_base, $from_base))
-      ->toBeSame($from_value);
+      ->toEqual($from_value);
   }
 
   public function testBaseConvertIdentity(): void {
@@ -109,7 +112,7 @@ final class MathComputeTest extends HackTest {
         $random_string .= Str\slice($alphabet, mt_rand($i === 0 && $length > 1 ? 1 : 0, $base - 1), 1);
       }
       expect(Math\base_convert($random_string, $base, $base))
-        ->toBeSame($random_string);
+        ->toEqual($random_string);
     }
   }
 
@@ -168,7 +171,7 @@ final class MathComputeTest extends HackTest {
     string $expected,
   ): void {
     expect(Math\base_convert($value, $from_base, $to_base))
-      ->toBeSame($expected);
+      ->toEqual($expected);
   }
 
   public static function provideTestBaseConvertException(): varray<mixed> {
@@ -206,7 +209,7 @@ final class MathComputeTest extends HackTest {
 
   <<DataProvider('provideTestCeil')>>
   public function testCeil(num $value, float $expected): void {
-    expect(Math\ceil($value))->toBeSame($expected);
+    expect(Math\ceil($value))->toEqual($expected);
   }
 
   public static function provideTestCos(): varray<mixed> {
@@ -256,7 +259,7 @@ final class MathComputeTest extends HackTest {
 
   <<DataProvider('provideTestFloor')>>
   public function testFloor(num $value, float $expected): void {
-    expect(Math\floor($value))->toBeSame($expected);
+    expect(Math\floor($value))->toEqual($expected);
   }
 
   public static function provideTestFromBase(): varray<mixed> {
@@ -283,7 +286,7 @@ final class MathComputeTest extends HackTest {
     int $from_base,
     int $expected,
   ): void {
-    expect(Math\from_base($number, $from_base))->toBeSame($expected);
+    expect(Math\from_base($number, $from_base))->toEqual($expected);
   }
 
   public static function provideTestFromBaseException(): varray<mixed> {
@@ -337,7 +340,7 @@ final class MathComputeTest extends HackTest {
     int $denominator,
     int $expected,
   ): void {
-    expect(Math\int_div($numerator, $denominator))->toBeSame($expected);
+    expect(Math\int_div($numerator, $denominator))->toEqual($expected);
   }
 
   public static function provideTestIntDivException(): varray<mixed> {
@@ -346,6 +349,12 @@ final class MathComputeTest extends HackTest {
       tuple(0, 0),
       tuple(1, 0),
     ];
+  }
+
+  <<DataProvider('provideTestIntDivException')>>
+  public function testIntDivException(int $numerator, int $denominator): void {
+    expect(() ==> Math\int_div($numerator, $denominator))
+      ->toThrow(DivisionByZeroException::class);
   }
 
   public static function provideTestLog(): varray<mixed> {
@@ -377,10 +386,10 @@ final class MathComputeTest extends HackTest {
   public function testLogNoBase(num $base): void {
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    expect(Math\log($base))->toBeSame(log((float) $base));
+    expect(Math\log($base))->toEqual(log((float) $base));
     /* HH_IGNORE_ERROR[2049] __PHPStdLib */
     /* HH_IGNORE_ERROR[4107] __PHPStdLib */
-    expect(Math\log($base, null))->toBeSame(log((float) $base));
+    expect(Math\log($base, null))->toEqual(log((float) $base));
   }
 
   public function testLogException(): void {
@@ -418,7 +427,7 @@ final class MathComputeTest extends HackTest {
     int $precision,
     float $expected,
   ): void {
-    expect(Math\round($value, $precision))->toBeSame($expected);
+    expect(Math\round($value, $precision))->toEqual($expected);
   }
 
   public static function provideTestSin(): varray<mixed> {
@@ -488,7 +497,7 @@ final class MathComputeTest extends HackTest {
     int $to_base,
     string $expected,
   ): void {
-    expect(Math\to_base($number, $to_base))->toBeSame($expected);
+    expect(Math\to_base($number, $to_base))->toEqual($expected);
   }
 
   public static function provideTestToBaseException(): varray<mixed> {

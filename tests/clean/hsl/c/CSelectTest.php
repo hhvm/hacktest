@@ -42,7 +42,7 @@ final class CSelectTest extends HackTest {
     (function(T): bool) $value_predicate,
     ?T $expected,
   ): void {
-    expect(C\find($traversable, $value_predicate))->toBeSame($expected);
+    expect(C\find($traversable, $value_predicate))->toEqual($expected);
   }
 
   public static function provideTestFindKey(): varray<mixed> {
@@ -75,7 +75,7 @@ final class CSelectTest extends HackTest {
     (function(Tv): bool) $value_predicate,
     ?Tv $expected,
   ): void {
-    expect(C\find_key($traversable, $value_predicate))->toBeSame($expected);
+    expect(C\find_key($traversable, $value_predicate))->toEqual($expected);
   }
 
   public static function provideTestFirst(): varray<mixed> {
@@ -103,7 +103,7 @@ final class CSelectTest extends HackTest {
     Traversable<T> $traversable,
     ?T $expected,
   ): void {
-    expect(C\first($traversable))->toBeSame($expected);
+    expect(C\first($traversable))->toEqual($expected);
   }
 
   public static function provideTestFirstx(): varray<mixed> {
@@ -127,12 +127,12 @@ final class CSelectTest extends HackTest {
     Traversable<T> $traversable,
     mixed $expected,
   ): void {
-    expect(C\firstx($traversable))->toBeSame($expected);
+    expect(C\firstx($traversable))->toEqual($expected);
   }
 
   public static function provideTestFirstxException<T>(
-  ): varray<(Traversable<T>, classname<Exception>)> {
-    return varray[
+  ): vec<(Traversable<T>, classname<Exception>)> {
+    return vec[
       tuple(
         varray[],
         InvariantException::class,
@@ -150,8 +150,8 @@ final class CSelectTest extends HackTest {
   }
 
   public static function provideTestFirstKey(
-  ): varray<(KeyedTraversable<mixed, mixed>, mixed)> {
-    return varray[
+  ): vec<(KeyedTraversable<mixed, mixed>, mixed)> {
+    return vec[
       tuple(
         varray[],
         null,
@@ -214,12 +214,12 @@ final class CSelectTest extends HackTest {
     KeyedTraversable<Tk, Tv> $traversable,
     ?Tk $expected,
   ): void {
-    expect(C\first_key($traversable))->toBeSame($expected);
+    expect(C\first_key($traversable))->toEqual($expected);
   }
 
   public static function provideTestFirstKeyx(
-  ): varray<(KeyedTraversable<mixed, mixed>, mixed)> {
-    return varray[
+  ): vec<(KeyedTraversable<mixed, mixed>, mixed)> {
+    return vec[
       tuple(
         darray[1 => null],
         1,
@@ -255,6 +255,13 @@ final class CSelectTest extends HackTest {
         ]),
         'foo',
       ),
+      tuple(
+        () ==> {
+          yield null => 'quux';
+          yield 42 => 'spam';
+        }(),
+        null,
+      ),
     ];
   }
 
@@ -263,12 +270,12 @@ final class CSelectTest extends HackTest {
     KeyedTraversable<Tk, Tv> $traversable,
     Tk $expected,
   ): void {
-    expect(C\first_keyx($traversable))->toBeSame($expected);
+    expect(C\first_keyx($traversable))->toEqual($expected);
   }
 
   public static function provideTestFirstKeyxException(
-  ): varray<(KeyedTraversable<mixed, mixed>, classname<Exception>)> {
-    return varray[
+  ): vec<(KeyedTraversable<mixed, mixed>, classname<Exception>)> {
+    return vec[
       tuple(
         varray[],
         InvariantException::class,
@@ -299,9 +306,8 @@ final class CSelectTest extends HackTest {
       ->toThrow($expected);
   }
 
-  public static function provideTestLast(
-  ): varray<(Traversable<mixed>, mixed)> {
-    return varray[
+  public static function provideTestLast(): vec<(Traversable<mixed>, mixed)> {
+    return vec[
       tuple(
         varray[],
         null,
@@ -350,6 +356,18 @@ final class CSelectTest extends HackTest {
         dict[3 => 4, 4 => 5],
         5,
       ),
+      tuple(
+        HackLibTestTraversables::getIterator(varray[]),
+        null,
+      ),
+      tuple(
+        HackLibTestTraversables::getIterator(varray[null]),
+        null,
+      ),
+      tuple(
+        HackLibTestTraversables::getIterator(Vec\range(13, 14)),
+        14,
+      ),
     ];
   }
 
@@ -358,12 +376,11 @@ final class CSelectTest extends HackTest {
     Traversable<Tv> $traversable,
     ?Tv $expected,
   ): void {
-    expect(C\last($traversable))->toBeSame($expected);
+    expect(C\last($traversable))->toEqual($expected);
   }
 
-  public static function provideTestLastx(
-  ): varray<(Traversable<mixed>, mixed)> {
-    return varray[
+  public static function provideTestLastx(): vec<(Traversable<mixed>, mixed)> {
+    return vec[
       tuple(
         varray[null],
         null,
@@ -420,12 +437,12 @@ final class CSelectTest extends HackTest {
     Traversable<Tv> $traversable,
     Tv $expected,
   ): void {
-    expect(C\lastx($traversable))->toBeSame($expected);
+    expect(C\lastx($traversable))->toEqual($expected);
   }
 
   public static function provideTestLastxException(
-  ): varray<(Traversable<mixed>, classname<Exception>)> {
-    return varray[
+  ): vec<(Traversable<mixed>, classname<Exception>)> {
+    return vec[
       tuple(
         varray[],
         InvariantException::class,
@@ -451,8 +468,8 @@ final class CSelectTest extends HackTest {
   }
 
   public static function provideTestLastKey(
-  ): varray<(KeyedTraversable<mixed, mixed>, mixed)> {
-    return varray[
+  ): vec<(KeyedTraversable<mixed, mixed>, mixed)> {
+    return vec[
       tuple(
         varray[],
         null
@@ -524,12 +541,12 @@ final class CSelectTest extends HackTest {
     KeyedTraversable<Tk, Tv> $traversable,
     ?Tk $expected,
   ): void {
-    expect(C\last_key($traversable))->toBeSame($expected);
+    expect(C\last_key($traversable))->toEqual($expected);
   }
 
   public static function provideTestLastKeyx(
-  ): varray<(KeyedTraversable<mixed, mixed>, mixed)> {
-    return varray[
+  ): vec<(KeyedTraversable<mixed, mixed>, mixed)> {
+    return vec[
       tuple(
         darray['' => null],
         '',
@@ -574,6 +591,13 @@ final class CSelectTest extends HackTest {
         HackLibTestTraversables::getKeyedIterator(darray['' => null]),
         '',
       ),
+      tuple(
+        () ==> {
+          yield 42 => 'spam';
+          yield null => 'quux';
+        }(),
+        null,
+      ),
     ];
   }
 
@@ -582,12 +606,12 @@ final class CSelectTest extends HackTest {
     KeyedTraversable<Tk, Tv> $traversable,
     mixed $expected,
   ): void {
-    expect(C\last_keyx($traversable))->toBeSame($expected);
+    expect(C\last_keyx($traversable))->toEqual($expected);
   }
 
   public static function provideTestLastKeyxException(
-  ): varray<(KeyedTraversable<mixed, mixed>, classname<Exception>)> {
-    return varray[
+  ): vec<(KeyedTraversable<mixed, mixed>, classname<Exception>)> {
+    return vec[
       tuple(
         varray[],
         InvariantException::class,
@@ -619,8 +643,8 @@ final class CSelectTest extends HackTest {
   }
 
   public static function provideTestNfirst(
-  ): varray<(?Traversable<mixed>, mixed)> {
-    return varray[
+  ): vec<(?Traversable<mixed>, mixed)> {
+    return vec[
       tuple(
         null,
         null,
@@ -648,12 +672,11 @@ final class CSelectTest extends HackTest {
     ?Traversable<T> $traversable,
     ?T $expected,
   ): void {
-    expect(C\nfirst($traversable))->toBeSame($expected);
+    expect(C\nfirst($traversable))->toEqual($expected);
   }
 
-  public static function provideTestOnlyx(
-  ): varray<(Traversable<mixed>, mixed)> {
-    return varray[
+  public static function provideTestOnlyx(): vec<(Traversable<mixed>, mixed)> {
+    return vec[
       tuple(
         vec[1],
         1,
@@ -672,12 +695,12 @@ final class CSelectTest extends HackTest {
     Traversable<T> $traversable,
     mixed $expected,
   ): void {
-    expect(C\onlyx($traversable))->toBeSame($expected);
+    expect(C\onlyx($traversable))->toEqual($expected);
   }
 
   public static function provideTestOnlyxException(
-  ): varray<(Traversable<mixed>, classname<Exception>)> {
-    return varray[
+  ): vec<(Traversable<mixed>, classname<Exception>)> {
+    return vec[
       tuple(
         varray[],
         InvariantException::class,
@@ -726,6 +749,6 @@ final class CSelectTest extends HackTest {
         C\count($single)
       ),
     )
-      ->toBeSame(42);
+      ->toEqual(42);
   }
 }

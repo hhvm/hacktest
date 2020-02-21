@@ -11,6 +11,7 @@
 use namespace HH\Lib\{C, Math, Str, Vec};
 use function Facebook\FBExpect\expect; // @oss-enable
 use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
+// @oss-disable: use InvariantViolationException as InvariantException;
 
 // @oss-disable: <<Oncalls('hack')>>
 final class VecSelectTest extends HackTest {
@@ -42,9 +43,11 @@ final class VecSelectTest extends HackTest {
     Container<Container<Tv>> $traversables,
     vec<Tv> $expected,
   ): void {
-    /* HH_FIXME[4359] Stricter enforcement of argument unpacking arity (T25385321) */
-    /* HH_FIXME[4104] Different code for the same error before HHVM 4.41 */
-    expect(Vec\diff($base, ...$traversables))->toBeSame($expected);
+    expect(Vec\diff(
+      $base,
+      C\firstx($traversables),
+      ...Vec\slice($traversables, 1)
+    ))->toEqual($expected);
   }
 
   public static function provideTestDiffBy(): varray<mixed> {
@@ -80,7 +83,7 @@ final class VecSelectTest extends HackTest {
     vec<Tv> $expected,
   ): void {
     expect(Vec\diff_by($first, $second, $scalar_func))
-      ->toBeSame($expected);
+      ->toEqual($expected);
   }
 
   public static function provideDrop(): varray<mixed> {
@@ -119,7 +122,7 @@ final class VecSelectTest extends HackTest {
     int $n,
     vec<Tv> $expected,
   ): void {
-    expect(Vec\drop($traversable, $n))->toBeSame($expected);
+    expect(Vec\drop($traversable, $n))->toEqual($expected);
   }
 
   public static function provideTestFilter(): varray<mixed> {
@@ -163,13 +166,13 @@ final class VecSelectTest extends HackTest {
     (function(Tv): bool) $value_predicate,
     vec<Tv> $expected,
   ): void {
-    expect(Vec\filter($traversable, $value_predicate))->toBeSame($expected);
+    expect(Vec\filter($traversable, $value_predicate))->toEqual($expected);
   }
 
   public function testFilterWithoutPredicate(): void {
     expect(Vec\filter(varray[
       0, 3, null, 5, false, 40, '', '0', 'win!',
-    ]))->toBeSame(vec[3, 5, 40, 'win!']);
+    ]))->toEqual(vec[3, 5, 40, 'win!']);
   }
 
   public static function provideTestFilterNulls(): varray<mixed> {
@@ -212,7 +215,7 @@ final class VecSelectTest extends HackTest {
   Traversable<?Tv> $traversable,
   vec<Tv> $expected,
   ): void {
-    expect(Vec\filter_nulls($traversable))->toBeSame($expected);
+    expect(Vec\filter_nulls($traversable))->toEqual($expected);
   }
 
   public static function provideTestFilterWithKey(): darray<string, mixed> {
@@ -254,7 +257,7 @@ final class VecSelectTest extends HackTest {
     vec<Tv> $expected,
   ): void {
     $result = Vec\filter_with_key($traversable, $filter_func);
-    expect($result)->toBeSame($expected);
+    expect($result)->toEqual($expected);
   }
 
   public static function provideTestIntersect(): varray<mixed> {
@@ -313,7 +316,7 @@ final class VecSelectTest extends HackTest {
     Container<Container<Tv>> $rest,
     vec<Tv> $expected,
   ): void {
-    expect(Vec\intersect($first, $second, ...$rest))->toBeSame($expected);
+    expect(Vec\intersect($first, $second, ...$rest))->toEqual($expected);
   }
 
   public static function provideTestKeys(): varray<mixed> {
@@ -361,7 +364,7 @@ final class VecSelectTest extends HackTest {
     KeyedTraversable<Tk, Tv> $traversable,
     vec<Tk> $expected,
   ): void {
-    expect(Vec\keys($traversable))->toBeSame($expected);
+    expect(Vec\keys($traversable))->toEqual($expected);
   }
 
   public static function provideTestSample(): varray<mixed> {
@@ -388,12 +391,12 @@ final class VecSelectTest extends HackTest {
   ): void {
     $expected_size = Math\minva(C\count(vec($traversable)), $sample_size);
     expect(C\count(Vec\sample($traversable, $sample_size)))
-      ->toBeSame($expected_size);
+      ->toEqual($expected_size);
   }
 
   public function testSampleIterator(): void {
     $iterator = HackLibTestTraversables::getIterator(Vec\range(0, 5));
-    expect(C\count(Vec\sample($iterator, 3)))->toBeSame(3);
+    expect(C\count(Vec\sample($iterator, 3)))->toEqual(3);
   }
 
   public static function provideTestSlice(): varray<mixed> {
@@ -422,6 +425,36 @@ final class VecSelectTest extends HackTest {
         null,
         Vec\range(2, 5),
       ),
+      tuple(
+        Vec\range(0, 5),
+        -6,
+        0,
+        vec[],
+      ),
+      tuple(
+        new Vector(Vec\range(0, 5)),
+        -2,
+        null,
+        Vec\range(4, 5),
+      ),
+      tuple(
+        new Set(Vec\range(0, 5)),
+        -4,
+        3,
+        Vec\range(2, 4),
+      ),
+      tuple(
+        dict['foo' => 1, 'bar' => 2, 'foobar' => 3],
+        -2,
+        null,
+        Vec\range(2, 3),
+      ),
+      tuple(
+        new Set(Vec\range(0, 5)),
+        8,
+        null,
+        vec[],
+      ),
     ];
   }
 
@@ -432,7 +465,14 @@ final class VecSelectTest extends HackTest {
     ?int $length,
     vec<Tv> $expected,
   ): void {
-    expect(Vec\slice($container, $offset, $length))->toBeSame($expected);
+    expect(Vec\slice($container, $offset, $length))->toEqual($expected);
+  }
+
+  public function testSliceThrow<Tv>(): void {
+    expect(() ==> Vec\slice(Vec\range(0, 5), -7, 1))->toThrow(
+      InvariantException::class,
+    );
+    expect(() ==> Vec\slice(Vec\range(0, 5), 10, null))->notToThrow();
   }
 
   public static function provideTake(): varray<mixed> {
@@ -471,15 +511,15 @@ final class VecSelectTest extends HackTest {
     int $n,
     vec<Tv> $expected,
   ): void {
-    expect(Vec\take($traversable, $n))->toBeSame($expected);
+    expect(Vec\take($traversable, $n))->toEqual($expected);
   }
 
   public function testTakeIter(): void {
     $iter = HackLibTestTraversables::getIterator(Vec\range(0, 4));
-    expect(Vec\take($iter, 2))->toBeSame(vec[0, 1]);
-    expect(Vec\take($iter, 0))->toBeSame(vec[]);
-    expect(Vec\take($iter, 2))->toBeSame(vec[2, 3]);
-    expect(Vec\take($iter, 2))->toBeSame(vec[4]);
+    expect(Vec\take($iter, 2))->toEqual(vec[0, 1]);
+    expect(Vec\take($iter, 0))->toEqual(vec[]);
+    expect(Vec\take($iter, 2))->toEqual(vec[2, 3]);
+    expect(Vec\take($iter, 2))->toEqual(vec[4]);
   }
 
   public static function provideTestUnique(): varray<mixed> {
@@ -502,7 +542,7 @@ final class VecSelectTest extends HackTest {
     Traversable<Tv> $traversable,
     vec<Tv> $expected,
   ): void {
-    expect(Vec\unique($traversable))->toBeSame($expected);
+    expect(Vec\unique($traversable))->toEqual($expected);
   }
 
   public static function provideTestUniqueBy(): varray<mixed> {
@@ -547,7 +587,7 @@ final class VecSelectTest extends HackTest {
     vec<Tv> $expected,
   ): void {
     expect(Vec\unique_by($traversable, $scalar_func))
-      ->toBeSame($expected);
+      ->toEqual($expected);
   }
 
 }

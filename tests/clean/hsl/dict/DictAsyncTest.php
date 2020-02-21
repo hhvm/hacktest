@@ -59,10 +59,10 @@ final class DictAsyncTest extends HackTest {
     KeyedTraversable<Tk, Awaitable<Tv>> $awaitables,
     dict<Tk, Tv> $expected,
   ): void {
-    /* HH_IGNORE_ERROR[5542] open source */
+    /* @lint-ignore HackLint5542 open source */
     \HH\Asio\join(async {
       $actual = await Dict\from_async($awaitables);
-      expect($actual)->toBeSame($expected);
+      expect($actual)->toEqual($expected);
     });
   }
 
@@ -99,15 +99,15 @@ final class DictAsyncTest extends HackTest {
     (function(Tk): Awaitable<Tv>) $async_func,
     dict<Tk, Tv> $expected,
   ): void {
-    /* HH_IGNORE_ERROR[5542] open source */
+    /* @lint-ignore HackLint5542 open source */
     \HH\Asio\join(async {
       $actual = await Dict\from_keys_async($keys, $async_func);
-      expect($actual)->toBeSame($expected);
+      expect($actual)->toEqual($expected);
     });
   }
 
   public function testFromKeysDuplicateKeysAsync(): void {
-    /* HH_IGNORE_ERROR[5542] open source */
+    /* @lint-ignore HackLint5542 open source */
     \HH\Asio\join(async {
       // Like Ref<int>, but not a flibism
       $run_cnt = Map { 'value' => 0 };
@@ -118,8 +118,8 @@ final class DictAsyncTest extends HackTest {
           return $k;
         },
       );
-      expect($actual)->toBeSame(dict[1 => 1, 2 => 2]);
-      expect($run_cnt['value'])->toBeSame(2);
+      expect($actual)->toEqual(dict[1 => 1, 2 => 2]);
+      expect($run_cnt['value'])->toEqual(2);
     });
   }
 
@@ -170,10 +170,10 @@ final class DictAsyncTest extends HackTest {
     (function(Tv): Awaitable<bool>) $value_predicate,
     dict<Tk, Tv> $expected,
   ): void {
-    /* HH_IGNORE_ERROR[5542] open source */
+    /* @lint-ignore HackLint5542 open source */
     \HH\Asio\join(async {
       $actual = await Dict\filter_async($traversable, $value_predicate);
-      expect($actual)->toBeSame($expected);
+      expect($actual)->toEqual($expected);
     });
   }
 
@@ -226,7 +226,7 @@ final class DictAsyncTest extends HackTest {
       $container,
       $predicate,
     );
-    expect($actual)->toBeSame($expected);
+    expect($actual)->toEqual($expected);
   }
 
   public static function provideTestGenMap(): varray<mixed> {
@@ -280,10 +280,10 @@ final class DictAsyncTest extends HackTest {
     (function(Tv1): Awaitable<Tv2>) $value_func,
     dict<Tk, Tv2> $expected,
   ): void {
-    /* HH_IGNORE_ERROR[5542] open source */
+    /* @lint-ignore HackLint5542 open source */
     \HH\Asio\join(async {
       $actual = await Dict\map_async($traversable, $value_func);
-      expect($actual)->toBeSame($expected);
+      expect($actual)->toEqual($expected);
     });
   }
 
@@ -329,10 +329,10 @@ final class DictAsyncTest extends HackTest {
     (function(Tk, Tv1): Awaitable<Tv2>) $value_func,
     dict<Tk, Tv2> $expected,
   ): void {
-    /* HH_IGNORE_ERROR[5542] open source */
+    /* @lint-ignore HackLint5542 open source */
     \HH\Asio\join(async {
       $result = await Dict\map_with_key_async($traversable, $value_func);
-      expect($result)->toBeSame($expected);
+      expect($result)->toEqual($expected);
     });
   }
 }

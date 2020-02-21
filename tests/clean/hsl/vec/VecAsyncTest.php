@@ -50,10 +50,10 @@ final class VecAsyncTest extends HackTest {
     Traversable<Awaitable<Tv>> $awaitables,
     vec<Tv> $expected,
   ): void {
-    /* HH_IGNORE_ERROR[5542] open source */
+    /* @lint-ignore HackLint5542 open source */
     \HH\Asio\join(async {
       $actual = await Vec\from_async($awaitables);
-      expect($actual)->toBeSame($expected);
+      expect($actual)->toEqual($expected);
     });
   }
 
@@ -83,10 +83,10 @@ final class VecAsyncTest extends HackTest {
     (function(Tv): Awaitable<bool>) $value_predicate,
     vec<Tv> $expected,
   ): void {
-    /* HH_IGNORE_ERROR[5542] open source */
+    /* @lint-ignore HackLint5542 open source */
     \HH\Asio\join(async {
       $actual = await Vec\filter_async($container, $value_predicate);
-      expect($actual)->toBeSame($expected);
+      expect($actual)->toEqual($expected);
     });
   }
 
@@ -113,10 +113,10 @@ final class VecAsyncTest extends HackTest {
     (function(Tk): Awaitable<Tv>) $async_func,
     vec<Tv> $expected,
   ): void {
-    /* HH_IGNORE_ERROR[5542] open source */
+    /* @lint-ignore HackLint5542 open source */
     \HH\Asio\join(async {
       $actual = await Vec\map_async($keys, $async_func);
-      expect($actual)->toBeSame($expected);
+      expect($actual)->toEqual($expected);
     });
   }
 }

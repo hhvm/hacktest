@@ -50,10 +50,10 @@ final class KeysetAsyncTest extends HackTest {
     Traversable<Awaitable<Tv>> $awaitables,
     keyset<Tv> $expected,
   ): void {
-    /* HH_IGNORE_ERROR[5542] open source */
+    /* @lint-ignore HackLint5542 open source */
     \HH\Asio\join(async {
       $actual = await Keyset\from_async($awaitables);
-      expect($actual)->toBeSame($expected);
+      expect($actual)->toEqual($expected);
     });
   }
 
@@ -83,19 +83,20 @@ final class KeysetAsyncTest extends HackTest {
     (function(Tv): Awaitable<arraykey>) $async_func,
     keyset<arraykey> $expected,
   ): void {
-    /* HH_IGNORE_ERROR[5542] open source */
+    /* @lint-ignore HackLint5542 open source */
     \HH\Asio\join(async {
       $actual = await Keyset\map_async($traversable, $async_func);
-      expect($actual)->toBeSame($expected);
+      expect($actual)->toEqual($expected);
     });
   }
 
-  public static function provideTestGenFilter(): varray<(
+  public static function provideTestGenFilter(
+  ): vec<(
     Container<arraykey>,
     (function(arraykey): Awaitable<bool>),
     keyset<arraykey>,
   )> {
-    return varray[
+    return vec[
       tuple(
         darray[
           2 => 'two',
@@ -125,10 +126,10 @@ final class KeysetAsyncTest extends HackTest {
     (function(Tv): Awaitable<bool>) $async_predicate,
     keyset<Tv> $expected,
   ): void {
-    /* HH_IGNORE_ERROR[5542] open source */
+    /* @lint-ignore HackLint5542 open source */
     \HH\Asio\join(async {
       $actual = await Keyset\filter_async($traversable, $async_predicate);
-      expect($actual)->toBeSame($expected);
+      expect($actual)->toEqual($expected);
     });
   }
 }
