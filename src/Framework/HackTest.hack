@@ -86,9 +86,9 @@ class HackTest {
       }
 
       $providers = vec[];
-      $provider = $method->getAttribute('DataProvider');
-      if ($provider !== null) {
-        $providers[] = (string)C\onlyx($provider);
+      $provider = $method->getAttributeClass(DataProvider::class)?->provider;
+      if ($provider is nonnull) {
+        $providers[] = $provider;
       }
 
       $method_name = $method->getName();
