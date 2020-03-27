@@ -13,7 +13,7 @@
 namespace Facebook\HackTest\_Private;
 
 use namespace HH\Lib\Str;
-use namespace HH\Lib\Experimental\IO;
+use namespace HH\Lib\IO;
 
 use namespace Facebook\HackTest;
 use type Facebook\HackTest\TestResult;
