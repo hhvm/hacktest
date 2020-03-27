@@ -9,8 +9,7 @@
 
 namespace Facebook\HackTest\_Private;
 
-use namespace HH\Lib\{C, Dict, Math, Str, Vec};
-use namespace HH\Lib\IO;
+use namespace HH\Lib\{C, Dict, IO, Math, Str, Vec};
 use namespace Facebook\HackTest;
 
 abstract class CLIOutputHandler {
