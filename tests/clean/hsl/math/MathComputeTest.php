@@ -310,7 +310,7 @@ final class MathComputeTest extends HackTest {
     // overflow (PHP_INT_MAX + 1) in all bases
     for ($n = 2; $n < 36; $n++) {
       $tuples[] = tuple(
-        Math\base_convert("9223372036854775808", 10, $n),
+        Math\base_convert('9223372036854775808', 10, $n),
         $n,
       );
     }

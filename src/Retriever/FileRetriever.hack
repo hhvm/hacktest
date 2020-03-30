@@ -50,7 +50,7 @@ final class FileRetriever {
       throw new InvalidTestFileException(
         Str\format(
           "Asked to run tests in %s, but it does not end in 'Test.hack' or ".
-          "or a legacy extension.",
+          'or a legacy extension.',
           $file,
         ),
       );

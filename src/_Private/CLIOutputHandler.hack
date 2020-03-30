@@ -156,7 +156,7 @@ abstract class CLIOutputHandler {
       |> Vec\map_with_key(
         $$,
         ($n, $content) ==> Str\format(
-          "%s| %s%s%s",
+          '%s| %s%s%s',
           Str\pad_left((string)($n + $first_line), $line_number_width, ' '),
           $c_light,
           $content,
@@ -172,7 +172,7 @@ abstract class CLIOutputHandler {
       $fun_offset = Str\search($blame_line, $fun.'(');
     }
     if (
-      $fun_offset is null && $frame['function'] === "HH\\invariant_violation"
+      $fun_offset is null && $frame['function'] === 'HH\\invariant_violation'
     ) {
       $fun = 'invariant';
       $fun_offset = Str\search($blame_line, 'invariant(');
@@ -180,7 +180,7 @@ abstract class CLIOutputHandler {
 
     if ($fun_offset is null) {
       $context_lines[] = Str\format(
-        "%s%s>%s %s%s",
+        '%s%s>%s %s%s',
         Str\pad_left((string)$line, $line_number_width),
         $c_red,
         $c_reset.$c_bold,
@@ -189,7 +189,7 @@ abstract class CLIOutputHandler {
       );
     } else {
       $context_lines[] = Str\format(
-        "%s%s>%s %s%s%s%s%s%s",
+        '%s%s>%s %s%s%s%s%s%s',
         Str\pad_left((string)$line, $line_number_width),
         $c_red,
         $c_reset.$c_bold,
@@ -202,7 +202,7 @@ abstract class CLIOutputHandler {
       );
 
       $context_lines[] = Str\format(
-        "%s%s%s%s",
+        '%s%s%s%s',
         Str\repeat(' ', $line_number_width + $fun_offset + 2),
         $c_red,
         Str\repeat('^', Str\length($fun)),

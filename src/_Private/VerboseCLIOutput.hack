@@ -83,7 +83,7 @@ final class VerboseCLIOutput extends CLIOutputHandler {
       $header = $this->getMessageHeaderForErrorDetails($error_id, $event);
 
       if ($event is HackTest\TestSkippedProgressEvent) {
-        return await $handle->writeAsync($header."Skipped: ".$ex->getMessage());
+        return await $handle->writeAsync($header.'Skipped: '.$ex->getMessage());
       }
 
       $it = $ex;

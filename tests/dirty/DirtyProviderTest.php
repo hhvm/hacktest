@@ -49,7 +49,7 @@ final class DirtyProviderTest extends HackTest {
   }
 
   public function provideError(): vec<mixed> {
-    invariant(0 === 1, "This test depends on a provider that throws an error.");
+    invariant(0 === 1, 'This test depends on a provider that throws an error.');
     return vec[
       tuple(1, 2),
       tuple(2, 1)

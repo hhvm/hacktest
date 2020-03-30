@@ -19,7 +19,7 @@ final class MethodRetrieverTest extends HackTest {
     $path = 'tests/clean/hsl/dict';
     $file_retriever = new FileRetriever($path);
     $files = $file_retriever->getTestFiles();
-    expect($files)->toNotBeEmpty("No test files in %s", $path);
+    expect($files)->toNotBeEmpty('No test files in %s', $path);
     foreach ($files as $file) {
       $classname = ClassRetriever::forFile($file)->getTestClassName()
         as nonnull;

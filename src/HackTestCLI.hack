@@ -75,7 +75,7 @@ final class HackTestCLI extends CLIWithRequiredArguments {
         () ==> {
           $this->verbose = true;
         },
-        "Increase output verbosity",
+        'Increase output verbosity',
         '--verbose',
         '-v',
       ),

@@ -75,7 +75,7 @@ final class ClassRetriever {
           ));
         } catch (TypeAssert\IncorrectTypeException $e) {
           return new WrappedException(
-            new InvalidTestFileException("Could not parse file."),
+            new InvalidTestFileException('Could not parse file.'),
           );
         }
       },
@@ -98,9 +98,9 @@ final class ClassRetriever {
           $rc = new \ReflectionClass($cn);
           $all_classes .= "\n - ".$rc->getName();
           if ($rc->isSubclassOf(HackTest::class)) {
-            $all_classes .= " (is a test class)";
+            $all_classes .= ' (is a test class)';
           } else {
-            $all_classes .= " (is not a subclass of ".HackTest::class.")";
+            $all_classes .= ' (is not a subclass of '.HackTest::class.')';
           }
         }
       }
