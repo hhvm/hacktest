@@ -15,7 +15,7 @@ use namespace HH\Lib\Str;
 // @oss-disable: <<Oncalls('hack')>>
 final class DataProviderTest extends HackTest {
 
-  public function provideSimple(): vec<mixed> {
+  public function provideSimple(): vec<(Traversable<arraykey>)> {
     $elements = vec['the', 'quick', 'brown', 'fox', 1];
     return vec[
       tuple($elements),
@@ -30,11 +30,11 @@ final class DataProviderTest extends HackTest {
   }
 
   <<DataProvider('provideSimple')>>
-  public function testSimple(Traversable<string> $traversable): void {
+  public function testSimple(Traversable<arraykey> $traversable): void {
     expect(Str\join($traversable, '-'))->toBeSame('the-quick-brown-fox-1');
   }
 
-  public function provideMultipleArgs(): vec<mixed> {
+  public function provideMultipleArgs(): vec<(int, int)> {
     return vec[
       tuple(1, 2),
       tuple(2, 1),
@@ -46,7 +46,7 @@ final class DataProviderTest extends HackTest {
     expect($a + $b)->toBeSame(3);
   }
 
-  public function provideSkip(): void {
+  public function provideSkip(): vec<(int)> {
     self::markTestSkipped(
       'This test depends on a data provider that is not ready yet.',
     );

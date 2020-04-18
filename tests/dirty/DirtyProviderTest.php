@@ -15,7 +15,7 @@ use namespace HH\Lib\Str;
 // @oss-disable: <<Oncalls('hack')>>
 final class DirtyProviderTest extends HackTest {
 
-  public function provideDirtyData(): vec<mixed> {
+  public function provideDirtyData(): vec<(Traversable<arraykey>)> {
     $elements = vec['the', 'quicky', 'brown', 'fox', 1];
     return vec[
       tuple($elements),
@@ -30,11 +30,11 @@ final class DirtyProviderTest extends HackTest {
   }
 
   <<DataProvider('provideDirtyData')>>
-  public function testDirtyData(Traversable<string> $traversable): void {
+  public function testDirtyData(Traversable<arraykey> $traversable): void {
     expect(Str\join($traversable, '-'))->toBeSame('the-quick-brown-fox-1');
   }
 
-  public function provideNoData(): vec<mixed> {
+  public function provideNoData(): vec<(int)> {
     return vec[];
   }
 
@@ -48,7 +48,7 @@ final class DirtyProviderTest extends HackTest {
     expect($a)->toBeSame(1);
   }
 
-  public function provideError(): vec<mixed> {
+  public function provideError(): vec<(int, int)> {
     invariant(0 === 1, 'This test depends on a provider that throws an error.');
     return vec[
       tuple(1, 2),
