@@ -1,8 +1,2 @@
-enable_experimental_tc_features = no_fallback_in_namespaces
-safe_array = true
-safe_vector_array = true
 ignored_paths = [ "vendor/.+/tests/.+", "vendor/hhvm/hhast/.+", "vendor/bin/.+" ]
-user_attributes=
-disallow_ambiguous_lambda=true
-disable_unsafe_expr=true
-disable_unsafe_block=true
+allowed_fixme_codes_strict = 2011, 2049, 2050, 2053, 4027, 4045, 4106, 4108, 4110, 4128, 4135, 4188, 4200, 4240, 4248, 4297, 4323
