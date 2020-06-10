@@ -93,7 +93,7 @@ class HackTest {
 
       $method_name = $method->getName();
       if (C\is_empty($providers)) {
-        /* HH_IGNORE_ERROR[2011] this is unsafe */
+        /* HH_FIXME[2011] this is unsafe */
         $to_run[] = tuple($method_name, null, () ==> $this->$method_name());
       } else {
         if (C\count($providers) > 1) {
@@ -144,7 +144,7 @@ class HackTest {
           $to_run[] = tuple(
             $method_name,
             tuple($idx as arraykey, $tuple as Container<_>),
-            /* HH_IGNORE_ERROR[2011] this is unsafe */
+            /* HH_FIXME[2011] this is unsafe */
             () ==> $this->$method_name(...$tuple),
           );
         }
@@ -166,7 +166,8 @@ class HackTest {
           if ($res is Awaitable<_>) {
             await $res;
           }
-          /* HH_IGNORE_ERROR[6002] this is used in catch block */
+          // This is not a Hack error, but an fb lint error instead.
+          /* HH_FIXME[6002] this is used in catch block */
           $clean = true;
           await $this->afterEachTestAsync();
           if ($this->expectedException !== null) {
