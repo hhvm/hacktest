@@ -13,7 +13,7 @@
     "hhvm/hhast": "^4.0"
   },
   "require": {
-    "hhvm": "^4.52",
+    "hhvm": "^4.60",
     "hhvm/hhvm-autoload": "^2.0.2|^3.0",
     "hhvm/hsl": "^4.0",
     "hhvm/hsl-experimental": "^4.50",
