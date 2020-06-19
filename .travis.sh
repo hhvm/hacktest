@@ -21,12 +21,15 @@ fi
 # also run tests in repo-authoritative mode
 REPO_DIR=$(mktemp -d)
 
+# Exclude vendor/bin/ to work around issue in HHVM 4.62
+# https://github.com/facebook/hhvm/issues/8719
 hhvm --hphp --target hhbc -l 3 \
   --module bin \
   --module src \
   --module tests \
   --module vendor \
   --ffile bin/hacktest \
+  --exclude-dir vendor/bin \
   --output-dir $REPO_DIR
 
 # make sure we don't have any of the source files handy
