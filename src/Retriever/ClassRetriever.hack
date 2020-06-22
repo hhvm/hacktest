@@ -19,9 +19,9 @@ use type Facebook\HackTest\_Private\{
 
 final class ClassRetriever {
   const type TFacts = shape(
-    'types' => array<shape(
+    'types' => varray<shape(
       'name' => string,
-      'baseTypes' => array<string>,
+      'baseTypes' => varray<string>,
       'kindOf' => string,
       ...
     )>,
