@@ -12,6 +12,7 @@ namespace Facebook\HackTest;
 
 use function Facebook\FBExpect\expect;
 use namespace Facebook\CLILib\TestLib;
+use namespace HH\Lib\IO;
 use type Facebook\CLILib\Terminal;
 // @oss-disable: <<Oncalls('hack')>>
 final class ExitCodeTest extends HackTest {
@@ -35,9 +36,9 @@ final class ExitCodeTest extends HackTest {
   }
 
   private static function makeCLI(vec<string> $argv): HackTestCLI {
-    $stdin = new TestLib\StringInput();
-    $stdout = new TestLib\StringOutput();
-    $stderr = new TestLib\StringOutput();
+    $stdin = new IO\MemoryHandle();
+    $stdout = new IO\MemoryHandle();
+    $stderr = new IO\MemoryHandle();
     $terminal = new Terminal($stdin, $stdout, $stderr);
     return new HackTestCLI($argv, $terminal);
   }
