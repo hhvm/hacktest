@@ -14,9 +14,9 @@ composer install
 hh_client
 
 bin/hacktest tests/clean/
-if !(hhvm --version | grep -q -- -dev); then
-  vendor/bin/hhast-lint
-fi
+#if !(hhvm --version | grep -q -- -dev); then
+#  vendor/bin/hhast-lint
+#fi
 
 # also run tests in repo-authoritative mode
 REPO_DIR=$(mktemp -d)
