@@ -11,7 +11,6 @@
 namespace Facebook\HackTest;
 
 use function Facebook\FBExpect\expect;
-use namespace Facebook\CLILib\TestLib;
 use namespace HH\Lib\IO;
 use type Facebook\CLILib\Terminal;
 // @oss-disable: <<Oncalls('hack')>>
