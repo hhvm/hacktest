@@ -75,7 +75,7 @@ final class ConciseCLIOutput extends CLIOutputHandler {
           $message .= "\n\n".$context;
         }
       }
-      await $handle->writeAsync($header.$message);
+      await $handle->writeAllAsync($header.$message);
     }
   }
 }

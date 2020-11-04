@@ -70,7 +70,7 @@ final class VerboseCLIOutput extends CLIOutputHandler {
       $scope = $e->getPath();
     }
 
-    await $handle->writeAsync($scope.'> '.$message."\n");
+    await $handle->writeAllAsync($scope.'> '.$message."\n");
   }
 
   private async function writeFailureDetailsAsync(
