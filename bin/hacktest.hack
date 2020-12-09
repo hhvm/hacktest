@@ -16,7 +16,7 @@ async function hack_test_main_async(): Awaitable<noreturn> {
   $found_autoloader = false;
   while (true) {
     $file = $root.'/vendor/autoload.hack';
-    if (\file_exists($file)) {
+    if (\HH\could_include($file)) {
       require_once($root.'/vendor/autoload.hack');
       $found_autoloader = true;
       \Facebook\AutoloadMap\initialize();
