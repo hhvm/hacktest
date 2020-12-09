@@ -15,12 +15,12 @@ async function hack_test_main_async(): Awaitable<noreturn> {
   $root = \dirname(__DIR__);
   $found_autoloader = false;
   while (true) {
-    try {
+    $file = $root.'/vendor/autoload.hack';
+    if (\file_exists($file)) {
       require_once($root.'/vendor/autoload.hack');
       $found_autoloader = true;
       \Facebook\AutoloadMap\initialize();
       break;
-    } catch (\Error $_) {
     }
     if ($root === '/') {
       break;
