@@ -34,16 +34,16 @@ final class ConciseCLIOutput extends CLIOutputHandler {
 
     switch ($e->getResult()) {
       case TestResult::PASSED:
-        await $handle->writeAsync('.');
+        await $handle->writeAllAsync('.');
         break;
       case TestResult::SKIPPED:
-        await $handle->writeAsync('S');
+        await $handle->writeAllAsync('S');
         break;
       case TestResult::FAILED:
-        await $handle->writeAsync('F');
+        await $handle->writeAllAsync('F');
         break;
       case TestResult::ERROR:
-        await $handle->writeAsync('E');
+        await $handle->writeAllAsync('E');
         break;
     }
   }

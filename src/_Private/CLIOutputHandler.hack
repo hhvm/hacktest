@@ -105,7 +105,7 @@ abstract class CLIOutputHandler {
     $result_counts = $this->getResultCounts();
     $num_tests = Math\sum($result_counts);
 
-    await $handle->writeAsync(Str\format(
+    await $handle->writeAllAsync(Str\format(
       "\n\nSummary: %d test(s), %d passed, %d failed, %d skipped, %d error(s).\n",
       $num_tests,
       $result_counts[HackTest\TestResult::PASSED] ?? 0,

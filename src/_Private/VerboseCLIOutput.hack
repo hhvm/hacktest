@@ -32,16 +32,16 @@ final class VerboseCLIOutput extends CLIOutputHandler {
     if ($e is HackTest\TestFinishedProgressEvent) {
       switch ($e->getResult()) {
         case TestResult::PASSED:
-          await $handle->writeAsync("PASS\n");
+          await $handle->writeAllAsync("PASS\n");
           break;
         case TestResult::SKIPPED:
-          await $handle->writeAsync("SKIP\n");
+          await $handle->writeAllAsync("SKIP\n");
           break;
         case TestResult::FAILED:
-          await $handle->writeAsync("FAIL\n");
+          await $handle->writeAllAsync("FAIL\n");
           break;
         case TestResult::ERROR:
-          await $handle->writeAsync("ERROR\n");
+          await $handle->writeAllAsync("ERROR\n");
           break;
       }
     }
@@ -83,7 +83,7 @@ final class VerboseCLIOutput extends CLIOutputHandler {
       $header = $this->getMessageHeaderForErrorDetails($error_id, $event);
 
       if ($event is HackTest\TestSkippedProgressEvent) {
-        await $handle->writeAsync($header.'Skipped: '.$ex->getMessage());
+        await $handle->writeAllAsync($header.'Skipped: '.$ex->getMessage());
         return;
       }
 
@@ -109,7 +109,7 @@ final class VerboseCLIOutput extends CLIOutputHandler {
           $message .= "\n\n".$context;
         }
       }
-      await $handle->writeAsync($header.$message);
+      await $handle->writeAllAsync($header.$message);
     }
   }
 }

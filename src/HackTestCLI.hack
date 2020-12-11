@@ -105,7 +105,7 @@ final class HackTestCLI extends CLIWithRequiredArguments {
     $result_counts = $output->getResultCounts();
 
     if (Math\sum($result_counts) === 0) {
-      await $this->getStderr()->writeAsync("No tests found.\n");
+      await $this->getStderr()->writeAllAsync("No tests found.\n");
       return ExitCode::ERROR;
     }
 
