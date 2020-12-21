@@ -27,6 +27,7 @@ jobs:
           set -ex
           export DEBIAN_FRONTEND=noninteractive
           sudo apt-get update
+          sudo apt-get remove hhvm || true
           sudo apt-get install -y software-properties-common apt-transport-https
           sudo apt-key add .github/workflows/hhvm.gpg.key
           if [ "${{matrix.hhvm}}" = "nightly" ]; then
