@@ -8,29 +8,25 @@
  *
  */
 
-/**
- * Handy functions to create iterators.
- *
- * Not using generators to be compatible with code that is explicitly setting
- * Hack.Lang.AutoprimeGenerators to false.
- */
+// FIXME: Temporarily reverting to the version from before
+// https://github.com/hhvm/hsl/commit/5d23a53e6afae03872b96954e6b11437e894e63e
+// because HackLibTestForwardOnlyIterator needs context declarations that can't
+// be made compatible with all HHVM versions currently supported by Hacktest.
 abstract final class HackLibTestTraversables {
 
   // For testing functions that accept Traversables
-  public static function getIterator<T>(Traversable<T> $ary): \HH\Rx\Iterator<T> {
-    $dict = dict[];
-    $i = 0;
+  public static function getIterator<T>(Traversable<T> $ary): Iterator<T> {
     foreach ($ary as $v) {
-      $dict[$i] = $v;
-      $i++;
+      yield $v;
     }
-    return new HackLibTestForwardOnlyIterator($dict);
   }
 
   // For testing functions that accept KeyedTraversables
-  public static function getKeyedIterator<Tk as arraykey, Tv>(
+  public static function getKeyedIterator<Tk, Tv>(
     KeyedTraversable<Tk, Tv> $ary,
-  ): \HH\Rx\KeyedIterator<Tk, Tv> {
-    return new HackLibTestForwardOnlyIterator(dict($ary));
+  ): KeyedIterator<Tk, Tv> {
+    foreach ($ary as $k => $v) {
+      yield $k => $v;
+    }
   }
 }
