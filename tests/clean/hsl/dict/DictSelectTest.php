@@ -162,22 +162,22 @@ final class DictSelectTest extends HackTest {
     return varray[
       tuple(
         dict[],
-        ($k, $v) ==> true,
+        ($_k, $_v) ==> true,
         dict[],
       ),
       tuple(
         dict[],
-        ($k, $v) ==> false,
+        ($_k, $_v) ==> false,
         dict[],
       ),
       tuple(
         dict[0 => 1],
-        ($k, $v) ==> true,
+        ($_k, $_v) ==> true,
         dict[0 => 1],
       ),
       tuple(
         dict[0 => 1],
-        ($k, $v) ==> false,
+        ($_k, $_v) ==> false,
         dict[],
       ),
       tuple(
@@ -197,7 +197,7 @@ final class DictSelectTest extends HackTest {
       ),
       tuple(
         HackLibTestTraversables::getIterator(Vec\range(1, 5)),
-        ($k, $v) ==> $v % 2 === 0,
+        ($_k, $v) ==> $v % 2 === 0,
         dict[1 => 2, 3 => 4],
       ),
     ];

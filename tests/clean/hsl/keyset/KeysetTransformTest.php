@@ -148,7 +148,7 @@ final class KeysetTransformTest extends HackTest {
     return varray[
       tuple(
         varray[],
-        ($a, $b) ==> null,
+        ($_a, $_b) ==> null,
         keyset[],
       ),
       tuple(

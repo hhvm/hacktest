@@ -556,7 +556,7 @@ final class DictTransformTest extends HackTest {
     return varray[
       tuple(
         darray[],
-        ($a, $b) ==> null,
+        ($_a, $_b) ==> null,
         dict[],
       ),
       tuple(
@@ -635,7 +635,7 @@ final class DictTransformTest extends HackTest {
     return varray[
       tuple(
         Vector {'the', 'quick', 'brown', 'fox'},
-        ($k, $v) ==> $k,
+        ($k, $_v) ==> $k,
         ($k, $v) ==> Str\slice($v, $k),
         dict[
           'the' => 0,
@@ -647,7 +647,7 @@ final class DictTransformTest extends HackTest {
       tuple(
         darray[10 => 'foo', 20 => 'food', 30 => 'fool', 40 => 'rude'],
         ($k, $v) ==> $v.(string)$k,
-        ($k, $v) ==> Str\slice($v, 0, 3),
+        ($_k, $v) ==> Str\slice($v, 0, 3),
         dict[
           'foo' => 'fool30',
           'rud' => 'rude40',

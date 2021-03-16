@@ -222,29 +222,29 @@ final class VecSelectTest extends HackTest {
     return darray[
       'All elements selected' => tuple(
         vec['the', 'quick', 'brown', 'fox', 'jumped'],
-        ($key, $value) ==> true,
+        ($_key, $_value) ==> true,
         vec['the', 'quick', 'brown', 'fox', 'jumped'],
       ),
       'No elements selected' => tuple(
         vec['the', 'quick', 'brown', 'fox', 'jumped'],
-        ($key, $value) ==> false,
+        ($_key, $_value) ==> false,
         vec[],
       ),
       'odd elements selected' => tuple(
         vec['the', 'quick', 'brown', 'fox', 'jumped'],
-        ($key, $value) ==> $key % 2 === 1,
+        ($key, $_value) ==> $key % 2 === 1,
         vec['quick','fox'],
       ),
       'elements selected starting with "f"' => tuple(
         vec['the', 'quick', 'brown', 'fox', 'jumped'],
-        ($key, $value) ==> Str\starts_with($value, 'f'),
+        ($_key, $value) ==> Str\starts_with($value, 'f'),
         vec['fox'],
       ),
       'elements selected starting with "f" 2' => tuple(
         HackLibTestTraversables::getIterator(
           vec['the', 'quick', 'brown', 'fox', 'jumped']
         ),
-        ($key, $value) ==> Str\starts_with($value, 'f'),
+        ($_key, $value) ==> Str\starts_with($value, 'f'),
         vec['fox'],
       ),
     ];
