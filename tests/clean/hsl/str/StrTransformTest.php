@@ -10,7 +10,6 @@
 
 use namespace HH\Lib\Str;
 use function Facebook\FBExpect\expect; // @oss-enable
-// @oss-disable: use InvariantViolationException as InvariantException;
 use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
@@ -468,9 +467,9 @@ final class StrTransformTest extends HackTest {
 
   public function testSpliceExceptions(): void {
     expect(() ==> Str\splice('hello world', ' cruel ', -12, 1))
-      ->toThrow(InvariantException::class);
+      ->toThrow(Exception::class);
     expect(() ==> Str\splice('hello world', ' cruel ', 100, 1))
-      ->toThrow(InvariantException::class);
+      ->toThrow(Exception::class);
   }
 
   public static function provideToInt(): varray<mixed> {

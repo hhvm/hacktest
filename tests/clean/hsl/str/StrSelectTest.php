@@ -10,7 +10,6 @@
 
 use namespace HH\Lib\Str;
 use function Facebook\FBExpect\expect; // @oss-enable
-// @oss-disable: use InvariantViolationException as InvariantException;
 use type Facebook\HackTest\{DataProvider, HackTest}; // @oss-enable
 
 // @oss-disable: <<Oncalls('hack')>>
@@ -81,11 +80,11 @@ final class StrSelectTest extends HackTest {
 
   public function testSliceExceptions(): void {
     expect(() ==> Str\slice('hello', 0, -1))
-      ->toThrow(InvariantException::class);
+      ->toThrow(Exception::class);
     expect(() ==> Str\slice('hello', 10))
-      ->toThrow(InvariantException::class);
+      ->toThrow(Exception::class);
     expect(() ==> Str\slice('hello', -6))
-      ->toThrow(InvariantException::class);
+      ->toThrow(Exception::class);
   }
 
   public static function provideStripPrefix(): varray<mixed> {
