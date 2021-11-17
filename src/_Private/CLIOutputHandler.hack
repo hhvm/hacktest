@@ -40,12 +40,12 @@ abstract class CLIOutputHandler {
     \Facebook\HackTest\ProgressEvent $e,
   ): Awaitable<void>;
 
-  final private function reset(): void {
+  private function reset(): void {
     $this->resultCounts = Dict\fill_keys(HackTest\TestResult::getValues(), 0);
     $this->errors = vec[];
   }
 
-  final private function logEvent(HackTest\ProgressEvent $e): void {
+  private function logEvent(HackTest\ProgressEvent $e): void {
     if ($e is HackTest\TestFinishedProgressEvent) {
       $this->resultCounts[$e->getResult()]++;
     }
