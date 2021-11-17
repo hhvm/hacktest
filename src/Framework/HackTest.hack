@@ -229,7 +229,7 @@ class HackTest {
     }
   }
 
-  private final function filterTestMethods(): void {
+  private function filterTestMethods(): void {
     $methods = vec[];
     foreach ($this->methods as $method) {
       $type_text = $method->getReturnTypeText();
@@ -246,7 +246,7 @@ class HackTest {
     $this->methods = $methods;
   }
 
-  private final function validateTestMethods(): void {
+  private function validateTestMethods(): void {
     foreach ($this->methods as $method) {
       $method_name = $method->getName();
       if (!$method->isPublic()) {
