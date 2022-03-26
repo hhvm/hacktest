@@ -284,7 +284,7 @@ class HackTest {
   /**
    * Preferred over markTestIncomplete(), @see markAsSkipped() for rationale.
    */
-  public static function markAsIncomplete(string $message): nothing {
+  public static final function markAsIncomplete(string $message): nothing {
     self::markTestIncomplete($message);
   }
 
@@ -300,7 +300,7 @@ class HackTest {
   /**
    * Preferred over fail(), @see markAsSkipped() for rationale.
    */
-  public static function markAsFailed(string $message = ''): nothing {
+  public static final function markAsFailed(string $message = ''): nothing {
     self::fail($message);
   }
 
@@ -320,9 +320,8 @@ class HackTest {
   ): void {
     $this->expectedException = $exception;
     $this->expectedExceptionMessage = $exception_message;
-    $this->expectedExceptionCode = static::computeExpectedExceptionCode(
-      $exception_code,
-    );
+    $this->expectedExceptionCode =
+      static::computeExpectedExceptionCode($exception_code);
   }
 
   private function clearExpectedException(): void {
