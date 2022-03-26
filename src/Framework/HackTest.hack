@@ -52,11 +52,8 @@ class HackTest {
     (function(\ReflectionMethod): bool) $method_filter,
     (function(ProgressEvent): Awaitable<void>) $progress_callback,
   ): Awaitable<void> {
-    $progress = new _Private\Progress(
-      $progress_callback,
-      $this->filename,
-      static::class,
-    );
+    $progress =
+      new _Private\Progress($progress_callback, $this->filename, static::class);
 
     await static::beforeFirstTestAsync();
     await using new _Private\OnScopeExitAsync(
@@ -262,14 +259,58 @@ class HackTest {
     }
   }
 
+  /**
+   * Preferred over markTestSkipped(), because the typechecker considers
+   * code past markTestSkipped() to be unreachable. This triggers inference
+   * bugs when dealing with coeffects @see tests/ShowCoeffectViolationTest.php.
+   * If you ever want to make your test not be skipped anymore, the code will
+   * be reachable again, which may reveal previously hidden errors introduced
+   * by code changes made whilst the test was skipped.
+   *
+   * You can use `return static::markAsSkipped('skipping');` to match the old
+   * `static::markTestSkipped('skipping')` behavior.
+   */
+  public static final function markAsSkipped(string $message): nothing {
+    self::markTestSkipped($message);
+  }
+
+  /**
+   * Code below this invocation will become unreachable for the typechecker.
+   * This reduces the strength of typechecking and may raise bogus type errors.
+   * @see markAsSkipped()
+   */
   public static final function markTestSkipped(string $message): noreturn {
     throw new SkippedTestException($message);
   }
 
+  /**
+   * Preferred over markTestIncomplete(), @see markAsSkipped() for rationale.
+   */
+  public static function markAsIncomplete(string $message): nothing {
+    self::markTestIncomplete($message);
+  }
+
+  /**
+   * Code below this invocation will become unreachable for the typechecker.
+   * This reduces the strength of typechecking and may raise bogus type errors.
+   * @see markAsIncomplete()
+   */
   public static function markTestIncomplete(string $message): noreturn {
     throw new SkippedTestException($message);
   }
 
+  /**
+   * Preferred over fail(), @see markAsSkipped() for rationale.
+   */
+  public static function markAsFailed(string $message = ''): nothing {
+    self::fail($message);
+  }
+
+  /**
+   * Code below this invocation will become unreachable for the typechecker.
+   * This reduces the strength of typechecking and may raise bogus type errors.
+   * @see markAsFailed()
+   */
   public static final function fail(string $message = ''): noreturn {
     throw new \RuntimeException($message);
   }
