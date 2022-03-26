@@ -17,14 +17,14 @@ final class ShowCoeffectViolationTest extends HackTest\HackTest {
     -> This is the method with where type constraints [2]
     -> Expected a function that requires the capability set {AccessGlobals, IO, ImplicitPolicyLocal, RxLocal, System, WriteProperty} [3]
     -> But got a function that requires nothing [4]
-    
+
     tests/SomeTest.hack:7:23
           5 |   public function testShowCoeffectViolation(): void {
           6 |     self::markTestSkipped('This test is pointless');
     [1]   7 |     expect(() ==> 3)->toThrow(\Exception::class);
           8 |   }
           9 | }
-    
+
     vendor/facebook/fbexpect/src/ExpectObj.hack:569:19
         567 |    * the awaitable will be awaited.
         568 |    *
@@ -36,10 +36,10 @@ final class ShowCoeffectViolationTest extends HackTest\HackTest {
     [3] 574 |   ): TException where T = (function(): TRet) {
         575 |     $msg = \vsprintf($msg ?? '', $args);
         576 |     $exception = $this->tryCallReturnException($exception_class);
-    
+
     .:0:0
     [4]   0 | No source found
-    
+
     1 error found.
     */
   public function testShowCoeffectViolation(): void {
