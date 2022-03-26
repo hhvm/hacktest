@@ -9,19 +9,19 @@
 
 namespace Facebook\HackTest;
 
-use type Facebook\CLILib\CLIWithRequiredArguments;
+use type Facebook\CLILib\CLIWithArguments;
 use namespace Facebook\CLILib\CLIOptions;
 use namespace HH\Lib\{C, Math, Str};
 
 /** The main `hacktest` CLI */
-final class HackTestCLI extends CLIWithRequiredArguments {
+final class HackTestCLI extends CLIWithArguments {
   private bool $verbose = false;
   private ?string $classFilter = null;
   private ?HackTestRunner::TMethodFilter $methodFilter = null;
 
   <<__Override>>
-  public static function getHelpTextForRequiredArguments(): vec<string> {
-    return vec['SOURCE_PATH'];
+  public static function getHelpTextForOptionalArguments(): string {
+    return 'SOURCE_PATH';
   }
 
   <<__Override>>
@@ -91,12 +91,27 @@ final class HackTestCLI extends CLIWithRequiredArguments {
       : new _Private\ConciseCLIOutput($this->getTerminal());
     $stdout = $this->getStdout();
 
-    await HackTestRunner::runAsync(
-      $this->getArguments(),
-      shape(
-        'classes' => (
-          $cf === null ? ($_ ==> true) : ($c ==> \fnmatch($cf, $c))
+    $arguments = $this->getArguments();
+    if (C\is_empty($arguments)) {
+      if (!\is_dir('tests')) {
+        await $this->getStderr()
+          ->writeAllAsync("SOURCE_PATH must be specified.\n");
+        return ExitCode::FAILURE;
+      }
+      await $this->getStderr()->writeAllAsync(
+        Str\format(
+          "No SOURCE_PATH was provided, but tests/ was found.\n".
+          "Executing all tests found in the %s directory.\n",
+          \getcwd().'/tests',
         ),
+      );
+      $arguments = vec['tests/'];
+    }
+
+    await HackTestRunner::runAsync(
+      $arguments,
+      shape(
+        'classes' => ($cf is null ? ($_ ==> true) : ($c ==> \fnmatch($cf, $c))),
         'methods' => ($mf ?? ($_class, $_method) ==> true),
       ),
       async $event ==> await $output->writeProgressAsync($stdout, $event),
