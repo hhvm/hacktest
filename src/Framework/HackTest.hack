@@ -274,7 +274,7 @@ class HackTest {
 
   /**
    * Code below this invocation will become unreachable for the typechecker.
-   * This reduces the strength of typechecking and may raise bogus type errors.
+   * This reduces the strength of typechecking and may raise baseless type errors.
    * @see markAsSkipped()
    */
   public static final function markTestSkipped(string $message): noreturn {
@@ -290,7 +290,7 @@ class HackTest {
 
   /**
    * Code below this invocation will become unreachable for the typechecker.
-   * This reduces the strength of typechecking and may raise bogus type errors.
+   * This reduces the strength of typechecking and may raise baseless type errors.
    * @see markAsIncomplete()
    */
   public static function markTestIncomplete(string $message): noreturn {
@@ -306,7 +306,7 @@ class HackTest {
 
   /**
    * Code below this invocation will become unreachable for the typechecker.
-   * This reduces the strength of typechecking and may raise bogus type errors.
+   * This reduces the strength of typechecking and may raise baseless type errors.
    * @see markAsFailed()
    */
   public static final function fail(string $message = ''): noreturn {
