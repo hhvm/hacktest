@@ -59,9 +59,7 @@ class HackTest {
     );
 
     await static::beforeFirstTestAsync();
-    await using new _Private\OnScopeExitAsync(
-      async () ==> await static::afterLastTestAsync(),
-    );
+    await using new _Private\OnScopeExitAsync(static::afterLastTestAsync<>);
 
     foreach ($this->methods as $method) {
       $to_run = vec[];
