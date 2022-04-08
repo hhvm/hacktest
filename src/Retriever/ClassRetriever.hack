@@ -19,9 +19,9 @@ use type Facebook\HackTest\_Private\{
 
 final class ClassRetriever {
   const type TFacts = shape(
-    'types' => varray<shape(
+    'types' => vec<shape(
       'name' => string,
-      'baseTypes' => varray<string>,
+      'baseTypes' => vec<string>,
       'kindOf' => string,
       ...
     )>,
@@ -57,7 +57,7 @@ final class ClassRetriever {
 
     $all_facts = \HH\facts_parse(
       /* root = */ '/',
-      varray($paths),
+      vec($paths),
       /* force_hh = */ false,
       /* multithreaded = */ true,
     );
