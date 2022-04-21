@@ -19,5 +19,10 @@
     "hhvm": "^4.128",
     "facebook/hh-clilib": "^2.5.0rc1",
     "hhvm/type-assert": "^3.0|^4.0"
+  },
+  "config": {
+    "allow-plugins": {
+      "hhvm/hhvm-autoload": true
+    }
   }
 }
