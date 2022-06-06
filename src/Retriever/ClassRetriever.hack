@@ -21,7 +21,7 @@ final class ClassRetriever {
   const type TFacts = shape(
     'types' => vec<shape(
       'name' => string,
-      'baseTypes' => vec<string>,
+      ?'baseTypes' => vec<string>,
       'kindOf' => string,
       ...
     )>,
