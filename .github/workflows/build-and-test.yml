@@ -39,7 +39,7 @@ jobs:
             --module src \
             --module tests \
             --module vendor \
-            --inputs bin/hacktest
+            --inputs bin/hacktest \
             --exclude-dir vendor/bin \
             --output-dir ${{ steps.create-repo-dir.outputs.path }}
       - name: Run tests in repo-authoritative mode
