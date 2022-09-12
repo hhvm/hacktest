@@ -34,7 +34,7 @@ jobs:
         run: |
           # Exclude vendor/bin/ to work around issue in HHVM 4.62
           # https://github.com/facebook/hhvm/issues/8719
-          hhvm --hphp --target hhbc -l 3 \
+          hhvm --hphp -l 3 \
             --module bin \
             --module src \
             --module tests \
