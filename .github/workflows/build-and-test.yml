@@ -13,7 +13,7 @@ jobs:
       matrix:
         os: [ ubuntu ]
         hhvm:
-          - '4.153'
+          - '4.128'
           - latest
           - nightly
     runs-on: ${{matrix.os}}-latest
@@ -39,7 +39,7 @@ jobs:
             --module src \
             --module tests \
             --module vendor \
-            --inputs bin/hacktest \
+            ${{ matrix.hhvm == '4.128' && '--ffile' || '--inputs' }} bin/hacktest \
             --exclude-dir vendor/bin \
             --output-dir ${{ steps.create-repo-dir.outputs.path }}
       - name: Run tests in repo-authoritative mode
