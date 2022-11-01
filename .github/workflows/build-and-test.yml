@@ -13,7 +13,7 @@ jobs:
       matrix:
         os: [ ubuntu ]
         hhvm:
-          - '4.128'
+          - '4.168'
           - latest
           - nightly
     runs-on: ${{matrix.os}}-latest
@@ -35,11 +35,11 @@ jobs:
           # Exclude vendor/bin/ to work around issue in HHVM 4.62
           # https://github.com/facebook/hhvm/issues/8719
           hhvm --hphp -l 3 \
-            --module bin \
-            --module src \
-            --module tests \
-            --module vendor \
-            ${{ matrix.hhvm == '4.128' && '--ffile' || '--inputs' }} bin/hacktest \
+            ${{ matrix.hhvm == '4.168' && '--module' || '--dir' }} bin \
+            ${{ matrix.hhvm == '4.168' && '--module' || '--dir' }} src \
+            ${{ matrix.hhvm == '4.168' && '--module' || '--dir' }} tests \
+            ${{ matrix.hhvm == '4.168' && '--module' || '--dir' }} vendor \
+            --inputs bin/hacktest \
             --exclude-dir vendor/bin \
             --output-dir ${{ steps.create-repo-dir.outputs.path }}
       - name: Run tests in repo-authoritative mode
