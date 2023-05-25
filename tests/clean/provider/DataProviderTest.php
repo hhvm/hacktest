@@ -34,6 +34,15 @@ final class DataProviderTest extends HackTest {
     expect(Str\join($traversable, '-'))->toBeSame('the-quick-brown-fox-1');
   }
 
+  public function provideWithPeriod()[]: dict<string, (string)> {
+    return dict['per.iod' => tuple('str')];
+  }
+
+  <<DataProvider('provideWithPeriod')>>
+  public function testPeriodInKey(string $v): void {
+    expect($v)->toEqual('str');
+  }
+
   public function provideMultipleArgs(): vec<(int, int)> {
     return vec[
       tuple(1, 2),
