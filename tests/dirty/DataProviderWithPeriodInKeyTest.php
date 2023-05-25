@@ -10,7 +10,6 @@
 
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\{DataProvider, HackTest};
-use namespace HH\Lib\Str;
 
 // @oss-disable: <<Oncalls('hack')>>
 final class DataProviderWithPeriodInKeyTest extends HackTest {
